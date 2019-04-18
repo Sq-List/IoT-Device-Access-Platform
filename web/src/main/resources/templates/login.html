@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <div th:replace="base/head"></div>
+    <link rel="stylesheet" th:href="@{/css/login.css}"/>
+</head>
+<body style="background-size: 100% 100%; background-attachment: fixed;">
+    <div class="container-fluid">
+        <div class="login-div">
+            <div class="login-title">
+                <span>流处理平台</span>
+            </div>
+            <div class="login-content layui-card">
+                <div class="layui-card-body">
+                    <div class="login-tab-content">
+                        <form class="layui-form" method="post">
+                            <div class="layui-form-item">
+                                <input type="text" name="username" required="required" lay-verify="required"
+                                       placeholder="用户名" autocomplete="off" class="layui-input"/>
+                            </div>
+                            <div class="layui-form-item">
+                                <input type="password" name="password" required="required" lay-verify="required"
+                                       placeholder="密码" autocomplete="off" class="layui-input"/>
+                            </div>
+                            <!--<input type="hidden" name="loginType" value="4"/>-->
+                            <div class="layui-form-item login-form-item">
+                                <button class="layui-btn layui-btn-big layui-btn-normal" lay-submit lay-filter="formDemo">
+                                    登录
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<div th:replace="base/script"></div>
+<script type="text/javascript">
+    layui.use(["layer", "form"], function()
+    {
+        var $ = layui.$;
+        var layer = layui.layer;
+        var form = layui.form;
+
+        form.on("submit(formDemo)", function (data) {
+            console.log(data);
+            let formData = data.field;
+
+            $.ajax({
+                url: ip + "/api/session",
+                type: "post",
+                contentType: "application/json",
+                data: JSON.stringify(formData),
+                dataType: "json",
+                success: function (res) {
+                    console.log(res);
+                    if (res.code == 0) {
+                        let data = res.data;
+
+                        layer.msg('登录成功！', {icon: 1, time: 2000}, function () {
+                            window.location.href = "/page/index";
+                        });
+                    } else {
+                        layer.msg(res.msg, {icon: 2, time: 2000});
+                    }
+                }
+            });
+
+            return false;
+        });
+    });
+</script>
+</html>

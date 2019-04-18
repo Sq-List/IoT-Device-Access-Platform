@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="base/layout">
+
+<title layout:fragment="title">客户列表</title>
+<div layout:fragment="side" th:replace="base/side::onselectLayout ('', '')"></div>
+<div layout:fragment="content-header" class="layui-card tonghe-header">
+    <span class="layui-breadcrumb">
+        <a href="javascript:void 0;" class="layui-breadcrumb-unclick">客户管理</a>
+        <a><cite>客户列表</cite></a>
+    </span>
+</div>
+<div layout:fragment="content">
+    
+</div>
+
+<script layout:fragment="script">
+    // layui.use(['element', 'table', 'laydate', 'form'], function () {
+    //
+    // });
+</script>
+</html>
