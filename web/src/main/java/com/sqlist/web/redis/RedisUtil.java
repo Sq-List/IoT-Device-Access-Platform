@@ -91,7 +91,7 @@ public class RedisUtil {
         try {
             jedis =  jedisPool.getResource();
             //生成真正的key
-            String realKey  = prefix.getPrefix() + key;
+            String realKey  = prefix.getPrefix() + ":" + key;
             return  jedis.exists(realKey);
         }finally {
             returnToPool(jedis);

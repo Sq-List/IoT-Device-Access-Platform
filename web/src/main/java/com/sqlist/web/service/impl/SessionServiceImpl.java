@@ -56,7 +56,8 @@ public class SessionServiceImpl implements SessionService {
         User user = redisUtil.get(UserKeyPrefix.TOKEN, token, User.class);
         // 延长有效期
         if (user != null) {
-            addTokenCookie(token, user);
+            redisUtil.set(UserKeyPrefix.TOKEN, token, user);
+            addTokenCookie(token);
         }
         return user;
     }
@@ -85,7 +86,7 @@ public class SessionServiceImpl implements SessionService {
         // 并生成token返回到客户端
         String uuid = UUIDUtil.uuid();
         redisUtil.set(UserKeyPrefix.TOKEN, uuid, user);
-        addTokenCookie(uuid, user);
+        addTokenCookie(uuid);
 
         return true;
     }
@@ -109,7 +110,7 @@ public class SessionServiceImpl implements SessionService {
         return true;
     }
 
-    private void addTokenCookie(String token, User user) {
+    private void addTokenCookie(String token) {
         Cookie cookie = new Cookie(COOKIE_NAME_TOKEN, token);
         cookie.setMaxAge(UserKeyPrefix.TOKEN.expireSeconds());
         cookie.setPath("/");
