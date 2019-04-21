@@ -57,7 +57,7 @@
                 dataType: "json",
                 success: function (res) {
                     console.log(res);
-                    if (res.code == 0) {
+                    if (res.code === 0) {
                         let data = res.data;
 
                         layer.msg('登录成功！', {icon: 1, time: 2000}, function () {

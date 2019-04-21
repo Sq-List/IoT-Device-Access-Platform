@@ -84,9 +84,9 @@ public class SessionServiceImpl implements SessionService {
 
         // 将登陆状态添加到redis中
         // 并生成token返回到客户端
-        String uuid = UUIDUtil.uuid();
-        redisUtil.set(UserKeyPrefix.TOKEN, uuid, user);
-        addTokenCookie(uuid);
+        String token = UUIDUtil.uuid();
+        redisUtil.set(UserKeyPrefix.TOKEN, token, user);
+        addTokenCookie(token);
 
         return true;
     }

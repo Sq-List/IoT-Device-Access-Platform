@@ -4,11 +4,11 @@
 <div class="layui-side layui-bg-black" th:fragment="onselectLayout (parent, child)">
     <div class="layui-side-scroll">
         <ul class="layui-nav layui-nav-tree">
-            <li class="layui-nav-item" th:classappend="(${parent} == 'customerManagement') ? 'layui-nav-itemed' : ''">
-                <a class="" href="javascript:;">客户管理</a>
+            <li class="layui-nav-item" th:classappend="(${parent} == 'task') ? 'layui-nav-itemed' : ''">
+                <a class="" href="javascript:;">任务</a>
                 <dl class="layui-nav-child">
-                    <dd th:class="(${child} == 'customerList') ? 'layui-this' : ''">
-                        <a th:href="@{/admin/customerList-view}">客户列表</a>
+                    <dd th:class="(${child} == 'list') ? 'layui-this' : ''">
+                        <a th:href="@{/page/list}">列表</a>
                     </dd>
                 </dl>
             </li>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="base/layout">
+
+<div layout:fragment="otherHead">
+    <link rel="stylesheet" th:href="@{/css/task.css}" />
+</div>
+
+<title layout:fragment="title">创建任务</title>
+<div layout:fragment="side" th:replace="base/side::onselectLayout ('task', 'list')"></div>
+<div layout:fragment="content-header" class="layui-card tonghe-header">
+    <span class="layui-breadcrumb">
+        <a href="javascript:;" class="layui-breadcrumb-unclick">任务</a>
+        <a><cite>创建</cite></a>
+    </span>
+</div>
+<div layout:fragment="content">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12 layui-col-lg12">
+            <div class="tonghe-card">
+                <div class="tonghe-card-header">
+                    <div class="layui-btn layui-btn-primary">保存</div>
+                </div>
+                <div class="tonghe-card-body">
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md2 layui-col-lg2">
+                            <div id="task-button">
+                                <div class="node radius" id="input" type="input">输入</div>
+                                <div class="node" id="handle" type="handle">处理</div>
+                                <div class="node radius" id="output" type="output">输出</div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md8 layui-col-lg8">
+                            <div id="task-main">
+
+                            </div>
+                        </div>
+                        <div class="layui-col-md2 layui-col-lg2">
+                            <div id="task-detail">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div layout:fragment="otherScriptPre">
+    <script th:src="@{/plugins/jquery-ui.min.js}"></script>
+    <script th:src="@{/plugins/jsplumb.min.js}"></script>
+</div>
+<div layout:fragment="otherScriptAfter">
+
+</div>
+<script layout:fragment="script">
+    layui.use(['element', 'table', 'layer'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var layer = layui.layer;
+
+        var i = 0;
+        $("#task-button").children().draggable({
+            // 表示复制
+            helper: "clone",
+            // droppable 方法里面也设置这个标识来判断拖放到的地方
+            scope: "main"
+        });
+
+        $("#task-main").droppable({
+            scope: "main",
+            drop: function (event, ui) {
+                console.log(ui);
+                console.log(this);
+                var left = parseInt(ui.offset.left - $(this).offset().left);
+                var top = parseInt(ui.offset.top - $(this).offset().top);
+                var name = ui.draggable[0].id;
+                switch (name) {
+                    case "input":
+                        i++;
+                        var id = "state_start" + i;
+                        $(this).append('<div class="node radius" id="' + id + '" type="input">' + $(ui
+                            .helper).html() + '</div>');
+                        $("#" + id).css("left", left).css("top", top);
+                        jsPlumb.addEndpoint(id, {
+                            anchors: "BottomCenter",
+                            isSource: true,
+                            maxConnections: -1
+                        }, hollowCircle);
+                        jsPlumb.draggable(id, {
+                            containment:true
+                        });
+                        $("#" + id).draggable({
+                            containment: "#task-main"
+                        });
+
+                        oneclick("#" + id);
+                        break;
+                    case "handle":
+                        i++;
+                        id = "state_flow" + i;
+                        $(this).append("<div class='node' id='" + id + "' type='handle'>" + $(ui.helper).html() + "</div>");
+                        $("#" + id).css("left", left).css("top", top);
+                        jsPlumb.addEndpoint(id, {
+                            anchors: "TopCenter",
+                            isTarget: true
+                        }, hollowCircle);
+                        jsPlumb.addEndpoint(id, {
+                            anchors: "BottomCenter",
+                            isSource: true,
+                            maxConnections: -1
+                        }, hollowCircle);
+                        jsPlumb.draggable(id);
+                        $("#" + id).draggable({
+                            containment: "#task-main"
+                        });
+                        oneclick("#" + id);
+                        break;
+                    case "output":
+                        i++;
+                        id = "state_end" + i;
+                        $(this).append('<div class="node radius" id="' + id + '" type="output">' + $(ui
+                            .helper).html() + '</div>');
+                        $("#" + id).css("left", left).css("top", top);
+                        jsPlumb.addEndpoint(id, {
+                            anchors: "TopCenter",
+                            isTarget: true
+                        }, hollowCircle);
+                        jsPlumb.draggable(id);
+                        $("#" + id).draggable({
+                            containment: "#task-main"
+                        });
+                        oneclick("#" + id);
+                        break;
+                }
+            }
+        });
+
+        $("#task-main").on("mouseenter", ".node", function () {
+            $(this).append('<i class="fa fa-times fa-lg close" aria-hidden="true"></i>');
+        });
+        $("#task-main").on("mouseleave", ".node", function () {
+            $(this).children("i").remove();
+        });
+        $("#task-main").on("click", ".node>.close",function () {
+            console.log(this);
+            let that = this;
+            layer.open({
+                content: '确定要删除吗?',
+                yes: function(index, layero){
+                    let $thisTaskButton = $(this).parent();
+                    jsPlumb.removeAllEndpoints($thisTaskButton.attr("id"));
+                    $thisTaskButton.remove();
+                    layer.close(index); //如果设定了yes回调，需进行手工关闭
+
+                }
+            });
+        });
+
+        jsPlumb.bind("click", function (conn, originalEvent) {
+            console.log(conn);
+            if (confirm("Are you sure?")) {
+                jsPlumb.detach(conn);
+            }
+        });
+
+        function oneclick(id) {
+            $(id).click(function () {
+                // TODO
+            });
+        }
+
+        //基本连接线样式
+        var connectorPaintStyle = {
+            lineWidth: 4,
+            strokeStyle: "#61B7CF",
+            joinstyle: "round",
+            outlineColor: "black",
+            outlineWidth: 2
+        };
+        // 鼠标悬浮在连接线上的样式
+        var connectorHoverStyle = {
+            lineWidth: 4,
+            strokeStyle: "#216477",
+            outlineWidth: 2,
+            outlineColor: "white"
+        };
+        var endpointHoverStyle = {
+            fillStyle: "#216477",
+            strokeStyle: "#216477"
+        };
+        //空心圆端点样式设置
+        var hollowCircle = {
+            endpoint: ["Dot", {
+                radius: 10
+            }], //端点的形状
+            // connectorStyle: connectorPaintStyle, //连接线的颜色，大小样式
+            // connectorHoverStyle: connectorHoverStyle,
+            // paintStyle: {
+            //     strokeStyle: "#1e8151",
+            //     fillStyle: "transparent",
+            //     radius: 2,
+            //     lineWidth: 2
+            // }, //端点的颜色样式
+            //anchor: "AutoDefault",
+            // isSource: true, //是否可以拖动（作为连线起点）
+            // connector: ["Flowchart", {
+            //     stub: [40, 60],
+            //     gap: 10,
+            //     cornerRadius: 5,
+            //     alwaysRespectStubs: true
+            // }], //连接线的样式种类有[Bezier],[Flowchart],[StateMachine ],[Straight ]
+            // isTarget: true, //是否可以放置（连线终点）
+            // maxConnections: -1, // 设置连接点最多可以连接几条线
+            connectorOverlays: [
+                ["Arrow", {
+                    width: 10,
+                    length: 10,
+                    location: 0.5
+                }]
+            ]
+        };
+        //实心圆样式
+        var solidCircle = {
+            endpoint: ["Dot", {
+                radius: 8
+            }], //端点的形状
+            paintStyle: {
+                fillStyle: "rgb(122, 176, 44)"
+            }, //端点的颜色样式
+            connectorStyle: {
+                strokeStyle: "rgb(97, 183, 207)",
+                lineWidth: 4
+            }, //连接线的颜色，大小样式
+            isSource: true, //是否可以拖动（作为连线起点）
+            connector: ["Flowchart", {
+                stub: [40, 60],
+                gap: 10,
+                cornerRadius: 5,
+                alwaysRespectStubs: true
+            }], //连接线的样式种类有[Bezier],[Flowchart],[StateMachine ],[Straight ]
+            isTarget: true, //是否可以放置（连线终点）
+            //anchor: "AutoDefault",
+            maxConnections: 3, // 设置连接点最多可以连接几条线
+            connectorOverlays: [
+                ["Arrow", {
+                    width: 10,
+                    length: 10,
+                    location: 1
+                }]
+            ]
+        };
+
+    });
+</script>
+</html>

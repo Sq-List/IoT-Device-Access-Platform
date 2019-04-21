@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sqlist.web.mapper.TaskUnitConnectMapper" >
+  <resultMap id="BaseResultMap" type="com.sqlist.web.domain.TaskUnitConnect" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="tucid" property="tucid" jdbcType="INTEGER" />
+    <result column="source_tuid" property="sourceTuid" jdbcType="INTEGER" />
+    <result column="target_tuid" property="targetTuid" jdbcType="INTEGER" />
+    <result column="tid" property="tid" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    tucid, source_tuid, target_tuid, tid
+  </sql>
+</mapper>
