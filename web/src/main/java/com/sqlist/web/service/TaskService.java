@@ -3,6 +3,7 @@ package com.sqlist.web.service;
 import com.sqlist.web.domain.Task;
 import com.sqlist.web.domain.User;
 import com.sqlist.web.vo.PageVO;
+import com.sqlist.web.vo.TaskVO;
 
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public interface TaskService {
     /**
      * 添加任务
      * @param user
-     * @param task
+     * @param taskVO
      */
-    void add(User user, Task task);
+    void add(User user, TaskVO taskVO);
 }

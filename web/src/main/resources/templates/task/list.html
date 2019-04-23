@@ -75,7 +75,7 @@
             }, function(value, index, elem){
                 $.ajax({
                     url: ip + "/api/task",
-                    type: "post",
+                    type: "put",
                     contentType: "application/json",
                     data: JSON.stringify({
                         name: value

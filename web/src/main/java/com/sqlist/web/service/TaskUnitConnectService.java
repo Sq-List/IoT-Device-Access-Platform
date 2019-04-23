@@ -1,0 +1,39 @@
+package com.sqlist.web.service;
+
+import com.sqlist.web.domain.TaskUnitConnect;
+import com.sqlist.web.vo.TaskUnitConnectVO;
+
+import java.util.List;
+
+/**
+ * @author SqList
+ * @date 2019/4/23 21:38
+ * @description
+ **/
+public interface TaskUnitConnectService {
+
+    /**
+     * 获取 连接
+     * @param tid
+     * @return
+     */
+    List<TaskUnitConnect> list(Integer tid);
+
+    /**
+     * 添加 连接
+     * @param taskUnitConnectVO
+     */
+    void add(TaskUnitConnectVO taskUnitConnectVO);
+
+    /**
+     * 删除 连接
+     * @param taskUnitConnectVO
+     */
+    void delete(TaskUnitConnectVO taskUnitConnectVO);
+
+    /**
+     * 更新 连接
+     * @param taskUnitConnectVO
+     */
+    void update(TaskUnitConnectVO taskUnitConnectVO);
+}

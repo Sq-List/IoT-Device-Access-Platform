@@ -6,14 +6,15 @@
       WARNING - @mbg.generated
     -->
     <id column="tucid" property="tucid" jdbcType="INTEGER" />
-    <result column="source_tuid" property="sourceTuid" jdbcType="INTEGER" />
-    <result column="target_tuid" property="targetTuid" jdbcType="INTEGER" />
+    <result column="source_tuid" property="sourceTuid" jdbcType="VARCHAR" />
+    <result column="target_tuid" property="targetTuid" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="tid" property="tid" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     <!--
       WARNING - @mbg.generated
     -->
-    tucid, source_tuid, target_tuid, tid
+    tucid, source_tuid, target_tuid, create_time, tid
   </sql>
 </mapper>

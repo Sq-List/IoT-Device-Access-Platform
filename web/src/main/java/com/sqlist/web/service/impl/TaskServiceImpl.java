@@ -10,6 +10,7 @@ import com.sqlist.web.mapper.TaskMapper;
 import com.sqlist.web.result.CodeMsg;
 import com.sqlist.web.service.TaskService;
 import com.sqlist.web.vo.PageVO;
+import com.sqlist.web.vo.TaskVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +50,10 @@ public class TaskServiceImpl implements TaskService {
 
     @Transactional(rollbackFor = RuntimeException.class)
     @Override
-    public void add(User user, Task task) {
+    public void add(User user, TaskVO taskVO) {
+        Task task = new Task();
+
+        task.setName(taskVO.getName());
         task.setUid(user.getUid());
 
         if (taskMapper.selectCount(task) != 0) {

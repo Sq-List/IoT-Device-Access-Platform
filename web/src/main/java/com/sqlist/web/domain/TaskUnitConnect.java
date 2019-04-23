@@ -1,12 +1,8 @@
 package com.sqlist.web.domain;
 
+import java.util.Date;
 import javax.persistence.*;
 
-/**
- * @author SqList
- * @date 2019/4/20 22:50
- * @description
- **/
 @Table(name = "task_unit_connect")
 public class TaskUnitConnect {
     /**
@@ -19,13 +15,19 @@ public class TaskUnitConnect {
      * 连接的起点tuid
      */
     @Column(name = "source_tuid")
-    private Integer sourceTuid;
+    private String sourceTuid;
 
     /**
      * 连接的终点tuid
      */
     @Column(name = "target_tuid")
-    private Integer targetTuid;
+    private String targetTuid;
+
+    /**
+     * 连接的创建时间
+     */
+    @Column(name = "create_time")
+    private Date createTime;
 
     /**
      * 连接所属的任务id
@@ -55,7 +57,7 @@ public class TaskUnitConnect {
      *
      * @return source_tuid - 连接的起点tuid
      */
-    public Integer getSourceTuid() {
+    public String getSourceTuid() {
         return sourceTuid;
     }
 
@@ -64,8 +66,8 @@ public class TaskUnitConnect {
      *
      * @param sourceTuid 连接的起点tuid
      */
-    public void setSourceTuid(Integer sourceTuid) {
-        this.sourceTuid = sourceTuid;
+    public void setSourceTuid(String sourceTuid) {
+        this.sourceTuid = sourceTuid == null ? null : sourceTuid.trim();
     }
 
     /**
@@ -73,7 +75,7 @@ public class TaskUnitConnect {
      *
      * @return target_tuid - 连接的终点tuid
      */
-    public Integer getTargetTuid() {
+    public String getTargetTuid() {
         return targetTuid;
     }
 
@@ -82,8 +84,26 @@ public class TaskUnitConnect {
      *
      * @param targetTuid 连接的终点tuid
      */
-    public void setTargetTuid(Integer targetTuid) {
-        this.targetTuid = targetTuid;
+    public void setTargetTuid(String targetTuid) {
+        this.targetTuid = targetTuid == null ? null : targetTuid.trim();
+    }
+
+    /**
+     * 获取连接的创建时间
+     *
+     * @return create_time - 连接的创建时间
+     */
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    /**
+     * 设置连接的创建时间
+     *
+     * @param createTime 连接的创建时间
+     */
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     /**

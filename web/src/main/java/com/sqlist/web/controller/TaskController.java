@@ -5,6 +5,7 @@ import com.sqlist.web.domain.User;
 import com.sqlist.web.result.Result;
 import com.sqlist.web.service.TaskService;
 import com.sqlist.web.vo.PageVO;
+import com.sqlist.web.vo.TaskVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -43,13 +44,13 @@ public class TaskController {
     /**
      * 添加task
      * @param user
-     * @param task
+     * @param taskVO
      * @return
      */
-    @RequestMapping(value = "", method = RequestMethod.POST)
-    public Result add(User user, @Validated @RequestBody Task task) {
-        log.info("user: {} add task: {}", user, task);
-        taskService.add(user, task);
+    @RequestMapping(value = "", method = RequestMethod.PUT)
+    public Result add(User user, @Validated @RequestBody TaskVO taskVO) {
+        log.info("user: {} add taskVO: {}", user, taskVO);
+        taskService.add(user, taskVO);
         return Result.success(null);
     }
 

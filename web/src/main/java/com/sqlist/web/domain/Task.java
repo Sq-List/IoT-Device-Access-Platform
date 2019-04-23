@@ -2,13 +2,7 @@ package com.sqlist.web.domain;
 
 import java.util.Date;
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
-/**
- * @author SqList
- * @date 2019/4/20 22:50
- * @description
- **/
 public class Task {
     /**
      * 任务id
@@ -19,7 +13,6 @@ public class Task {
     /**
      * 任务名字
      */
-    @NotNull(message = "name 不能为null")
     private String name;
 
     /**
@@ -95,7 +88,7 @@ public class Task {
      * @param status 任务状态
      */
     public void setStatus(String status) {
-        this.status = status;
+        this.status = status == null ? null : status.trim();
     }
 
     /**

@@ -1,19 +1,15 @@
 package com.sqlist.web.domain;
 
+import java.util.Date;
 import javax.persistence.*;
 
-/**
- * @author SqList
- * @date 2019/4/20 22:50
- * @description
- **/
 @Table(name = "task_unit")
 public class TaskUnit {
     /**
-     * 任务单元id
+     * 任务单元id,uuid
      */
     @Id
-    private Integer tuid;
+    private String tuid;
 
     /**
      * 任务单元类型
@@ -23,13 +19,19 @@ public class TaskUnit {
     /**
      * 任务单元类型id
      */
-    @Column(name = "typd_id")
-    private Integer typdId;
+    @Column(name = "type_id")
+    private Integer typeId;
 
     /**
      * 任务单元状态
      */
-    private Byte status;
+    private String status;
+
+    /**
+     * 任务单元创建时间
+     */
+    @Column(name = "create_time")
+    private Date createTime;
 
     /**
      * 任务单元提交到flink的job_id
@@ -43,21 +45,21 @@ public class TaskUnit {
     private Integer tid;
 
     /**
-     * 获取任务单元id
+     * 获取任务单元id,uuid
      *
-     * @return tuid - 任务单元id
+     * @return tuid - 任务单元id,uuid
      */
-    public Integer getTuid() {
+    public String getTuid() {
         return tuid;
     }
 
     /**
-     * 设置任务单元id
+     * 设置任务单元id,uuid
      *
-     * @param tuid 任务单元id
+     * @param tuid 任务单元id,uuid
      */
-    public void setTuid(Integer tuid) {
-        this.tuid = tuid;
+    public void setTuid(String tuid) {
+        this.tuid = tuid == null ? null : tuid.trim();
     }
 
     /**
@@ -83,17 +85,17 @@ public class TaskUnit {
      *
      * @return typd_id - 任务单元类型id
      */
-    public Integer getTypdId() {
-        return typdId;
+    public Integer getTypeId() {
+        return typeId;
     }
 
     /**
      * 设置任务单元类型id
      *
-     * @param typdId 任务单元类型id
+     * @param typeId 任务单元类型id
      */
-    public void setTypdId(Integer typdId) {
-        this.typdId = typdId;
+    public void setTypeId(Integer typeId) {
+        this.typeId = typeId;
     }
 
     /**
@@ -101,7 +103,7 @@ public class TaskUnit {
      *
      * @return status - 任务单元状态
      */
-    public Byte getStatus() {
+    public String getStatus() {
         return status;
     }
 
@@ -110,8 +112,26 @@ public class TaskUnit {
      *
      * @param status 任务单元状态
      */
-    public void setStatus(Byte status) {
-        this.status = status;
+    public void setStatus(String status) {
+        this.status = status == null ? null : status.trim();
+    }
+
+    /**
+     * 获取任务单元创建时间
+     *
+     * @return create_time - 任务单元创建时间
+     */
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    /**
+     * 设置任务单元创建时间
+     *
+     * @param createTime 任务单元创建时间
+     */
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     /**

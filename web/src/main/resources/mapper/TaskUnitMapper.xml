@@ -5,10 +5,11 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <id column="tuid" property="tuid" jdbcType="INTEGER" />
+    <id column="tuid" property="tuid" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="VARCHAR" />
-    <result column="typd_id" property="typdId" jdbcType="INTEGER" />
-    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="typd_id" property="typeId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="job_id" property="jobId" jdbcType="VARCHAR" />
     <result column="tid" property="tid" jdbcType="INTEGER" />
   </resultMap>
@@ -16,6 +17,6 @@
     <!--
       WARNING - @mbg.generated
     -->
-    tuid, type, typd_id, status, job_id, tid
+    tuid, type, typd_id, status, create_time, job_id, tid
   </sql>
 </mapper>

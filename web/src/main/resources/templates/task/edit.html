@@ -4,7 +4,7 @@
       layout:decorator="base/layout">
 
 <div layout:fragment="otherHead">
-    <link rel="stylesheet" th:href="@{/css/task.css}" />
+    <link rel="stylesheet" th:href="@{/css/task.css}"/>
 </div>
 
 <title layout:fragment="title">创建任务</title>
@@ -62,197 +62,442 @@
         var table = layui.table;
         var layer = layui.layer;
 
-        var i = 0;
-        $("#task-button").children().draggable({
-            // 表示复制
-            helper: "clone",
-            // droppable 方法里面也设置这个标识来判断拖放到的地方
-            scope: "main"
-        });
+        var tid = /\/page\/task\/(\d+)\/edit/g.exec(window.location.pathname)[1];
 
-        $("#task-main").droppable({
-            scope: "main",
-            drop: function (event, ui) {
-                console.log(ui);
-                console.log(this);
-                var left = parseInt(ui.offset.left - $(this).offset().left);
-                var top = parseInt(ui.offset.top - $(this).offset().top);
-                var name = ui.draggable[0].id;
-                switch (name) {
+        jsPlumb.ready(function () {
+            var instance = jsPlumb.getInstance({
+                // Connector: ["Flowchart", {curviness: 50}],//连线类型，有直线，折线等，我这只用直线
+                // DragOptions: {cursor: "pointer", zIndex: 2000},//拖动的时候
+                // PaintStyle: {strokeStyle: '#E8C870', lineWidth: 2},
+                // EndpointStyle: {radius: 5, fillStyle: color},
+                // HoverPaintStyle: {strokeStyle: "#7073EB"},
+                // EndpointHoverStyle: {fillStyle: "#7073EB"},
+                // ConnectionOverlays: [
+                //     ["Label", {label: "关联", cssClass: "csslabel"}]//这个是鼠标拉出来的线的属性
+                // ],
+                Container: "task-main"//容器位置
+            });
+
+            /**
+             * 连成 连接
+             */
+            instance.bind("connection", function (info) {
+                console.log("connect!!!!!");
+                console.log(info);
+
+                let index = layer.load(2);
+                $.ajax({
+                    url: ip + "/api/taskUnitConnect",
+                    type: "put",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        "sourceTuid": info.sourceId,
+                        "targetTuid": info.targetId,
+                        "tid": tid
+                    }),
+                    dataType: "json",
+                    success: function (res) {
+                        console.log(res);
+                        layer.close(index);
+                        if (res.code === 0) {
+
+                        } else {
+                            layer.msg(res.msg, {icon: 2, time: 2000});
+                        }
+                    }
+                });
+            });
+
+            /**
+             * 删除连接
+             */
+            instance.bind("connectionDetached", function (info) {
+                console.log("connectionDetached");
+                console.log(info);
+
+                $.ajax({
+                    url: ip + "/api/taskUnitConnect",
+                    type: "delete",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        "sourceTuid": info.sourceId,
+                        "targetTuid": info.targetId,
+                        "tid": tid
+                    }),
+                    dataType: "json",
+                    success: function (res) {
+                        console.log(res);
+                        if (res.code === 0) {
+
+                        } else {
+                            layer.msg(res.msg, {icon: 2, time: 2000});
+                        }
+                    }
+                });
+            });
+
+            /**
+             * 已存在的连接改变时（会触发 connect 事件）
+             */
+            instance.bind("connectionMoved", function (info) {
+                console.log("connectionMoved");
+                console.log(info);
+
+                $.ajax({
+                    url: ip + "/api/taskUnitConnect",
+                    type: "post",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        "sourceTuid": info.newSourceId,
+                        "targetTuid": info.newTargetId,
+                        "oldSourceTuid": info.originalSourceId,
+                        "oldTargetTuid": info.originalTargetId,
+                        "tid": tid
+                    }),
+                    dataType: "json",
+                    success: function (res) {
+                        console.log(res);
+                        if (res.code === 0) {
+
+                        } else {
+                            layer.msg(res.msg, {icon: 2, time: 2000});
+                        }
+                    }
+                });
+            });
+
+            init();
+
+            /**
+             * 获取 taskUnit
+             */
+            function init() {
+                let index = layer.load(2);
+                new Promise(function (resolve, reject) {
+                    $.ajax({
+                        url: ip + "/api/taskUnit",
+                        type: "get",
+                        contentType: "application/json",
+                        data: "tid=" + tid,
+                        dataType: "json",
+                        success: function (res) {
+                            console.log(res);
+                            if (res.code === 0) {
+                                let list = res.data;
+
+                                let topSpace = 70;
+                                let leftSpace = 50;
+                                let height = $(".node").height() + 20;
+                                let weight = $(".node").width() + 20;
+                                let inputLeft = handleLeft = outputLeft = leftSpace;
+                                let inputTop = 10;
+                                let handleTop = inputTop + height + topSpace;
+                                let outputTop = handleTop + height + topSpace;
+                                for (let i = 0; i < list.length; i++) {
+                                    let taskUnit = list[i];
+                                    let left = 0;
+                                    let top = 0;
+                                    if (taskUnit.type === "input") {
+                                        left = inputLeft;
+                                        inputLeft += weight;
+                                        top = inputTop;
+                                    } else if (taskUnit.type === "handle") {
+                                        left = handleLeft;
+                                        handleLeft += weight;
+                                        top = handleTop;
+                                    } else if (taskUnit.type === "output") {
+                                        left = outputLeft;
+                                        outputLeft += weight;
+                                        top = outputTop;
+                                    }
+
+                                    addTaskUnitDiv(taskUnit.type, taskUnit.tuid, left, top);
+                                }
+
+                                resolve();
+                            } else {
+                                layer.msg(res.msg, {icon: 2, time: 2000});
+                                reject();
+                            }
+                        }
+                    })
+                }).then(function () {   // 获取连接
+                    return new Promise(function (resolve, reject) {
+                        $.ajax({
+                            url: ip + "/api/taskUnitConnect",
+                            type: "get",
+                            contentType: "application/json",
+                            data: "tid=" + tid,
+                            dataType: "json",
+                            success: function (res) {
+                                console.log(res);
+                                layer.close(index);
+                                if (res.code === 0) {
+                                    let list = res.data;
+
+                                    for (let i = 0; i < list.length; i++) {
+                                        let connect = list[i];
+                                        instance.connect({
+                                            uuids: [connect.sourceTuid + '-from', connect.targetTuid + '-to']
+                                        })
+                                    }
+
+                                    resolve();
+                                } else {
+                                    layer.msg(res.msg, {icon: 2, time: 2000});
+                                }
+                            }
+                        });
+                    })
+                })
+            }
+
+            // ----------------- 拖拽部分 -----------------
+            $("#task-button").children().draggable({
+                // 表示复制
+                helper: "clone",
+                // droppable 方法里面也设置这个标识来判断拖放到的地方
+                scope: "main"
+            });
+
+            $("#task-main").droppable({
+                scope: "main",
+                drop: function (event, ui) {
+                    console.log(ui);
+                    // console.log(this);
+                    let left = parseInt(ui.offset.left - $(this).offset().left);
+                    let top = parseInt(ui.offset.top - $(this).offset().top);
+                    let type = ui.draggable[0].id;
+                    let resData = addTaskUnit(type);
+                    let id = resData.tuid;
+                    addTaskUnitDiv(type, id, left, top);
+                }
+            });
+
+            function addTaskUnitDiv(type, id, left, top) {
+                let $taskMain = $("#task-main");
+                $taskMain.append($("#" + type).clone().attr("id", id));
+                let $id = $("#" + id);
+                switch (type) {
                     case "input":
-                        i++;
-                        var id = "state_start" + i;
-                        $(this).append('<div class="node radius" id="' + id + '" type="input">' + $(ui
-                            .helper).html() + '</div>');
-                        $("#" + id).css("left", left).css("top", top);
-                        jsPlumb.addEndpoint(id, {
+                        $id.css("left", left).css("top", top);
+                        instance.addEndpoint(id, {
                             anchors: "BottomCenter",
                             isSource: true,
-                            maxConnections: -1
+                            maxConnections: -1,
+                            uuid: id + '-from'
                         }, hollowCircle);
-                        jsPlumb.draggable(id, {
-                            containment:true
+                        instance.draggable(id, {
+                            containment: true
                         });
-                        $("#" + id).draggable({
+                        $id.draggable({
                             containment: "#task-main"
                         });
 
                         oneclick("#" + id);
                         break;
                     case "handle":
-                        i++;
-                        id = "state_flow" + i;
-                        $(this).append("<div class='node' id='" + id + "' type='handle'>" + $(ui.helper).html() + "</div>");
-                        $("#" + id).css("left", left).css("top", top);
-                        jsPlumb.addEndpoint(id, {
+                        $id.css("left", left).css("top", top);
+                        instance.addEndpoint(id, {
                             anchors: "TopCenter",
-                            isTarget: true
+                            isTarget: true,
+                            uuid: id + '-to'
                         }, hollowCircle);
-                        jsPlumb.addEndpoint(id, {
+                        instance.addEndpoint(id, {
                             anchors: "BottomCenter",
                             isSource: true,
-                            maxConnections: -1
+                            maxConnections: -1,
+                            uuid: id + '-from'
                         }, hollowCircle);
-                        jsPlumb.draggable(id);
-                        $("#" + id).draggable({
+                        instance.draggable(id, {
+                            containment: true
+                        });
+                        $id.draggable({
                             containment: "#task-main"
                         });
                         oneclick("#" + id);
                         break;
                     case "output":
-                        i++;
-                        id = "state_end" + i;
-                        $(this).append('<div class="node radius" id="' + id + '" type="output">' + $(ui
-                            .helper).html() + '</div>');
-                        $("#" + id).css("left", left).css("top", top);
-                        jsPlumb.addEndpoint(id, {
+                        $id.css("left", left).css("top", top);
+                        instance.addEndpoint(id, {
                             anchors: "TopCenter",
-                            isTarget: true
+                            isTarget: true,
+                            uuid: id + '-to'
                         }, hollowCircle);
-                        jsPlumb.draggable(id);
-                        $("#" + id).draggable({
+                        instance.draggable(id, {
+                            containment: true
+                        });
+                        $id.draggable({
                             containment: "#task-main"
                         });
                         oneclick("#" + id);
                         break;
                 }
             }
-        });
 
-        $("#task-main").on("mouseenter", ".node", function () {
-            $(this).append('<i class="fa fa-times fa-lg close" aria-hidden="true"></i>');
-        });
-        $("#task-main").on("mouseleave", ".node", function () {
-            $(this).children("i").remove();
-        });
-        $("#task-main").on("click", ".node>.close",function () {
-            console.log(this);
-            let that = this;
-            layer.open({
-                content: '确定要删除吗?',
-                yes: function(index, layero){
-                    let $thisTaskButton = $(this).parent();
-                    jsPlumb.removeAllEndpoints($thisTaskButton.attr("id"));
-                    $thisTaskButton.remove();
-                    layer.close(index); //如果设定了yes回调，需进行手工关闭
+            function addTaskUnit(type) {
+                let index = layer.load(2);
 
+                let resData = "";
+                $.ajax({
+                    url: ip + "/api/taskUnit",
+                    type: "put",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        "type": type,
+                        "tid": tid
+                    }),
+                    dataType: "json",
+                    async: false,
+                    success: function (res) {
+                        // console.log(res);
+                        layer.close(index);
+                        if (res.code === 0) {
+                            resData = res.data;
+                        } else {
+                            layer.msg(res.msg, {icon: 2, time: 2000});
+                        }
+                    }
+                });
+
+                return resData;
+            }
+
+            $("#task-main").on("mouseenter", ".node", function () {
+                $(this).append('<i class="fa fa-times fa-lg close" aria-hidden="true"></i>');
+            });
+            $("#task-main").on("mouseleave", ".node", function () {
+                $(this).children("i").remove();
+            });
+            $("#task-main").on("click", ".node>.close", function () {
+                console.log(this);
+                let $thisTaskButton = $(this).parent();
+                layer.open({
+                    content: '确定要删除吗?',
+                    yes: function (index, layero) {
+                        console.log($thisTaskButton.get(0));
+
+                        $.ajax({
+                            url: ip + "/api/taskUnit",
+                            type: "delete",
+                            contentType: "application/json",
+                            data: JSON.stringify({
+                                "tuid": $thisTaskButton.attr("id")
+                            }),
+                            dataType: "json",
+                            success: function (res) {
+                                // console.log(res);
+                                layer.close(index);
+                                if (res.code === 0) {
+
+                                } else {
+                                    layer.msg(res.msg, {icon: 2, time: 2000});
+                                }
+                            }
+                        });
+
+                        instance.removeAllEndpoints($thisTaskButton.attr("id"));
+                        $thisTaskButton.remove();
+                        layer.close(index); //如果设定了yes回调，需进行手工关闭
+
+                    }
+                });
+            });
+
+            instance.bind("click", function (conn, originalEvent) {
+                console.log(conn);
+                if (confirm("Are you sure?")) {
+                    instance.detach(conn);
                 }
             });
-        });
 
-        jsPlumb.bind("click", function (conn, originalEvent) {
-            console.log(conn);
-            if (confirm("Are you sure?")) {
-                jsPlumb.detach(conn);
+            function oneclick(id) {
+                $(id).click(function () {
+                    // TODO
+                });
             }
+
+            //基本连接线样式
+            var connectorPaintStyle = {
+                lineWidth: 4,
+                strokeStyle: "#61B7CF",
+                joinstyle: "round",
+                outlineColor: "black",
+                outlineWidth: 2
+            };
+            // 鼠标悬浮在连接线上的样式
+            var connectorHoverStyle = {
+                lineWidth: 4,
+                strokeStyle: "#216477",
+                outlineWidth: 2,
+                outlineColor: "white"
+            };
+            var endpointHoverStyle = {
+                fillStyle: "#216477",
+                strokeStyle: "#216477"
+            };
+            //空心圆端点样式设置
+            var hollowCircle = {
+                endpoint: ["Dot", {
+                    radius: 10
+                }], //端点的形状
+                // connectorStyle: connectorPaintStyle, //连接线的颜色，大小样式
+                // connectorHoverStyle: connectorHoverStyle,
+                // paintStyle: {
+                //     strokeStyle: "#1e8151",
+                //     fillStyle: "transparent",
+                //     radius: 2,
+                //     lineWidth: 2
+                // }, //端点的颜色样式
+                //anchor: "AutoDefault",
+                // isSource: true, //是否可以拖动（作为连线起点）
+                // connector: ["Flowchart", {
+                //     stub: [40, 60],
+                //     gap: 10,
+                //     cornerRadius: 5,
+                //     alwaysRespectStubs: true
+                // }], //连接线的样式种类有[Bezier],[Flowchart],[StateMachine ],[Straight ]
+                // isTarget: true, //是否可以放置（连线终点）
+                // maxConnections: -1, // 设置连接点最多可以连接几条线
+                connectorOverlays: [
+                    ["Arrow", {
+                        width: 10,
+                        length: 10,
+                        location: 0.5
+                    }]
+                ]
+            };
+            //实心圆样式
+            var solidCircle = {
+                endpoint: ["Dot", {
+                    radius: 8
+                }], //端点的形状
+                paintStyle: {
+                    fillStyle: "rgb(122, 176, 44)"
+                }, //端点的颜色样式
+                connectorStyle: {
+                    strokeStyle: "rgb(97, 183, 207)",
+                    lineWidth: 4
+                }, //连接线的颜色，大小样式
+                isSource: true, //是否可以拖动（作为连线起点）
+                connector: ["Flowchart", {
+                    stub: [40, 60],
+                    gap: 10,
+                    cornerRadius: 5,
+                    alwaysRespectStubs: true
+                }], //连接线的样式种类有[Bezier],[Flowchart],[StateMachine ],[Straight ]
+                isTarget: true, //是否可以放置（连线终点）
+                //anchor: "AutoDefault",
+                maxConnections: 3, // 设置连接点最多可以连接几条线
+                connectorOverlays: [
+                    ["Arrow", {
+                        width: 10,
+                        length: 10,
+                        location: 1
+                    }]
+                ]
+            };
         });
-
-        function oneclick(id) {
-            $(id).click(function () {
-                // TODO
-            });
-        }
-
-        //基本连接线样式
-        var connectorPaintStyle = {
-            lineWidth: 4,
-            strokeStyle: "#61B7CF",
-            joinstyle: "round",
-            outlineColor: "black",
-            outlineWidth: 2
-        };
-        // 鼠标悬浮在连接线上的样式
-        var connectorHoverStyle = {
-            lineWidth: 4,
-            strokeStyle: "#216477",
-            outlineWidth: 2,
-            outlineColor: "white"
-        };
-        var endpointHoverStyle = {
-            fillStyle: "#216477",
-            strokeStyle: "#216477"
-        };
-        //空心圆端点样式设置
-        var hollowCircle = {
-            endpoint: ["Dot", {
-                radius: 10
-            }], //端点的形状
-            // connectorStyle: connectorPaintStyle, //连接线的颜色，大小样式
-            // connectorHoverStyle: connectorHoverStyle,
-            // paintStyle: {
-            //     strokeStyle: "#1e8151",
-            //     fillStyle: "transparent",
-            //     radius: 2,
-            //     lineWidth: 2
-            // }, //端点的颜色样式
-            //anchor: "AutoDefault",
-            // isSource: true, //是否可以拖动（作为连线起点）
-            // connector: ["Flowchart", {
-            //     stub: [40, 60],
-            //     gap: 10,
-            //     cornerRadius: 5,
-            //     alwaysRespectStubs: true
-            // }], //连接线的样式种类有[Bezier],[Flowchart],[StateMachine ],[Straight ]
-            // isTarget: true, //是否可以放置（连线终点）
-            // maxConnections: -1, // 设置连接点最多可以连接几条线
-            connectorOverlays: [
-                ["Arrow", {
-                    width: 10,
-                    length: 10,
-                    location: 0.5
-                }]
-            ]
-        };
-        //实心圆样式
-        var solidCircle = {
-            endpoint: ["Dot", {
-                radius: 8
-            }], //端点的形状
-            paintStyle: {
-                fillStyle: "rgb(122, 176, 44)"
-            }, //端点的颜色样式
-            connectorStyle: {
-                strokeStyle: "rgb(97, 183, 207)",
-                lineWidth: 4
-            }, //连接线的颜色，大小样式
-            isSource: true, //是否可以拖动（作为连线起点）
-            connector: ["Flowchart", {
-                stub: [40, 60],
-                gap: 10,
-                cornerRadius: 5,
-                alwaysRespectStubs: true
-            }], //连接线的样式种类有[Bezier],[Flowchart],[StateMachine ],[Straight ]
-            isTarget: true, //是否可以放置（连线终点）
-            //anchor: "AutoDefault",
-            maxConnections: 3, // 设置连接点最多可以连接几条线
-            connectorOverlays: [
-                ["Arrow", {
-                    width: 10,
-                    length: 10,
-                    location: 1
-                }]
-            ]
-        };
 
     });
 </script>

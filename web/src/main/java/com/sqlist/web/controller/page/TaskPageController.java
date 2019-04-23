@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/page/task")
 public class TaskPageController {
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @RequestMapping(value = {"/list", ""}, method = RequestMethod.GET)
     public String list() {
         return "task/list";
     }
