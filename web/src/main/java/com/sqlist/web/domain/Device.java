@@ -49,6 +49,11 @@ public class Device {
     private Integer pid;
 
     /**
+     * 设备属于的用户id
+     */
+    private Integer uid;
+
+    /**
      * 获取设备id
      *
      * @return did - 设备id
@@ -172,5 +177,13 @@ public class Device {
      */
     public void setPid(Integer pid) {
         this.pid = pid;
+    }
+
+    public Integer getUid() {
+        return uid;
+    }
+
+    public void setUid(Integer uid) {
+        this.uid = uid;
     }
 }

@@ -26,8 +26,8 @@
         </div>
     </div>
     <template id="toolbar">
-        <a th:href="@{/page/task/{{ d.tid }}}" class="layui-btn layui-btn-primary layui-btn-xs">查看</a>
-        <a th:href="@{/page/task/{{ d.tid }}/edit}" class="layui-btn layui-btn-xs">编辑</a>
+        <a th:href="@{/page/product/{{ d.pid }}/detail}" class="layui-btn layui-btn-primary layui-btn-xs">查看</a>
+        <!--<a th:href="@{/page/product/{{ d.pid }}}" class="layui-btn layui-btn-xs">编辑</a>-->
     </template>
 </div>
 
@@ -83,7 +83,7 @@
                         if (res.code === 0) {
                             layer.msg('添加成功！', {icon: 1, time: 2000}, function () {
                                 layer.close(index);
-                                table.reload('tasksTable', {});
+                                table.reload('productsTable', {});
                             });
                         } else {
                             layer.msg(res.msg, {icon: 2, time: 2000});

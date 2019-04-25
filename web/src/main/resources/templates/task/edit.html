@@ -102,7 +102,7 @@
         var table = layui.table;
         var layer = layui.layer;
 
-        var tid = /\/page\/task\/(\d+)\/edit/g.exec(window.location.pathname)[1];
+        var tid = /.*(\d+).*/g.exec(window.location.pathname)[1];
 
         jsPlumb.ready(function () {
             var instance = jsPlumb.getInstance({

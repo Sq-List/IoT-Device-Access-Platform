@@ -7,9 +7,11 @@ import com.sqlist.web.domain.User;
 import com.sqlist.web.mapper.ProductMapper;
 import com.sqlist.web.service.ProductService;
 import com.sqlist.web.vo.PageVO;
+import com.sqlist.web.vo.ProductVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +23,8 @@ import java.util.Map;
  **/
 @Service
 public class ProductServiceImpl implements ProductService {
+
+    public static final String SPLIT = "-";
 
     @Autowired
     private ProductMapper productMapper;
@@ -39,5 +43,26 @@ public class ProductServiceImpl implements ProductService {
         map.put("list", productList);
 
         return map;
+    }
+
+    @Override
+    public Product detail(Integer pid) {
+        Product product = new Product();
+        product.setPid(pid);
+
+        product = productMapper.selectOne(product);
+
+        return product;
+    }
+
+    @Override
+    public void add(User user, ProductVO productVO) {
+        Product product = new Product();
+        product.setUid(user.getUid());
+        product.setName(productVO.getName());
+        product.setCreateTime(new Date());
+        product.setTopic(user.getUsername() + SPLIT + product.getName());
+
+        productMapper.insert(product);
     }
 }

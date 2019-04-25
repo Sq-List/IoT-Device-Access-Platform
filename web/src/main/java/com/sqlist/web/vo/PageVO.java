@@ -1,6 +1,7 @@
 package com.sqlist.web.vo;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
 
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotNull;
  * @description
  **/
 @Data
+@ToString
 public class PageVO {
 
     /**
