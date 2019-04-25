@@ -48,9 +48,18 @@ public class TaskUnitController {
 
     @RequestMapping(value = "", method = RequestMethod.DELETE)
     public Result delete(User user, @Validated(TaskUnitVO.Delete.class) @RequestBody TaskUnitVO taskUnitVO) {
-        log.info("delete(), user: {}, taskUnitVO: {}", user, taskUnitVO);
+        log.info("deleteMultiple(), user: {}, taskUnitVO: {}", user, taskUnitVO);
 
         taskUnitServce.delete(taskUnitVO);
+
+        return Result.success(null);
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    public Result update(User user, @Validated(TaskUnitVO.Update.class) @RequestBody TaskUnitVO taskUnitVO) {
+        log.info("deleteMultiple(), user: {}, taskUnitVO: {}", user, taskUnitVO);
+
+        taskUnitServce.update(taskUnitVO);
 
         return Result.success(null);
     }

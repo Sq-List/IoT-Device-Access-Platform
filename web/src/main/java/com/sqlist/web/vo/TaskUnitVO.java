@@ -20,10 +20,18 @@ public class TaskUnitVO {
     @NotNull(groups = Add.class)
     private String type;
 
-    @NotNull(groups = Add.class)
+    @NotNull(groups = {Add.class, Update.class})
+    private Integer top;
+
+    @NotNull(groups = {Add.class, Update.class})
+    private Integer left;
+
+    @NotNull(groups = {Add.class, Delete.class})
     private Integer tid;
 
     public interface Add {}
 
     public interface Delete {}
+
+    public interface Update {}
 }

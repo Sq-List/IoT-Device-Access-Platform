@@ -59,6 +59,16 @@ public class TaskUnitConnectServiceImpl implements TaskUnitConnectService {
         taskUnitConnectMapper.delete(taskUnitConnect);
     }
 
+    @Override
+    public void taskUnitDelete(TaskUnitConnect taskUnitConnect) {
+        taskUnitConnectMapper.taskUnitDelete(taskUnitConnect);
+    }
+
+    @Override
+    public void deleteMultiple(List<Integer> deleteTidList) {
+        taskUnitConnectMapper.deleteMultiple(deleteTidList);
+    }
+
     @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public void update(TaskUnitConnectVO taskUnitConnectVO) {
@@ -75,8 +85,8 @@ public class TaskUnitConnectServiceImpl implements TaskUnitConnectService {
         if (taskUnitConnectMapper.selectCount(newConnect) != 0) {
             // 重新连成的连接已经存在在数据库中（connect 触发导致插入的）
             // 删除旧连接
-            log.info("new connect already exist, delete old connect");
-            log.debug("new connect: {} already exist, delete old connect: {}", newConnect, oldConnect);
+            log.info("new connect already exist, deleteMultiple old connect");
+            log.debug("new connect: {} already exist, deleteMultiple old connect: {}", newConnect, oldConnect);
             taskUnitConnectMapper.delete(oldConnect);
         } else {
             // 重新连成的连接还未存在在数据库中
@@ -90,7 +100,7 @@ public class TaskUnitConnectServiceImpl implements TaskUnitConnectService {
                 updateOldConnect.setTargetTuid(taskUnitConnectVO.getTargetTuid());
                 taskUnitConnectMapper.updateByPrimaryKeySelective(updateOldConnect);
             } catch (DataIntegrityViolationException e) {
-                log.error("new connect insert during select old connect, delete old connect");
+                log.error("new connect insert during select old connect, deleteMultiple old connect");
                 taskUnitConnectMapper.delete(oldConnect);
             }
         }

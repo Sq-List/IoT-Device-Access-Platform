@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.sqlist.web.mapper.TaskMapper" >
-  <resultMap id="BaseResultMap" type="com.sqlist.web.domain.Task" >
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="tid" property="tid" jdbcType="INTEGER" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="CHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="uid" property="uid" jdbcType="INTEGER" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    <!--
-      WARNING - @mbg.generated
-    -->
-    tid, name, status, create_time, update_time, uid
-  </sql>
+<mapper namespace="com.sqlist.web.mapper.TaskMapper">
+    <resultMap id="BaseResultMap" type="com.sqlist.web.domain.Task">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="tid" property="tid" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="CHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="uid" property="uid" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        tid, name, status, create_time, update_time, uid
+    </sql>
+
+    <delete id="deleteMultiple" parameterType="list">
+        DELETE FROM task
+        WHERE tid IN
+        <foreach item="item" collection="tidList" separator="," open="(" close=")" index="">
+            #{item}
+        </foreach>
+    </delete>
 </mapper>

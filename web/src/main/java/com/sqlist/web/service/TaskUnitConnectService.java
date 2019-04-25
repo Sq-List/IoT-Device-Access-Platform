@@ -32,6 +32,18 @@ public interface TaskUnitConnectService {
     void delete(TaskUnitConnectVO taskUnitConnectVO);
 
     /**
+     * taskUnit 删除，需要删除与之相关联的 connect
+     * @param taskUnitConnect
+     */
+    void taskUnitDelete(TaskUnitConnect taskUnitConnect);
+
+    /**
+     * 删除与 tid 关联的taskUnit
+     * @param deleteTidList
+     */
+    void deleteMultiple(List<Integer> deleteTidList);
+
+    /**
      * 更新 连接
      * @param taskUnitConnectVO
      */

@@ -3,11 +3,11 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="base/layout">
 
-<title layout:fragment="title">任务列表</title>
-<div layout:fragment="side" th:replace="base/side::onselectLayout ('task', 'taskList')"></div>
+<title layout:fragment="title">产品列表</title>
+<div layout:fragment="side" th:replace="base/side::onselectLayout ('product', 'productList')"></div>
 <div layout:fragment="content-header" class="layui-card tonghe-header">
     <span class="layui-breadcrumb">
-        <a href="javascript:;" class="layui-breadcrumb-unclick">任务</a>
+        <a href="javascript:;" class="layui-breadcrumb-unclick">产品</a>
         <a><cite>列表</cite></a>
     </span>
 </div>
@@ -16,11 +16,11 @@
         <div class="layui-col-md12 layui-col-lg12">
             <div class="tonghe-card">
                 <div class="tonghe-card-header">
-                    <div class="layui-btn" id="taskAdd">新建任务</div>
-                    <div class="layui-btn layui-btn-danger" id="taskDel">删除任务</div>
+                    <div class="layui-btn" id="productAdd">新建产品</div>
+                    <div class="layui-btn layui-btn-danger" id="productDel">删除产品</div>
                 </div>
                 <div class="tonghe-card-body">
-                    <table id="tasksTable"></table>
+                    <table id="productsTable"></table>
                 </div>
             </div>
         </div>
@@ -38,13 +38,13 @@
         var layer = layui.layer;
 
         table.render({
-            elem: "#tasksTable",
+            elem: "#productsTable",
             even: true,
             toolbar: true,
             defaultToolbar: ['filter'],
             limit: 10, //每页默认显示的数量
             page: true,
-            url: ip + "/api/task",
+            url: ip + "/api/product",
             parseData: function(res) { //res 即为原始返回的数据
                 return {
                     "code": res.code, //解析接口状态
@@ -61,20 +61,17 @@
                     {field: 'createTime', title: "创建时间", templet: function (d) {
                             return new Date(d.createTime).format("yyyy-MM-dd hh:mm");
                         }},
-                    {field: 'updateTime', title: "最后一次更新时间", templet: function (d) {
-                            return new Date(d.updateTime).format("yyyy-MM-dd hh:mm");
-                        }},
                     {fixed: 'right', align:'center', toolbar: '#toolbar'}
                 ]
             ]
         });
 
-        $("#taskAdd").click(function () {
+        $("#productAdd").click(function () {
             layer.prompt({
-                title: '输入任务名称'
+                title: '输入产品名称'
             }, function(value, index, elem){
                 $.ajax({
-                    url: ip + "/api/task",
+                    url: ip + "/api/product",
                     type: "put",
                     contentType: "application/json",
                     data: JSON.stringify({
@@ -96,38 +93,7 @@
             });
         });
 
-        $("#taskDel").click(function () {
-            let checkStatus = table.checkStatus('tasksTable');
 
-            console.log(checkStatus);
-            let list = [];
-            checkStatus.data.forEach(function (currentValue, index, arr) {
-                list.push(currentValue.tid);
-            });
-            layer.open({
-                content: '确定要删除吗?',
-                yes: function (index, layero) {
-                    $.ajax({
-                        url: ip + "/api/task",
-                        type: "delete",
-                        contentType: "application/json",
-                        data: JSON.stringify(list),
-                        dataType: "json",
-                        success: function (res) {
-                            // console.log(res);
-                            layer.close(index);
-                            if (res.code === 0) {
-
-                                layer.close(index); //如果设定了yes回调，需进行手工关闭
-                                table.reload('tasksTable', {});
-                            } else {
-                                layer.msg(res.msg, {icon: 2, time: 2000});
-                            }
-                        }
-                    });
-                }
-            });
-        });
     });
 </script>
 </html>

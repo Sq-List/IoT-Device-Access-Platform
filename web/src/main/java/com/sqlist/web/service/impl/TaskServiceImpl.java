@@ -9,6 +9,8 @@ import com.sqlist.web.exception.GlobalException;
 import com.sqlist.web.mapper.TaskMapper;
 import com.sqlist.web.result.CodeMsg;
 import com.sqlist.web.service.TaskService;
+import com.sqlist.web.service.TaskUnitConnectService;
+import com.sqlist.web.service.TaskUnitServce;
 import com.sqlist.web.vo.PageVO;
 import com.sqlist.web.vo.TaskVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,12 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private TaskMapper taskMapper;
+
+    @Autowired
+    private TaskUnitServce taskUnitServce;
+
+    @Autowired
+    private TaskUnitConnectService taskUnitConnectService;
 
     @Override
     public Map<String, Object> list(User user, PageVO pageVO) {
@@ -65,5 +73,15 @@ public class TaskServiceImpl implements TaskService {
         task.setCreateTime(now);
         task.setUpdateTime(now);
         taskMapper.insert(task);
+    }
+
+    @Transactional(rollbackFor = RuntimeException.class)
+    @Override
+    public void delete(List<Integer> tidList) {
+        taskMapper.deleteMultiple(tidList);
+
+        // 删除相关的unit和connect
+        taskUnitServce.deleteMultiple(tidList);
+        taskUnitConnectService.deleteMultiple(tidList);
     }
 }

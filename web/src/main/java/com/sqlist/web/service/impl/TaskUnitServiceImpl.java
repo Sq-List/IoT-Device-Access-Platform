@@ -1,7 +1,9 @@
 package com.sqlist.web.service.impl;
 
 import com.sqlist.web.domain.TaskUnit;
+import com.sqlist.web.domain.TaskUnitConnect;
 import com.sqlist.web.mapper.TaskUnitMapper;
+import com.sqlist.web.service.TaskUnitConnectService;
 import com.sqlist.web.service.TaskUnitServce;
 import com.sqlist.web.util.UUIDUtil;
 import com.sqlist.web.vo.TaskUnitVO;
@@ -27,6 +29,9 @@ public class TaskUnitServiceImpl implements TaskUnitServce {
     @Autowired
     private TaskUnitMapper taskUnitMapper;
 
+    @Autowired
+    private TaskUnitConnectService taskUnitConnectService;
+
     @Override
     public List<TaskUnit> list(Integer tid) {
         TaskUnit taskUnit = new TaskUnit();
@@ -43,6 +48,8 @@ public class TaskUnitServiceImpl implements TaskUnitServce {
         TaskUnit taskUnit = new TaskUnit();
         taskUnit.setTuid(TASK_UNIT_UID_PREFIX + UUIDUtil.uuid());
         taskUnit.setType(taskUnitVO.getType());
+        taskUnit.setLeftDis(taskUnitVO.getLeft());
+        taskUnit.setTopDis(taskUnitVO.getTop());
         taskUnit.setTid(taskUnitVO.getTid());
         taskUnit.setCreateTime(new Date());
 
@@ -51,11 +58,37 @@ public class TaskUnitServiceImpl implements TaskUnitServce {
         return taskUnit;
     }
 
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public void delete(TaskUnitVO taskUnitVO) {
         TaskUnit taskUnit = new TaskUnit();
         taskUnit.setTuid(taskUnitVO.getTuid());
 
         taskUnitMapper.delete(taskUnit);
+
+        // TODO：删除相关联的内容
+
+        // 删除相关联的连接
+        TaskUnitConnect taskUnitConnect = new TaskUnitConnect();
+        taskUnitConnect.setTid(taskUnitVO.getTid());
+        taskUnitConnect.setSourceTuid(taskUnitVO.getTuid());
+        taskUnitConnectService.taskUnitDelete(taskUnitConnect);
+    }
+
+    @Override
+    public void deleteMultiple(List<Integer> deleteTidList) {
+        taskUnitMapper.deleteMultiple(deleteTidList);
+
+        // TODO：删除相关联的内容
+    }
+
+    @Override
+    public void update(TaskUnitVO taskUnitVO) {
+        TaskUnit taskUnit = new TaskUnit();
+        taskUnit.setTuid(taskUnitVO.getTuid());
+        taskUnit.setLeftDis(taskUnitVO.getLeft());
+        taskUnit.setTopDis(taskUnitVO.getTop());
+
+        taskUnitMapper.updateByPrimaryKeySelective(taskUnit);
     }
 }

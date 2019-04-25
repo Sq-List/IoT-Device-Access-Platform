@@ -1,5 +1,6 @@
 package com.sqlist.web.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.sqlist.web.domain.Task;
 import com.sqlist.web.domain.User;
 import com.sqlist.web.result.Result;
@@ -9,11 +10,9 @@ import com.sqlist.web.vo.TaskVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -49,13 +48,23 @@ public class TaskController {
      */
     @RequestMapping(value = "", method = RequestMethod.PUT)
     public Result add(User user, @Validated @RequestBody TaskVO taskVO) {
-        log.info("user: {} add taskVO: {}", user, taskVO);
+        log.info("add(), user: {}, taskVO: {}", user, taskVO);
         taskService.add(user, taskVO);
         return Result.success(null);
     }
 
+    /**
+     * 删除 多个task
+     * @param user
+     * @param deleteTidList
+     * @return
+     */
     @RequestMapping(value = "", method = RequestMethod.DELETE)
-    public Result delete(User user) {
-        return null;
+    public Result delete(User user, @RequestBody List<Integer> deleteTidList) {
+        log.info("deleteMultiple(), user: {} deleteMultiple: {}", user, JSON.toJSONString(deleteTidList));
+
+        taskService.delete(deleteTidList);
+
+        return Result.success(null);
     }
 }

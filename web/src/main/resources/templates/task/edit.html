@@ -8,11 +8,11 @@
 </div>
 
 <title layout:fragment="title">创建任务</title>
-<div layout:fragment="side" th:replace="base/side::onselectLayout ('task', 'list')"></div>
+<div layout:fragment="side" th:replace="base/side::onselectLayout ('task', 'taskList')"></div>
 <div layout:fragment="content-header" class="layui-card tonghe-header">
     <span class="layui-breadcrumb">
         <a href="javascript:;" class="layui-breadcrumb-unclick">任务</a>
-        <a><cite>创建</cite></a>
+        <a><cite>编辑</cite></a>
     </span>
 </div>
 <div layout:fragment="content">
@@ -20,11 +20,11 @@
         <div class="layui-col-md12 layui-col-lg12">
             <div class="tonghe-card">
                 <div class="tonghe-card-header">
-                    <div class="layui-btn layui-btn-primary">保存</div>
+                    <div class="layui-btn layui-btn-primary">开发完成</div>
                 </div>
                 <div class="tonghe-card-body">
                     <div class="layui-row layui-col-space15">
-                        <div class="layui-col-md2 layui-col-lg2">
+                        <div class="layui-col-md1 layui-col-lg1">
                             <div id="task-button">
                                 <div class="node radius" id="input" type="input">输入</div>
                                 <div class="node" id="handle" type="handle">处理</div>
@@ -36,8 +36,39 @@
 
                             </div>
                         </div>
-                        <div class="layui-col-md2 layui-col-lg2">
-                            <div id="task-detail">
+                        <div class="layui-col-md3 layui-col-lg3">
+                            <div id="task-detail" onselect="">
+                                <form class="layui-form layui-form-pane">
+                                    <div class="layui-form-item layui-form-text">
+                                        <label class="layui-form-label">产品</label>
+                                        <div class="layui-input-block">
+                                            <select name="product" lay-verify="required">
+                                                <option value=""></option>
+                                                <option value="0">北京</option>
+                                                <option value="1">上海</option>
+                                                <option value="2">广州</option>
+                                                <option value="3">深圳</option>
+                                                <option value="4">杭州</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item layui-form-text">
+                                        <label class="layui-form-label">设备</label>
+                                        <div class="layui-input-block">
+                                            <select name="device" lay-verify="required">
+                                                <option value=""></option>
+                                                <option value="0">北京</option>
+                                                <option value="1">上海</option>
+                                                <option value="2">广州</option>
+                                                <option value="3">深圳</option>
+                                                <option value="4">杭州</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <button class="layui-btn" lay-submit="" lay-filter="">保存</button>
+                                    </div>
+                                </form>
 
                             </div>
                         </div>
@@ -47,6 +78,15 @@
 
         </div>
     </div>
+
+    <template id="no-click-content">
+        <div class="center">
+            请点击任务单元
+        </div>
+    </template>
+    <template id="input-content">
+
+    </template>
 </div>
 
 <div layout:fragment="otherScriptPre">
@@ -78,94 +118,6 @@
                 Container: "task-main"//容器位置
             });
 
-            /**
-             * 连成 连接
-             */
-            instance.bind("connection", function (info) {
-                console.log("connect!!!!!");
-                console.log(info);
-
-                let index = layer.load(2);
-                $.ajax({
-                    url: ip + "/api/taskUnitConnect",
-                    type: "put",
-                    contentType: "application/json",
-                    data: JSON.stringify({
-                        "sourceTuid": info.sourceId,
-                        "targetTuid": info.targetId,
-                        "tid": tid
-                    }),
-                    dataType: "json",
-                    success: function (res) {
-                        console.log(res);
-                        layer.close(index);
-                        if (res.code === 0) {
-
-                        } else {
-                            layer.msg(res.msg, {icon: 2, time: 2000});
-                        }
-                    }
-                });
-            });
-
-            /**
-             * 删除连接
-             */
-            instance.bind("connectionDetached", function (info) {
-                console.log("connectionDetached");
-                console.log(info);
-
-                $.ajax({
-                    url: ip + "/api/taskUnitConnect",
-                    type: "delete",
-                    contentType: "application/json",
-                    data: JSON.stringify({
-                        "sourceTuid": info.sourceId,
-                        "targetTuid": info.targetId,
-                        "tid": tid
-                    }),
-                    dataType: "json",
-                    success: function (res) {
-                        console.log(res);
-                        if (res.code === 0) {
-
-                        } else {
-                            layer.msg(res.msg, {icon: 2, time: 2000});
-                        }
-                    }
-                });
-            });
-
-            /**
-             * 已存在的连接改变时（会触发 connect 事件）
-             */
-            instance.bind("connectionMoved", function (info) {
-                console.log("connectionMoved");
-                console.log(info);
-
-                $.ajax({
-                    url: ip + "/api/taskUnitConnect",
-                    type: "post",
-                    contentType: "application/json",
-                    data: JSON.stringify({
-                        "sourceTuid": info.newSourceId,
-                        "targetTuid": info.newTargetId,
-                        "oldSourceTuid": info.originalSourceId,
-                        "oldTargetTuid": info.originalTargetId,
-                        "tid": tid
-                    }),
-                    dataType: "json",
-                    success: function (res) {
-                        console.log(res);
-                        if (res.code === 0) {
-
-                        } else {
-                            layer.msg(res.msg, {icon: 2, time: 2000});
-                        }
-                    }
-                });
-            });
-
             init();
 
             /**
@@ -185,33 +137,9 @@
                             if (res.code === 0) {
                                 let list = res.data;
 
-                                let topSpace = 70;
-                                let leftSpace = 50;
-                                let height = $(".node").height() + 20;
-                                let weight = $(".node").width() + 20;
-                                let inputLeft = handleLeft = outputLeft = leftSpace;
-                                let inputTop = 10;
-                                let handleTop = inputTop + height + topSpace;
-                                let outputTop = handleTop + height + topSpace;
                                 for (let i = 0; i < list.length; i++) {
                                     let taskUnit = list[i];
-                                    let left = 0;
-                                    let top = 0;
-                                    if (taskUnit.type === "input") {
-                                        left = inputLeft;
-                                        inputLeft += weight;
-                                        top = inputTop;
-                                    } else if (taskUnit.type === "handle") {
-                                        left = handleLeft;
-                                        handleLeft += weight;
-                                        top = handleTop;
-                                    } else if (taskUnit.type === "output") {
-                                        left = outputLeft;
-                                        outputLeft += weight;
-                                        top = outputTop;
-                                    }
-
-                                    addTaskUnitDiv(taskUnit.type, taskUnit.tuid, left, top);
+                                    addTaskUnitDiv(taskUnit.type, taskUnit.tuid, taskUnit.leftDis, taskUnit.topDis);
                                 }
 
                                 resolve();
@@ -249,7 +177,116 @@
                             }
                         });
                     })
+                }).then(function () {
+                    return new Promise(function (resolve, reject) {
+
+
+
+
+                        resolve();
+                    })
                 })
+            }
+
+            /**
+             * 连成 连接
+             */
+            instance.bind("connection", jsPlumbConnect);
+
+            /**
+             * 删除连接
+             */
+            instance.bind("connectionDetached", function (info) {
+                console.log("connectionDetached");
+                console.log(info);
+
+                $.ajax({
+                    url: ip + "/api/taskUnitConnect",
+                    type: "delete",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        "sourceTuid": info.sourceId,
+                        "targetTuid": info.targetId,
+                        "tid": tid
+                    }),
+                    dataType: "json",
+                    success: function (res) {
+                        console.log(res);
+                        if (res.code === 0) {
+
+                        } else {
+                            layer.msg(res.msg, {icon: 2, time: 2000});
+                        }
+                    }
+                });
+            });
+
+            /**
+             * 已存在的连接改变时（会触发 connect 事件）
+             */
+            instance.bind("connectionMoved", function (info, originalEvent) {
+                // instance.unbind("connection");
+
+                console.log("connectionMoved");
+                console.log(info);
+
+                if (info.newSourceId === info.originalSourceId && info.newTargetId === info.originalTargetId) {
+                    return;
+                }
+
+                $.ajax({
+                    url: ip + "/api/taskUnitConnect",
+                    type: "post",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        "sourceTuid": info.newSourceId,
+                        "targetTuid": info.newTargetId,
+                        "oldSourceTuid": info.originalSourceId,
+                        "oldTargetTuid": info.originalTargetId,
+                        "tid": tid
+                    }),
+                    dataType: "json",
+                    success: function (res) {
+                        console.log(res);
+                        if (res.code === 0) {
+
+                        } else {
+                            layer.msg(res.msg, {icon: 2, time: 2000});
+                        }
+                    }
+                });
+
+                // instance.bind("connection", jsPlumbConnect);
+            });
+
+            function jsPlumbConnect(info, originalEvent) {
+                // 编程方式连接不请求，要鼠标方式连接才请求
+                if (originalEvent !== undefined) {
+                    console.log("connect!!!!!");
+                    console.log(info);
+
+                    let index = layer.load(2);
+                    $.ajax({
+                        url: ip + "/api/taskUnitConnect",
+                        type: "put",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            "sourceTuid": info.sourceId,
+                            "targetTuid": info.targetId,
+                            "tid": tid
+                        }),
+                        dataType: "json",
+                        success: function (res) {
+                            console.log(res);
+                            layer.close(index);
+                            if (res.code === 0) {
+
+                            } else {
+                                layer.msg(res.msg, {icon: 2, time: 2000});
+                            }
+                        }
+                    });
+                }
             }
 
             // ----------------- 拖拽部分 -----------------
@@ -268,7 +305,7 @@
                     let left = parseInt(ui.offset.left - $(this).offset().left);
                     let top = parseInt(ui.offset.top - $(this).offset().top);
                     let type = ui.draggable[0].id;
-                    let resData = addTaskUnit(type);
+                    let resData = addTaskUnit(type, left, top);
                     let id = resData.tuid;
                     addTaskUnitDiv(type, id, left, top);
                 }
@@ -278,26 +315,29 @@
                 let $taskMain = $("#task-main");
                 $taskMain.append($("#" + type).clone().attr("id", id));
                 let $id = $("#" + id);
+
+                $id.css("left", left).css("top", top);
+                instance.draggable(id, {
+                    containment: true
+                });
+                $id.draggable({
+                    containment: "#task-main",
+                    stop: function (event, ui) {
+                        console.log(ui);
+                        updateTaskUnit($(ui.helper).attr("id"), ui.position);
+                    }
+                });
                 switch (type) {
                     case "input":
-                        $id.css("left", left).css("top", top);
                         instance.addEndpoint(id, {
                             anchors: "BottomCenter",
                             isSource: true,
                             maxConnections: -1,
                             uuid: id + '-from'
                         }, hollowCircle);
-                        instance.draggable(id, {
-                            containment: true
-                        });
-                        $id.draggable({
-                            containment: "#task-main"
-                        });
 
-                        oneclick("#" + id);
                         break;
                     case "handle":
-                        $id.css("left", left).css("top", top);
                         instance.addEndpoint(id, {
                             anchors: "TopCenter",
                             isTarget: true,
@@ -309,33 +349,27 @@
                             maxConnections: -1,
                             uuid: id + '-from'
                         }, hollowCircle);
-                        instance.draggable(id, {
-                            containment: true
-                        });
-                        $id.draggable({
-                            containment: "#task-main"
-                        });
-                        oneclick("#" + id);
+
                         break;
                     case "output":
-                        $id.css("left", left).css("top", top);
                         instance.addEndpoint(id, {
                             anchors: "TopCenter",
                             isTarget: true,
                             uuid: id + '-to'
                         }, hollowCircle);
-                        instance.draggable(id, {
-                            containment: true
-                        });
-                        $id.draggable({
-                            containment: "#task-main"
-                        });
-                        oneclick("#" + id);
+
                         break;
                 }
             }
 
-            function addTaskUnit(type) {
+            /**
+             * 此方法中的ajax需要为同步
+             * @param type
+             * @param left
+             * @param top
+             * @returns {string}
+             */
+            function addTaskUnit(type, left, top) {
                 let index = layer.load(2);
 
                 let resData = "";
@@ -345,6 +379,8 @@
                     contentType: "application/json",
                     data: JSON.stringify({
                         "type": type,
+                        "left": left,
+                        "top": top,
                         "tid": tid
                     }),
                     dataType: "json",
@@ -363,15 +399,38 @@
                 return resData;
             }
 
+            function updateTaskUnit(tuid, position) {
+                let index = layer.load(2);
+
+                position['tuid'] = tuid;
+                $.ajax({
+                    url: ip + "/api/taskUnit",
+                    type: "post",
+                    contentType: "application/json",
+                    data: JSON.stringify(position),
+                    dataType: "json",
+                    success: function (res) {
+                        // console.log(res);
+                        layer.close(index);
+                        if (res.code === 0) {
+
+                        } else {
+                            layer.msg(res.msg, {icon: 2, time: 2000});
+                        }
+                    }
+                });
+            }
+
             $("#task-main").on("mouseenter", ".node", function () {
                 $(this).append('<i class="fa fa-times fa-lg close" aria-hidden="true"></i>');
             });
             $("#task-main").on("mouseleave", ".node", function () {
                 $(this).children("i").remove();
             });
-            $("#task-main").on("click", ".node>.close", function () {
-                console.log(this);
+            $("#task-main").on("click", ".node > .close", function (event) {
+                // console.log(this);
                 let $thisTaskButton = $(this).parent();
+                let tuid = $thisTaskButton.attr("id");
                 layer.open({
                     content: '确定要删除吗?',
                     yes: function (index, layero) {
@@ -382,40 +441,50 @@
                             type: "delete",
                             contentType: "application/json",
                             data: JSON.stringify({
-                                "tuid": $thisTaskButton.attr("id")
+                                "tid": tid,
+                                "tuid": tuid
                             }),
                             dataType: "json",
                             success: function (res) {
                                 // console.log(res);
                                 layer.close(index);
                                 if (res.code === 0) {
+                                    let $taskDetail = $("#task-detail");
+                                    if ($taskDetail.attr("onselect") === tuid) {
+                                        $taskDetail.html("").append($("#no-click-content").html());
+                                    }
 
+                                    instance.removeAllEndpoints($thisTaskButton.attr("id"));
+                                    $thisTaskButton.remove();
+                                    layer.close(index); //如果设定了yes回调，需进行手工关闭
                                 } else {
                                     layer.msg(res.msg, {icon: 2, time: 2000});
                                 }
                             }
                         });
-
-                        instance.removeAllEndpoints($thisTaskButton.attr("id"));
-                        $thisTaskButton.remove();
-                        layer.close(index); //如果设定了yes回调，需进行手工关闭
-
                     }
                 });
+
+                event.stopPropagation();
             });
 
-            instance.bind("click", function (conn, originalEvent) {
-                console.log(conn);
-                if (confirm("Are you sure?")) {
-                    instance.detach(conn);
-                }
+            $("#task-main").on("click", ".node", function (event) {
+                let $thisNode = $(this);
+
+                $("#task-main .node").removeClass("click");
+                $thisNode.addClass("click");
+
+                let $taskDetail = $("#task-detail");
+                $taskDetail.html("").append("123").attr("onselect", $thisNode.attr("id"));
+
             });
 
-            function oneclick(id) {
-                $(id).click(function () {
-                    // TODO
-                });
-            }
+            // instance.bind("click", function (conn, originalEvent) {
+            //     console.log(conn);
+            //     if (confirm("Are you sure?")) {
+            //         instance.detach(conn);
+            //     }
+            // });
 
             //基本连接线样式
             var connectorPaintStyle = {

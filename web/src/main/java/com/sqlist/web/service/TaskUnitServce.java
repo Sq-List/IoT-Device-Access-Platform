@@ -31,4 +31,16 @@ public interface TaskUnitServce {
      * @param taskUnitVO
      */
     void delete(TaskUnitVO taskUnitVO);
+
+    /**
+     * 删除与 tid 关联的taskUnit
+     * @param deleteTidList
+     */
+    void deleteMultiple(List<Integer> deleteTidList);
+
+    /**
+     * 更新 taskUnit
+     * @param taskUnitVO
+     */
+    void update(TaskUnitVO taskUnitVO);
 }

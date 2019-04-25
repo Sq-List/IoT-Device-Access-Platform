@@ -5,6 +5,7 @@ import com.sqlist.web.domain.User;
 import com.sqlist.web.vo.PageVO;
 import com.sqlist.web.vo.TaskVO;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,4 +29,10 @@ public interface TaskService {
      * @param taskVO
      */
     void add(User user, TaskVO taskVO);
+
+    /**
+     * 删除任务
+     * @param deleteList
+     */
+    void delete(List<Integer> deleteList);
 }

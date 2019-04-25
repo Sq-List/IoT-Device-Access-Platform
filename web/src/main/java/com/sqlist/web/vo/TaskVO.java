@@ -12,6 +12,6 @@ import javax.validation.constraints.NotNull;
 @Data
 public class TaskVO {
 
-    @NotNull(message = "name 不能为null")
+    @NotNull
     private String name;
 }

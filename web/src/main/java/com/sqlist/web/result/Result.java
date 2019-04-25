@@ -1,10 +1,13 @@
 package com.sqlist.web.result;
 
+import lombok.ToString;
+
 /**
  * @author SqList
  * @date 2019/4/9 9:44
  * @descriptio
  **/
+@ToString
 public class Result<T> {
     private int code;
     private String msg;

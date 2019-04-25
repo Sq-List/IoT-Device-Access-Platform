@@ -1,20 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.sqlist.web.mapper.TaskUnitConnectMapper" >
-  <resultMap id="BaseResultMap" type="com.sqlist.web.domain.TaskUnitConnect" >
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="tucid" property="tucid" jdbcType="INTEGER" />
-    <result column="source_tuid" property="sourceTuid" jdbcType="VARCHAR" />
-    <result column="target_tuid" property="targetTuid" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="tid" property="tid" jdbcType="INTEGER" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    <!--
-      WARNING - @mbg.generated
-    -->
-    tucid, source_tuid, target_tuid, create_time, tid
-  </sql>
+<mapper namespace="com.sqlist.web.mapper.TaskUnitConnectMapper">
+    <resultMap id="BaseResultMap" type="com.sqlist.web.domain.TaskUnitConnect">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="tucid" property="tucid" jdbcType="INTEGER"/>
+        <result column="source_tuid" property="sourceTuid" jdbcType="VARCHAR"/>
+        <result column="target_tuid" property="targetTuid" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="tid" property="tid" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        tucid, source_tuid, target_tuid, create_time, tid
+    </sql>
+
+    <delete id="taskUnitDelete">
+        DELETE FROM task_unit_connect
+        WHERE tid = #{tid}
+        AND (
+            source_tuid = #{sourceTuid} OR target_tuid = #{sourceTuid}
+        )
+    </delete>
+
+    <delete id="deleteMultiple" parameterType="list">
+        DELETE FROM task_unit_connect
+        WHERE tid IN
+        <foreach item="item" collection="tidList" separator="," open="(" close=")" index="">
+            #{item}
+        </foreach>
+    </delete>
 </mapper>

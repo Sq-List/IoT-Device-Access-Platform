@@ -17,10 +17,16 @@ public class TaskUnit {
     private String type;
 
     /**
-     * 任务单元类型id
+     * 任务单元位置
      */
-    @Column(name = "type_id")
-    private Integer typeId;
+    @Column(name = "left_dis")
+    private Integer leftDis;
+
+    /**
+     * 任务单元位置
+     */
+    @Column(name = "top_dis")
+    private Integer topDis;
 
     /**
      * 任务单元状态
@@ -81,21 +87,39 @@ public class TaskUnit {
     }
 
     /**
-     * 获取任务单元类型id
+     * 获取任务单元位置
      *
-     * @return typd_id - 任务单元类型id
+     * @return left_dis - 任务单元位置
      */
-    public Integer getTypeId() {
-        return typeId;
+    public Integer getLeftDis() {
+        return leftDis;
     }
 
     /**
-     * 设置任务单元类型id
+     * 设置任务单元位置
      *
-     * @param typeId 任务单元类型id
+     * @param leftDis 任务单元位置
      */
-    public void setTypeId(Integer typeId) {
-        this.typeId = typeId;
+    public void setLeftDis(Integer leftDis) {
+        this.leftDis = leftDis;
+    }
+
+    /**
+     * 获取任务单元位置
+     *
+     * @return top_dis - 任务单元位置
+     */
+    public Integer getTopDis() {
+        return topDis;
+    }
+
+    /**
+     * 设置任务单元位置
+     *
+     * @param topDis 任务单元位置
+     */
+    public void setTopDis(Integer topDis) {
+        this.topDis = topDis;
     }
 
     /**
