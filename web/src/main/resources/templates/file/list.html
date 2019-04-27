@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="base/layout">
+
+<title layout:fragment="title">上传文件列表</title>
+<div layout:fragment="side" th:replace="base/side::onselectLayout ('file', 'fileList')"></div>
+<div layout:fragment="content-header" class="layui-card tonghe-header">
+    <span class="layui-breadcrumb">
+        <a href="javascript:;" class="layui-breadcrumb-unclick">文件</a>
+        <a><cite>列表</cite></a>
+    </span>
+</div>
+<div layout:fragment="content">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12 layui-col-lg12">
+            <div class="tonghe-card">
+                <div class="tonghe-card-header">
+                    <div class="layui-btn" id="fileAdd">上传文件</div>
+                    <div class="layui-btn layui-btn-danger" id="fileDel">删除文件</div>
+                </div>
+                <div class="tonghe-card-body">
+                    <table id="filesTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script layout:fragment="script">
+    layui.use(['element', 'table', 'layer'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var layer = layui.layer;
+
+        table.render({
+            elem: "#filesTable",
+            even: true,
+            toolbar: true,
+            defaultToolbar: ['filter'],
+            limit: 10, //每页默认显示的数量
+            page: true,
+            url: ip + "/api/file",
+            parseData: function(res) { //res 即为原始返回的数据
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度
+                    "data": res.data.list //解析数据列表
+                }
+            },
+            cols: [
+                [
+                    {type:'checkbox'},
+                    {field: 'name', title: "名称"},
+                    {field: 'extensions', title: "扩展名"},
+                    {field: 'uploadTime', title: "上传时间", templet: function (d) {
+                            return new Date(d.uploadTime).format(commonDateFormat);
+                        }}
+                ]
+            ]
+        });
+
+        $("#fileAdd").click(function () {
+            layer.prompt({
+                title: '输入产品名称'
+            }, function(value, index, elem){
+                $.ajax({
+                    url: ip + "/api/file",
+                    type: "put",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        name: value
+                    }),
+                    dataType: "json",
+                    success: function (res) {
+                        console.log(res);
+                        if (res.code === 0) {
+                            layer.msg('添加成功！', {icon: 1, time: 2000}, function () {
+                                layer.close(index);
+                                table.reload('filesTable', {});
+                            });
+                        } else {
+                            layer.msg(res.msg, {icon: 2, time: 2000});
+                        }
+                    }
+                });
+            });
+        });
+
+        $("#fileDel").click(function () {
+            let checkStatus = table.checkStatus('filesTable');
+
+            if (checkStatus.data.length === 0) {
+                layer.msg('请勾选', {icon: 1, time: 2000});
+                return;
+            }
+
+            console.log(checkStatus);
+            let list = [];
+            checkStatus.data.forEach(function (currentValue, index, arr) {
+                list.push(currentValue.tid);
+            });
+            layer.open({
+                content: '确定要删除吗?',
+                yes: function (index, layero) {
+                    $.ajax({
+                        url: ip + "/api/file",
+                        type: "delete",
+                        contentType: "application/json",
+                        data: JSON.stringify(list),
+                        dataType: "json",
+                        success: function (res) {
+                            // console.log(res);
+                            layer.close(index);
+                            if (res.code === 0) {
+                                table.reload('filesTable', {});
+                                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                            } else {
+                                layer.msg(res.msg, {icon: 2, time: 2000});
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+</html>

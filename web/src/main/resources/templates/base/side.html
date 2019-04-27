@@ -20,6 +20,14 @@
                     </dd>
                 </dl>
             </li>
+            <li class="layui-nav-item" th:classappend="(${parent} == 'file') ? 'layui-nav-itemed' : ''">
+                <a class="" href="javascript:;">文件</a>
+                <dl class="layui-nav-child">
+                    <dd th:class="(${child} == 'fileList') ? 'layui-this' : ''">
+                        <a th:href="@{/page/file/list}">列表</a>
+                    </dd>
+                </dl>
+            </li>
             <li class="layui-nav-item" th:classappend="(${parent} == 'task') ? 'layui-nav-itemed' : ''">
                 <a class="" href="javascript:;">任务</a>
                 <dl class="layui-nav-child">
