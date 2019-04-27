@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="base/layout">
+
+<title layout:fragment="title">设备详情</title>
+<div layout:fragment="side" th:replace="base/side::onselectLayout ('device', 'deviceList')"></div>
+<div layout:fragment="content-header" class="layui-card tonghe-header">
+    <span class="layui-breadcrumb">
+        <a href="javascript:;" class="layui-breadcrumb-unclick">设备</a>
+        <a><cite>详情</cite></a>
+    </span>
+</div>
+<div layout:fragment="content">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12 layui-col-lg12">
+            <div class="tonghe-card">
+                <div class="tonghe-card-header">
+                    <div class="layui-btn" id="productChange">选择产品</div>
+                </div>
+                <div class="tonghe-card-body">
+                    <form class="layui-form  layui-form-pane" lay-filter="detailForm">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">设备名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="name" class="layui-input" readonly>
+                            </div>
+                        </div>
+                        <!--<div class="layui-form-item">-->
+                            <!--<label class="layui-form-label">产品 key</label>-->
+                            <!--<div class="layui-input-block">-->
+                                <!--<input type="text" name="productKey" class="layui-input" readonly>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="layui-form-item">-->
+                            <!--<label class="layui-form-label">产品 secret</label>-->
+                            <!--<div class="layui-input-block">-->
+                                <!--<input type="text" name="productSecret" class="layui-input" readonly>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">创建时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="createTime" class="layui-input" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">激活时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="activeTime" class="layui-input" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">最后一次上线时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="lastTime" class="layui-input" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">所属产品</label>
+                            <div class="layui-input-block">
+                                <a id="productName" target="_blank" href="javascript:;" style="padding-left: 10px; height: 36px; line-height: 36px;">无</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <template id="toolbar">
+        <a th:href="@{/page/product/{{ d.pid }}/detail}" target="_blank" class="layui-btn layui-btn-primary layui-btn-xs">查看</a>
+    </template>
+    <template id="productChangeLayer">
+        <form action="" class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">当前产品</label>
+                    <div class="layui-input-inline" style="width: 300px;">
+                        <input type="text" id="currentProduct" name="currentProduct" class="layui-input" readonly>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">选择产品</label>
+                    <div class="layui-input-inline" style="width: 300px;">
+                        <input type="text" id="chooseProduct" name="chooseProduct" class="layui-input" readonly>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <hr>
+        <table id='productTable' lay-filter='productTable'></table>
+    </template>
+</div>
+
+<script layout:fragment="script">
+    layui.use(['element', 'table', 'layer', 'form'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+
+        var did = /.*(\d+).*/g.exec(window.location.pathname)[1];
+
+        let currentProduct;
+        init();
+
+        function init() {
+            let index = layer.load(2);
+            $.ajax({
+                url: ip + "/api/device/" + did,
+                type: "get",
+                contentType: "application/json",
+                dataType: "json",
+                success: function (res) {
+                    console.log(res);
+                    layer.close(index);
+                    if (res.code === 0) {
+                        let data = res.data.device;
+                        data.createTime = new Date(data.createTime).format(commonDateFormat);
+                        if (data.activeTime != null) {
+                            data.activeTime = new Date(data.activeTime).format(commonDateFormat);
+                        }
+                        if (data.lastTime != null) {
+                            data.lastTime = new Date(data.lastTime).format(commonDateFormat);
+                        }
+                        form.val("detailForm", data);
+
+                        if (res.data.product != null) {
+                            currentProduct = res.data.product;
+                            $("#productName").attr("href", "/page/product/" + currentProduct.pid + "/detail").text(currentProduct.name);
+                        }
+                    } else {
+                        layer.msg(res.msg, {icon: 2, time: 2000});
+                    }
+                }
+            });
+        }
+
+        $("#productChange").click(function () {
+            let chooseProduct;
+
+            layer.open({
+                title: "选择产品",
+                content: $("#productChangeLayer").html(),
+                type: 0,
+                area: '1000px',
+                offset: '100px',
+                yes: function (index, layero) {
+                    if (chooseProduct == null) {
+                        layer.msg("请勾选产品", {icon: 2, time: 2000});
+                    }
+
+
+                    $.ajax({
+                        url: ip + "/api/product/" + chooseProduct.pid + "/devices",
+                        type: "put",
+                        contentType: "application/json",
+                        data: JSON.stringify([did]),
+                        dataType: "json",
+                        success: function (res) {
+                            console.log(res);
+                            if (res.code === 0) {
+                                layer.msg('选择成功！', {icon: 1, time: 2000}, function () {
+                                    init();
+                                    layer.close(index);
+                                });
+                            } else {
+                                layer.msg(res.msg, {icon: 2, time: 2000});
+                            }
+                        }
+                    });
+                },
+                success: function (index, layero) {
+                    if (currentProduct != null) {
+                        $("#currentProduct").val(currentProduct.name);
+                    }
+
+                    table.render({
+                        elem: '#productTable',
+                        even: true,
+                        url: ip + "/api/product",
+                        // 不加会自动关闭layer
+                        loading: false,
+                        page: true,
+                        limits: [10],
+                        limit: 10, //每页默认显示的数量
+                        parseData: function (res) {
+                            // console.log(res);
+                            let list = res.data.list;
+                            for (let i = 0; i < list.length; i++) {
+                                // 遍历获取的数据，如果已经选择，则在table上选中
+                                if (chooseProduct != null && chooseProduct.pid === list[i].pid) {
+                                    list[i].LAY_CHECKED = true;
+                                }
+
+                                if (currentProduct != null && currentProduct.pid === list[i].pid) {
+                                    list.splice(i, 1);
+                                }
+                            }
+
+                            return {
+                                "code": res.code, //解析接口状态
+                                "msg": res.msg, //解析提示文本
+                                "count": res.data.total, //解析数据长度
+                                "data": res.data.list //解析数据列表
+                            }
+                        },
+                        cols: [
+                            [
+                                {type: 'radio'},
+                                {field: 'name', title: "名称"},
+                                {field: 'status', title: "状态"},
+                                {field: 'createTime', title: "创建时间", templet: function (d) {
+                                        return new Date(d.createTime).format(commonDateFormat);
+                                    }},
+                                {fixed: 'right', align:'center', toolbar: '#toolbar'}
+                            ]
+                        ]
+                    });
+
+                    table.on('radio(productTable)', function(obj){
+                        console.log(obj);
+
+                        chooseProduct = obj.data;
+                        $("#chooseProduct").val(chooseProduct.name);
+                    });
+                }
+
+            });
+        })
+    });
+</script>
+</html>

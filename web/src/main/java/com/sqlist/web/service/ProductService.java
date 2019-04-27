@@ -25,10 +25,10 @@ public interface ProductService {
 
     /**
      * 获取产品详细信息
-     * @param pid
+     * @param product
      * @return
      */
-    Product detail(Integer pid);
+    Product detail(Product product);
 
     /**
      * 添加产品
@@ -36,4 +36,11 @@ public interface ProductService {
      * @param productVO
      */
     void add(User user, ProductVO productVO);
+
+    /**
+     * 删除产品
+     * @param user
+     * @param pidList
+     */
+    void deleteMultiple(User user, List<Integer> pidList);
 }

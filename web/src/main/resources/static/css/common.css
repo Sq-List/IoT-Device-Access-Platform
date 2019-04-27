@@ -97,3 +97,11 @@ img.tonghe-form-img {
     position: relative;
     z-index: 99999999;
 }
+
+.layui-form-pane .layui-form-label {
+    width: 160px;
+}
+
+.layui-form-pane .layui-input-block {
+    margin-left: 160px;
+}

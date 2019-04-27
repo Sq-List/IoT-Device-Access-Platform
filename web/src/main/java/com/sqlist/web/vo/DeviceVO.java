@@ -14,6 +14,9 @@ import javax.validation.constraints.NotNull;
 @ToString
 public class DeviceVO {
 
+    @NotNull(groups = Add.class)
+    private String name;
+
     @NotNull(groups = Product.class)
     private Integer pid;
 
@@ -23,4 +26,6 @@ public class DeviceVO {
     public interface Product {}
 
     public interface Device {}
+
+    public interface Add {}
 }

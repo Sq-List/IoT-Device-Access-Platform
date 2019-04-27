@@ -77,8 +77,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Transactional(rollbackFor = RuntimeException.class)
     @Override
-    public void delete(List<Integer> tidList) {
-        taskMapper.deleteMultiple(tidList);
+    public void deleteMultiple(User user, List<Integer> tidList) {
+        taskMapper.deleteMultiple(user, tidList);
 
         // 删除相关的unit和connect
         taskUnitServce.deleteMultiple(tidList);

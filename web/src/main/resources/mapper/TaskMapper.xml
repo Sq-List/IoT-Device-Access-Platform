@@ -21,7 +21,8 @@
 
     <delete id="deleteMultiple" parameterType="list">
         DELETE FROM task
-        WHERE tid IN
+        WHERE uid = #{user.uid}
+        AND tid IN
         <foreach item="item" collection="tidList" separator="," open="(" close=")" index="">
             #{item}
         </foreach>

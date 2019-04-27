@@ -63,7 +63,7 @@ public class TaskController {
     public Result delete(User user, @RequestBody List<Integer> deleteTidList) {
         log.info("deleteMultiple(), user: {} deleteMultiple: {}", user, JSON.toJSONString(deleteTidList));
 
-        taskService.delete(deleteTidList);
+        taskService.deleteMultiple(user, deleteTidList);
 
         return Result.success(null);
     }

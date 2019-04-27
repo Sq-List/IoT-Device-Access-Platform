@@ -1,5 +1,7 @@
 package com.sqlist.web.controller;
 
+import com.sqlist.web.domain.Device;
+import com.sqlist.web.domain.Product;
 import com.sqlist.web.domain.User;
 import com.sqlist.web.result.Result;
 import com.sqlist.web.service.DeviceService;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,7 +41,10 @@ public class ProductController {
 
     @RequestMapping(value = "/{pid}", method = RequestMethod.GET)
     public Result detail(User user, @PathVariable("pid") Integer pid) {
-        return Result.success(productService.detail(pid));
+        Product product = new Product();
+        product.setPid(pid);
+        product.setUid(user.getUid());
+        return Result.success(productService.detail(product));
     }
 
     @RequestMapping(value = "/{pid}/devices", method = RequestMethod.GET)
@@ -48,6 +54,24 @@ public class ProductController {
         deviceVO.setUid(user.getUid());
 
         return Result.success(deviceService.list(deviceVO, pageVO));
+    }
+
+    /**
+     * 从product中删除device时，pid为0
+     * @param user
+     * @param pid
+     * @param didList
+     * @return
+     */
+    @RequestMapping(value = "/{pid}/devices", method = {RequestMethod.PUT, RequestMethod.DELETE})
+    public Result addDevices(User user, @PathVariable("pid") Integer pid, @RequestBody List<Integer> didList) {
+        Device device = new Device();
+        device.setUid(user.getUid());
+        device.setPid(pid);
+
+        deviceService.updatePidMultipleByDid(device, didList);
+
+        return Result.success(null);
     }
 
     @RequestMapping(value = "", method = RequestMethod.PUT)
@@ -60,7 +84,8 @@ public class ProductController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.DELETE)
-    public Result delete() {
+    public Result delete(User user, @RequestBody List<Integer> pidList) {
+        productService.deleteMultiple(user, pidList);
         return Result.success(null);
     }
 }

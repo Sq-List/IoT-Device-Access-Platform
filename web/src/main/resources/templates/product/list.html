@@ -59,7 +59,7 @@
                     {field: 'name', title: "名称"},
                     {field: 'status', title: "状态"},
                     {field: 'createTime', title: "创建时间", templet: function (d) {
-                            return new Date(d.createTime).format("yyyy-MM-dd hh:mm");
+                            return new Date(d.createTime).format(commonDateFormat);
                         }},
                     {fixed: 'right', align:'center', toolbar: '#toolbar'}
                 ]
@@ -93,7 +93,42 @@
             });
         });
 
+        $("#productDel").click(function () {
+            let checkStatus = table.checkStatus('productsTable');
 
+            if (checkStatus.data.length === 0) {
+                layer.msg('请勾选', {icon: 1, time: 2000});
+                return;
+            }
+
+            console.log(checkStatus);
+            let list = [];
+            checkStatus.data.forEach(function (currentValue, index, arr) {
+                list.push(currentValue.pid);
+            });
+            layer.open({
+                content: '确定要删除吗?',
+                yes: function (index, layero) {
+                    $.ajax({
+                        url: ip + "/api/product",
+                        type: "delete",
+                        contentType: "application/json",
+                        data: JSON.stringify(list),
+                        dataType: "json",
+                        success: function (res) {
+                            // console.log(res);
+                            layer.close(index);
+                            if (res.code === 0) {
+                                table.reload('productsTable', {});
+                                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                            } else {
+                                layer.msg(res.msg, {icon: 2, time: 2000});
+                            }
+                        }
+                    });
+                }
+            });
+        });
     });
 </script>
 </html>

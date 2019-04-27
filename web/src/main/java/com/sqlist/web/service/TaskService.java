@@ -32,7 +32,8 @@ public interface TaskService {
 
     /**
      * 删除任务
+     * @param user
      * @param deleteList
      */
-    void delete(List<Integer> deleteList);
+    void deleteMultiple(User user, List<Integer> deleteList);
 }

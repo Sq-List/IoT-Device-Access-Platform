@@ -142,3 +142,5 @@ if (window.location.pathname.startsWith("/page")) {
         });
     });
 }
+
+var commonDateFormat = "yyyy-MM-dd hh:mm:ss";

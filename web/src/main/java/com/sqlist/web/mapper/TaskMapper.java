@@ -1,6 +1,7 @@
 package com.sqlist.web.mapper;
 
 import com.sqlist.web.domain.Task;
+import com.sqlist.web.domain.User;
 import com.sqlist.web.util.MyMapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,7 +16,8 @@ public interface TaskMapper extends MyMapper<Task> {
 
     /**
      * 根据tid删除多个任务
+     * @param user
      * @param tidList
      */
-    void deleteMultiple(@Param("tidList") List<Integer> tidList);
+    void deleteMultiple(@Param("user") User user, @Param("tidList") List<Integer> tidList);
 }

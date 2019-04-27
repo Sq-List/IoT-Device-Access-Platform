@@ -31,19 +31,17 @@ public class GlobalExceptionHandler {
         return Result.fail(e.getCodeMsg());
     }
 
-    @ExceptionHandler(value = BindException.class)
-    public Result handleBindException(BindException ex) {
-        List<ObjectError> errors = ex.getAllErrors();
-        ObjectError error = errors.get(0);
-        String msg = error.getDefaultMessage();
-        log.error("raised BindException: {}", msg);
-        return Result.fail(CodeMsg.BIND_ERROR.fillArgs(msg));
-    }
+    @ExceptionHandler(value = {MethodArgumentNotValidException.class, BindException.class})
+    public Result validationError(Exception ex) {
+        BindingResult result = null;
+        if (ex instanceof MethodArgumentNotValidException) {
+            result = ((MethodArgumentNotValidException)ex).getBindingResult();
+            log.error("raised MethodArgumentNotValidException: {}", ex);
+        } else {
+            result = (BindException)ex;
+            log.error("raised BindException: {}", ex);
+        }
 
-    @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public Result validationError(MethodArgumentNotValidException ex) {
-        log.error("raised MethodArgumentNotValidException : " + ex);
-        BindingResult result = ex.getBindingResult();
         final List<FieldError> fieldErrors = result.getFieldErrors();
         StringBuilder builder = new StringBuilder();
 

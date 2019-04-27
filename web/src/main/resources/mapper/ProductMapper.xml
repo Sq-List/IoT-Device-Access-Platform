@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.sqlist.web.mapper.ProductMapper" >
-  <resultMap id="BaseResultMap" type="com.sqlist.web.domain.Product" >
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="pid" property="pid" jdbcType="INTEGER" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="product_key" property="productKey" jdbcType="VARCHAR" />
-    <result column="product_secret" property="productSecret" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="status" property="status" jdbcType="VARCHAR" />
-    <result column="topic" property="topic" jdbcType="VARCHAR" />
-    <result column="uid" property="uid" jdbcType="INTEGER" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    <!--
-      WARNING - @mbg.generated
-    -->
-    pid, name, product_key, product_secret, create_time, status, topic, uid
-  </sql>
+<mapper namespace="com.sqlist.web.mapper.ProductMapper">
+    <resultMap id="BaseResultMap" type="com.sqlist.web.domain.Product">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="pid" property="pid" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="product_key" property="productKey" jdbcType="VARCHAR"/>
+        <result column="product_secret" property="productSecret" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="topic" property="topic" jdbcType="VARCHAR"/>
+        <result column="uid" property="uid" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        pid, name, product_key, product_secret, create_time, status, topic, uid
+    </sql>
+
+    <delete id="deleteMultiple" >
+        DELETE FROM product
+        WHERE uid = #{user.uid}
+        AND pid IN
+        <foreach item="item" collection="pidList" separator="," open="(" close=")" index="">
+            #{item}
+        </foreach>
+    </delete>
 </mapper>
