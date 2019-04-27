@@ -29,6 +29,11 @@ public class CodeMsg {
      */
     public static CodeMsg TASK_NAME_REPEAT = new CodeMsg(500301, "任务名称不能重复");
 
+    /**
+     * File 5004XX
+     */
+    public static CodeMsg UPLOAD_FILE_EMPET = new CodeMsg(500401, "上传文件空，上传失败");
+
     private CodeMsg( ) {
     }
 

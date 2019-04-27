@@ -25,6 +25,20 @@
             </div>
         </div>
     </div>
+    <template id="fileAddLayer">
+        <form id="fileAddForm" class="layui-form  layui-form-pane" enctype="multipart/form-data" method="post" style="text-align: center;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-block">
+                    <input type="text" id="fileName" name="name" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="chooseFile" class="layui-btn">选择文件</label>
+                <input type="file" id="chooseFile" name="image" accept=".jar" style="position: absolute; clip: rect(0 0 0 0);"/>
+            </div>
+        </form>
+    </template>
 </div>
 
 <script layout:fragment="script">
@@ -62,29 +76,37 @@
         });
 
         $("#fileAdd").click(function () {
-            layer.prompt({
-                title: '输入产品名称'
-            }, function(value, index, elem){
-                $.ajax({
-                    url: ip + "/api/file",
-                    type: "put",
-                    contentType: "application/json",
-                    data: JSON.stringify({
-                        name: value
-                    }),
-                    dataType: "json",
-                    success: function (res) {
-                        console.log(res);
-                        if (res.code === 0) {
-                            layer.msg('添加成功！', {icon: 1, time: 2000}, function () {
-                                layer.close(index);
-                                table.reload('filesTable', {});
-                            });
-                        } else {
-                            layer.msg(res.msg, {icon: 2, time: 2000});
+            layer.open({
+                title: "上传文件",
+                content: $("#fileAddLayer").html(),
+                type: 0,
+                area: '1000px',
+                offset: '100px',
+                yes: function (index, layero) {
+                    $.ajax({
+                        url: ip + "/api/file",
+                        type: "put",
+                        data: new FormData($("#fileAddForm").get(0)),
+                        processData: false,
+                        cache: false,
+                        contentType: false,
+                        dataType: "json",
+                        success: function (res) {
+                            console.log(res);
+                            if (res.code === 0) {
+                                layer.msg('上传成功！', {icon: 1, time: 2000}, function () {
+                                    layer.close(index);
+                                    table.reload('filesTable', {});
+                                });
+                            } else {
+                                layer.msg(res.msg, {icon: 2, time: 2000});
+                            }
                         }
-                    }
-                });
+                    });
+                },
+                success: function (index, layero) {
+
+                }
             });
         });
 
@@ -123,6 +145,18 @@
                     });
                 }
             });
+        });
+
+        $(document).on("change", "#chooseFile", function (data) {
+            let $fileDom = $("#chooseFile");
+            let fileDom = $fileDom.get(0);
+
+            if (fileDom.files && fileDom.files[0]) {
+                let pointIndex = fileDom.files[0].name.lastIndexOf(".");
+                let name = fileDom.files[0].name.slice(0, pointIndex);
+
+                $("#fileName").val(name);
+            }
         });
     });
 </script>
