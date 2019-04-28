@@ -147,10 +147,10 @@
                 area: '1000px',
                 offset: '100px',
                 yes: function (index, layero) {
+                    let index1 = layer.load(2);
                     if (chooseProduct == null) {
                         layer.msg("请勾选产品", {icon: 2, time: 2000});
                     }
-
 
                     $.ajax({
                         url: ip + "/api/product/" + chooseProduct.pid + "/devices",
@@ -159,6 +159,7 @@
                         data: JSON.stringify([did]),
                         dataType: "json",
                         success: function (res) {
+                            layer.close(index1);
                             console.log(res);
                             if (res.code === 0) {
                                 layer.msg('选择成功！', {icon: 1, time: 2000}, function () {

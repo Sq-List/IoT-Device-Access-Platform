@@ -1,18 +1,19 @@
 package com.sqlist.web.controller;
 
 import com.sqlist.web.domain.User;
-import com.sqlist.web.exception.GlobalException;
-import com.sqlist.web.result.CodeMsg;
 import com.sqlist.web.result.Result;
 import com.sqlist.web.service.FileService;
+import com.sqlist.web.vo.FileVO;
 import com.sqlist.web.vo.PageVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * @author SqList
@@ -33,12 +34,14 @@ public class FileController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.PUT)
-    public Result upload(User user, String name, MultipartFile file) {
-        if (file.isEmpty()) {
-            throw new GlobalException(CodeMsg.UPLOAD_FILE_EMPET);
-        }
+    public Result upload(User user, @Validated FileVO fileVO) {
+        fileService.upload(user, fileVO);
+        return Result.success(null);
+    }
 
-//        String suffix ;
+    @RequestMapping(value = "", method = RequestMethod.DELETE)
+    public Result delete(User user, @RequestBody List<Integer> fidList) {
+        fileService.delete(user, fidList);
         return Result.success(null);
     }
 }

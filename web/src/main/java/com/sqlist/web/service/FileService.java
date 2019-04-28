@@ -1,8 +1,10 @@
 package com.sqlist.web.service;
 
 import com.sqlist.web.domain.User;
+import com.sqlist.web.vo.FileVO;
 import com.sqlist.web.vo.PageVO;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,4 +21,18 @@ public interface FileService {
      * @return
      */
     Map<String, Object> list(User user, PageVO pageVO);
+
+    /**
+     * 上传 文件
+     * @param user
+     * @param fileVO
+     */
+    void upload(User user, FileVO fileVO);
+
+    /**
+     * 删除 文件
+     * @param user
+     * @param fidList
+     */
+    void delete(User user, List<Integer> fidList);
 }

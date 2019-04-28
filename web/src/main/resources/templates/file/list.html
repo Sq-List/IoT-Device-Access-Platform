@@ -35,7 +35,7 @@
             </div>
             <div class="layui-form-item">
                 <label for="chooseFile" class="layui-btn">选择文件</label>
-                <input type="file" id="chooseFile" name="image" accept=".jar" style="position: absolute; clip: rect(0 0 0 0);"/>
+                <input type="file" id="chooseFile" name="file" accept=".jar" style="position: absolute; clip: rect(0 0 0 0);"/>
             </div>
         </form>
     </template>
@@ -83,6 +83,7 @@
                 area: '1000px',
                 offset: '100px',
                 yes: function (index, layero) {
+                    let index1 = layer.load(2);
                     $.ajax({
                         url: ip + "/api/file",
                         type: "put",
@@ -92,6 +93,7 @@
                         contentType: false,
                         dataType: "json",
                         success: function (res) {
+                            layer.close(index1);
                             console.log(res);
                             if (res.code === 0) {
                                 layer.msg('上传成功！', {icon: 1, time: 2000}, function () {
@@ -121,7 +123,7 @@
             console.log(checkStatus);
             let list = [];
             checkStatus.data.forEach(function (currentValue, index, arr) {
-                list.push(currentValue.tid);
+                list.push(currentValue.fid);
             });
             layer.open({
                 content: '确定要删除吗?',

@@ -2,6 +2,9 @@ package com.sqlist.web.vo;
 
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @author SqList
@@ -12,5 +15,9 @@ import lombok.ToString;
 @ToString
 public class FileVO {
 
+    @NotNull
     private String name;
+
+    @NotNull(message = "上传文件空，上传失败")
+    private MultipartFile file;
 }
