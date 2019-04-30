@@ -26,9 +26,9 @@
                     <div class="layui-row layui-col-space15">
                         <div class="layui-col-md1 layui-col-lg1">
                             <div id="task-button">
-                                <div class="node radius" id="input" type="input">输入</div>
-                                <div class="node" id="handle" type="handle">处理</div>
-                                <div class="node radius" id="output" type="output">输出</div>
+                                <div class="node radius" id="input" type="Input">输入</div>
+                                <div class="node" id="handle" type="Handle">处理</div>
+                                <div class="node radius" id="output" type="Output">输出</div>
                             </div>
                         </div>
                         <div class="layui-col-md8 layui-col-lg8">
@@ -135,11 +135,15 @@
                         success: function (res) {
                             console.log(res);
                             if (res.code === 0) {
-                                let list = res.data;
+                                let data = res.data;
 
-                                for (let i = 0; i < list.length; i++) {
-                                    let taskUnit = list[i];
-                                    addTaskUnitDiv(taskUnit.type, taskUnit.tuid, taskUnit.leftDis, taskUnit.topDis);
+                                for (let key in data) {
+                                    console.log(key);
+                                    let list = data[key];
+                                    for (let i = 0; i < list.length; i++) {
+                                        let taskUnit = list[i];
+                                        addTaskUnitDiv(key, taskUnit.tuid, taskUnit.leftDis, taskUnit.topDis);
+                                    }
                                 }
 
                                 resolve();
@@ -176,14 +180,6 @@
                                 }
                             }
                         });
-                    })
-                }).then(function () {
-                    return new Promise(function (resolve, reject) {
-
-
-
-
-                        resolve();
                     })
                 })
             }
@@ -324,7 +320,8 @@
                     containment: "#task-main",
                     stop: function (event, ui) {
                         console.log(ui);
-                        updateTaskUnit($(ui.helper).attr("id"), ui.position);
+                        let $helper = $(ui.helper);
+                        updateTaskUnit($helper.attr("type"), $helper.attr("id"), ui.position);
                     }
                 });
                 switch (type) {
@@ -399,10 +396,11 @@
                 return resData;
             }
 
-            function updateTaskUnit(tuid, position) {
+            function updateTaskUnit(type, tuid, position) {
                 let index = layer.load(2);
 
                 position['tuid'] = tuid;
+                position['type'] = type;
                 $.ajax({
                     url: ip + "/api/taskUnit",
                     type: "post",
@@ -431,6 +429,7 @@
                 // console.log(this);
                 let $thisTaskButton = $(this).parent();
                 let tuid = $thisTaskButton.attr("id");
+                let type = $thisTaskButton.attr("type");
                 layer.open({
                     content: '确定要删除吗?',
                     yes: function (index, layero) {
@@ -442,7 +441,8 @@
                             contentType: "application/json",
                             data: JSON.stringify({
                                 "tid": tid,
-                                "tuid": tuid
+                                "tuid": tuid,
+                                "type": type
                             }),
                             dataType: "json",
                             success: function (res) {
@@ -478,13 +478,6 @@
                 $taskDetail.html("").append("123").attr("onselect", $thisNode.attr("id"));
 
             });
-
-            // instance.bind("click", function (conn, originalEvent) {
-            //     console.log(conn);
-            //     if (confirm("Are you sure?")) {
-            //         instance.detach(conn);
-            //     }
-            // });
 
             //基本连接线样式
             var connectorPaintStyle = {
@@ -536,36 +529,7 @@
                     }]
                 ]
             };
-            //实心圆样式
-            var solidCircle = {
-                endpoint: ["Dot", {
-                    radius: 8
-                }], //端点的形状
-                paintStyle: {
-                    fillStyle: "rgb(122, 176, 44)"
-                }, //端点的颜色样式
-                connectorStyle: {
-                    strokeStyle: "rgb(97, 183, 207)",
-                    lineWidth: 4
-                }, //连接线的颜色，大小样式
-                isSource: true, //是否可以拖动（作为连线起点）
-                connector: ["Flowchart", {
-                    stub: [40, 60],
-                    gap: 10,
-                    cornerRadius: 5,
-                    alwaysRespectStubs: true
-                }], //连接线的样式种类有[Bezier],[Flowchart],[StateMachine ],[Straight ]
-                isTarget: true, //是否可以放置（连线终点）
-                //anchor: "AutoDefault",
-                maxConnections: 3, // 设置连接点最多可以连接几条线
-                connectorOverlays: [
-                    ["Arrow", {
-                        width: 10,
-                        length: 10,
-                        location: 1
-                    }]
-                ]
-            };
+
         });
 
     });

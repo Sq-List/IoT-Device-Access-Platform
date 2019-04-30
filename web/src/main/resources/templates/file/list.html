@@ -156,6 +156,18 @@
             if (fileDom.files && fileDom.files[0]) {
                 let pointIndex = fileDom.files[0].name.lastIndexOf(".");
                 let name = fileDom.files[0].name.slice(0, pointIndex);
+                let extensions = fileDom.files[0].name.slice(pointIndex + 1);
+
+                if (extensions === "jar") {
+                    console.log($("#fileAddForm"));
+                    $($("#fileAddForm").children()[0]).after("" +
+                        "<div class=\"layui-form-item\">\n" +
+                        "    <label class=\"layui-form-label\">mainClass</label>\n" +
+                        "    <div class=\"layui-input-block\">\n" +
+                        "        <input type=\"text\" id=\"mainClass\" name=\"mainClass\" class=\"layui-input\">\n" +
+                        "    </div>\n" +
+                        "</div>");
+                }
 
                 $("#fileName").val(name);
             }

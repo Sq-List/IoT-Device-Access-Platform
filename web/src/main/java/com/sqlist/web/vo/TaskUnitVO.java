@@ -14,10 +14,10 @@ import javax.validation.constraints.NotNull;
 @ToString
 public class TaskUnitVO {
 
-    @NotNull(groups = Delete.class)
+    @NotNull(groups = {Delete.class, Update.class, Delete.class})
     private String tuid;
 
-    @NotNull(groups = Add.class)
+    @NotNull(groups = {Add.class, Update.class, Delete.class})
     private String type;
 
     @NotNull(groups = {Add.class, Update.class})

@@ -10,7 +10,7 @@ import com.sqlist.web.mapper.TaskMapper;
 import com.sqlist.web.result.CodeMsg;
 import com.sqlist.web.service.TaskService;
 import com.sqlist.web.service.TaskUnitConnectService;
-import com.sqlist.web.service.TaskUnitServce;
+import com.sqlist.web.service.TaskUnitService;
 import com.sqlist.web.vo.PageVO;
 import com.sqlist.web.vo.TaskVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class TaskServiceImpl implements TaskService {
     private TaskMapper taskMapper;
 
     @Autowired
-    private TaskUnitServce taskUnitServce;
+    private TaskUnitService taskUnitService;
 
     @Autowired
     private TaskUnitConnectService taskUnitConnectService;
@@ -81,7 +81,7 @@ public class TaskServiceImpl implements TaskService {
         taskMapper.deleteMultiple(user, tidList);
 
         // 删除相关的unit和connect
-        taskUnitServce.deleteMultiple(tidList);
+        taskUnitService.deleteMultiple(tidList);
         taskUnitConnectService.deleteMultiple(tidList);
     }
 }

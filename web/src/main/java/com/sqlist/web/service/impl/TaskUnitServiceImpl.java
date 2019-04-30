@@ -4,7 +4,7 @@ import com.sqlist.web.domain.TaskUnit;
 import com.sqlist.web.domain.TaskUnitConnect;
 import com.sqlist.web.mapper.TaskUnitMapper;
 import com.sqlist.web.service.TaskUnitConnectService;
-import com.sqlist.web.service.TaskUnitServce;
+import com.sqlist.web.service.TaskUnitService;
 import com.sqlist.web.util.UUIDUtil;
 import com.sqlist.web.vo.TaskUnitVO;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ import java.util.List;
  **/
 @Slf4j
 @Service
-public class TaskUnitServiceImpl implements TaskUnitServce {
+public class TaskUnitServiceImpl implements TaskUnitService {
 
     public static final String TASK_UNIT_UID_PREFIX = "tu-";
 
@@ -32,28 +32,17 @@ public class TaskUnitServiceImpl implements TaskUnitServce {
     @Autowired
     private TaskUnitConnectService taskUnitConnectService;
 
-    @Override
-    public List<TaskUnit> list(Integer tid) {
-        TaskUnit taskUnit = new TaskUnit();
-        taskUnit.setTid(tid);
-
-        List<TaskUnit> taskUnitList = taskUnitMapper.select(taskUnit);
-
-        return taskUnitList;
-    }
-
     @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public TaskUnit add(TaskUnitVO taskUnitVO) {
         TaskUnit taskUnit = new TaskUnit();
-        taskUnit.setTuid(TASK_UNIT_UID_PREFIX + UUIDUtil.uuid());
-        taskUnit.setType(taskUnitVO.getType());
+        taskUnit.setTuid(taskUnitVO.getType().toLowerCase() + "-" + UUIDUtil.uuid());
         taskUnit.setLeftDis(taskUnitVO.getLeft());
         taskUnit.setTopDis(taskUnitVO.getTop());
-        taskUnit.setTid(taskUnitVO.getTid());
         taskUnit.setCreateTime(new Date());
+        taskUnit.setTid(taskUnitVO.getTid());
 
-        taskUnitMapper.insert(taskUnit);
+        taskUnitMapper.insert(taskUnitVO.getType().toLowerCase(), taskUnit);
 
         return taskUnit;
     }
@@ -63,10 +52,9 @@ public class TaskUnitServiceImpl implements TaskUnitServce {
     public void delete(TaskUnitVO taskUnitVO) {
         TaskUnit taskUnit = new TaskUnit();
         taskUnit.setTuid(taskUnitVO.getTuid());
+        taskUnit.setTid(taskUnitVO.getTid());
 
-        taskUnitMapper.delete(taskUnit);
-
-        // TODO：删除相关联的内容
+        taskUnitMapper.delete(taskUnitVO.getType().toLowerCase(), taskUnit);
 
         // 删除相关联的连接
         TaskUnitConnect taskUnitConnect = new TaskUnitConnect();
@@ -77,18 +65,18 @@ public class TaskUnitServiceImpl implements TaskUnitServce {
 
     @Override
     public void deleteMultiple(List<Integer> deleteTidList) {
-        taskUnitMapper.deleteMultiple(deleteTidList);
-
-        // TODO：删除相关联的内容
+        taskUnitMapper.deleteMultiple("input", deleteTidList);
+        taskUnitMapper.deleteMultiple("handle", deleteTidList);
+        taskUnitMapper.deleteMultiple("output", deleteTidList);
     }
 
     @Override
-    public void update(TaskUnitVO taskUnitVO) {
+    public void updateDis(TaskUnitVO taskUnitVO) {
         TaskUnit taskUnit = new TaskUnit();
         taskUnit.setTuid(taskUnitVO.getTuid());
         taskUnit.setLeftDis(taskUnitVO.getLeft());
         taskUnit.setTopDis(taskUnitVO.getTop());
 
-        taskUnitMapper.updateByPrimaryKeySelective(taskUnit);
+        taskUnitMapper.updateDis(taskUnitVO.getType().toLowerCase(), taskUnit);
     }
 }

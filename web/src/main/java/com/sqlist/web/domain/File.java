@@ -21,6 +21,12 @@ public class File {
     private String name;
 
     /**
+     * 入口类
+     */
+    @Column(name = "main_class")
+    private String mainClass;
+
+    /**
      * 文件扩展名
      */
     private String extensions;
@@ -75,6 +81,24 @@ public class File {
      */
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
+    }
+
+    /**
+     * 获取入口类
+     *
+     * @return main_class - 入口类
+     */
+    public String getMainClass() {
+        return mainClass;
+    }
+
+    /**
+     * 设置入口类
+     *
+     * @param mainClass 入口类
+     */
+    public void setMainClass(String mainClass) {
+        this.mainClass = mainClass == null ? null : mainClass.trim();
     }
 
     /**

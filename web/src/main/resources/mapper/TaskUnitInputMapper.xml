@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sqlist.web.mapper.TaskUnitInputMapper" >
+  <resultMap id="BaseResultMap" type="com.sqlist.web.domain.TaskUnitInput" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="tuid" property="tuid" jdbcType="VARCHAR" />
+    <result column="pid" property="pid" jdbcType="INTEGER" />
+    <result column="left_dis" property="leftDis" jdbcType="INTEGER" />
+    <result column="top_dis" property="topDis" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="job_id" property="jobId" jdbcType="VARCHAR" />
+    <result column="tid" property="tid" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    tuid, pid, left_dis, top_dis, status, create_time, job_id, tid
+  </sql>
+</mapper>

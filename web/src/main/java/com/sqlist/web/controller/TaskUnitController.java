@@ -3,7 +3,10 @@ package com.sqlist.web.controller;
 import com.sqlist.web.domain.TaskUnit;
 import com.sqlist.web.domain.User;
 import com.sqlist.web.result.Result;
-import com.sqlist.web.service.TaskUnitServce;
+import com.sqlist.web.service.TaskUnitHandleService;
+import com.sqlist.web.service.TaskUnitInputService;
+import com.sqlist.web.service.TaskUnitOutputService;
+import com.sqlist.web.service.TaskUnitService;
 import com.sqlist.web.vo.TaskUnitVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author SqList
@@ -26,22 +31,34 @@ import java.util.List;
 public class TaskUnitController {
 
     @Autowired
-    private TaskUnitServce taskUnitServce;
+    private TaskUnitService taskUnitService;
+
+    @Autowired
+    private TaskUnitInputService taskUnitInputService;
+
+    @Autowired
+    private TaskUnitHandleService taskUnitHandleService;
+
+    @Autowired
+    private TaskUnitOutputService taskUnitOutputService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public Result list(User user, Integer tid) {
         log.info("add(), user: {}, tid: {}", user, tid);
 
-        List<TaskUnit> taskUnitList = taskUnitServce.list(tid);
+        Map<String, List> map = new HashMap<>();
+        map.put("input", taskUnitInputService.list(tid));
+        map.put("handle", taskUnitHandleService.list(tid));
+        map.put("output", taskUnitOutputService.list(tid));
 
-        return Result.success(taskUnitList);
+        return Result.success(map);
     }
 
     @RequestMapping(value = "", method = RequestMethod.PUT)
     public Result add(User user, @Validated(TaskUnitVO.Add.class) @RequestBody TaskUnitVO taskUnitVO) {
         log.info("add(), user: {}, taskUnitVO: {}", user, taskUnitVO);
 
-        TaskUnit taskUnit = taskUnitServce.add(taskUnitVO);
+        TaskUnit taskUnit = taskUnitService.add(taskUnitVO);
 
         return Result.success(taskUnit);
     }
@@ -50,16 +67,16 @@ public class TaskUnitController {
     public Result delete(User user, @Validated(TaskUnitVO.Delete.class) @RequestBody TaskUnitVO taskUnitVO) {
         log.info("deleteMultiple(), user: {}, taskUnitVO: {}", user, taskUnitVO);
 
-        taskUnitServce.delete(taskUnitVO);
+        taskUnitService.delete(taskUnitVO);
 
         return Result.success(null);
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public Result update(User user, @Validated(TaskUnitVO.Update.class) @RequestBody TaskUnitVO taskUnitVO) {
+    public Result updateDis(User user, @Validated(TaskUnitVO.Update.class) @RequestBody TaskUnitVO taskUnitVO) {
         log.info("deleteMultiple(), user: {}, taskUnitVO: {}", user, taskUnitVO);
 
-        taskUnitServce.update(taskUnitVO);
+        taskUnitService.updateDis(taskUnitVO);
 
         return Result.success(null);
     }

@@ -3,6 +3,11 @@ package com.sqlist.web.domain;
 import java.util.Date;
 import javax.persistence.*;
 
+/**
+ * @author SqList
+ * @date 2019/4/28 1:19
+ * @description
+ **/
 @Table(name = "task_unit_connect")
 public class TaskUnitConnect {
     /**

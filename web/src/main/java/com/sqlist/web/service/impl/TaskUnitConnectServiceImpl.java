@@ -93,8 +93,8 @@ public class TaskUnitConnectServiceImpl implements TaskUnitConnectService {
             // 更新旧连接
 
             try {
-                log.info("new connect is not exist, update old connect");
-                log.debug("new connect: {} is not exist, update old connect: {}", newConnect, oldConnect);
+                log.info("new connect is not exist, updateDis old connect");
+                log.debug("new connect: {} is not exist, updateDis old connect: {}", newConnect, oldConnect);
                 TaskUnitConnect updateOldConnect = taskUnitConnectMapper.selectOne(oldConnect);
                 updateOldConnect.setSourceTuid(taskUnitConnectVO.getSourceTuid());
                 updateOldConnect.setTargetTuid(taskUnitConnectVO.getTargetTuid());

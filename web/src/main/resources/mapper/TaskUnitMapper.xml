@@ -22,10 +22,28 @@
     </sql>
 
     <delete id="deleteMultiple" parameterType="list">
-        DELETE FROM task_unit
+        DELETE FROM task_unit_${type}
         WHERE tid IN
         <foreach item="item" collection="tidList" separator="," open="(" close=")" index="">
             #{item}
         </foreach>
+    </delete>
+
+    <insert id="insert">
+        INSERT INTO `graduation`.`task_unit_${type}`(`tuid`, `left_dis`, `top_dis`, `create_time`, `tid`)
+        VALUES (#{taskUnit.tuid}, #{taskUnit.leftDis}, #{taskUnit.topDis}, #{taskUnit.createTime}, #{taskUnit.tid});
+    </insert>
+
+    <update id="updateDis">
+        UPDATE task_unit_${type}
+        SET left_dis = #{taskUnit.leftDis}
+        AND top_dis = #{taskUnit.topDis}
+        WHERE tid = #{taskUnit.tid}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM task_unit_${type}
+        WHERE tuid = #{taskUnit.tuid}
+        AND tid = #{taskUnit.tid}
     </delete>
 </mapper>

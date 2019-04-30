@@ -79,6 +79,7 @@ public class FileServiceImpl implements FileService {
             throw new GlobalException(CodeMsg.UPLOAD_FILE_IO_EXCEPTION);
         }
 
+        saveFile.setMainClass(fileVO.getMainClass());
         saveFile.setPath(savePath);
         saveFile.setExtensions(extensions);
         saveFile.setUploadTime(new Date());

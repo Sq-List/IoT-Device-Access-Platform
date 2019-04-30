@@ -2,6 +2,11 @@ package com.sqlist.web.domain;
 
 import javax.persistence.*;
 
+/**
+ * @author SqList
+ * @date 2019/4/15 1:19
+ * @description
+ **/
 public class User {
     @Id
     private Integer uid;

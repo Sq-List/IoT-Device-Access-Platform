@@ -10,14 +10,7 @@ import java.util.List;
  * @date 2019/4/22 15:04
  * @description
  **/
-public interface TaskUnitServce {
-
-    /**
-     * 获取 taskUnit
-     * @param tid
-     * @return
-     */
-    List<TaskUnit> list(Integer tid);
+public interface TaskUnitService {
 
     /**
      * 添加 taskUnit
@@ -42,5 +35,5 @@ public interface TaskUnitServce {
      * 更新 taskUnit
      * @param taskUnitVO
      */
-    void update(TaskUnitVO taskUnitVO);
+    void updateDis(TaskUnitVO taskUnitVO);
 }
