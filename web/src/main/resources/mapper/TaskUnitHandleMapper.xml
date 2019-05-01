@@ -21,7 +21,7 @@
     <!--
       WARNING - @mbg.generated
     -->
-    tuid, type, fid, main_class, content, left_dis, top_dis, status, create_time, job_id,
+    tuid, type, fid, content, left_dis, top_dis, status, create_time, job_id,
     tid
   </sql>
 </mapper>

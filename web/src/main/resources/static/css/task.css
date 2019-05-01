@@ -26,6 +26,12 @@
     border-radius: 25em;
 }
 
+[id^="task"] {
+    box-sizing: border-box;
+    border: 1px solid #7c7c7c;
+    height: 740px;
+}
+
 .node:hover {
     box-shadow: 2px 2px 19px #444;
     -o-box-shadow: 2px 2px 19px #444;
@@ -42,11 +48,6 @@
     -moz-box-shadow: 2px 2px 19px #444;
     opacity: 0.8;
     filter: alpha(opacity=80);
-}
-
-[id^="task"] {
-    border: 1px solid #7c7c7c;
-    height: 740px;
 }
 
 #task-button {

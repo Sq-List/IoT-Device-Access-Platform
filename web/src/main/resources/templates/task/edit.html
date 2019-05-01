@@ -38,38 +38,9 @@
                         </div>
                         <div class="layui-col-md3 layui-col-lg3">
                             <div id="task-detail" onselect="">
-                                <form class="layui-form layui-form-pane">
-                                    <div class="layui-form-item layui-form-text">
-                                        <label class="layui-form-label">产品</label>
-                                        <div class="layui-input-block">
-                                            <select name="product" lay-verify="required">
-                                                <option value=""></option>
-                                                <option value="0">北京</option>
-                                                <option value="1">上海</option>
-                                                <option value="2">广州</option>
-                                                <option value="3">深圳</option>
-                                                <option value="4">杭州</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item layui-form-text">
-                                        <label class="layui-form-label">设备</label>
-                                        <div class="layui-input-block">
-                                            <select name="device" lay-verify="required">
-                                                <option value=""></option>
-                                                <option value="0">北京</option>
-                                                <option value="1">上海</option>
-                                                <option value="2">广州</option>
-                                                <option value="3">深圳</option>
-                                                <option value="4">杭州</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <button class="layui-btn" lay-submit="" lay-filter="">保存</button>
-                                    </div>
-                                </form>
-
+                                <div class="center">
+                                    请点击任务单元
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -79,13 +50,96 @@
         </div>
     </div>
 
-    <template id="no-click-content">
+    <template id="noClickContent">
         <div class="center">
             请点击任务单元
         </div>
     </template>
-    <template id="input-content">
-
+    <template id="inputContent">
+        <form class="layui-form layui-form-pane">
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">产品</label>
+                <div class="layui-input-block">
+                    <select id="productSelect" name="pid" lay-verify="required" lay-filter="productSelect">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">Topic</label>
+                <div class="layui-input-block">
+                    <input type="text" id="productTopic" name="topic" class="layui-input" readonly>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <button class="layui-btn" id="save" lay-submit="" lay-filter="save">保存</button>
+            </div>
+        </form>
+    </template>
+    <template id="handleContent">
+        <form class="layui-form layui-form-pane">
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">类型</label>
+                <div class="layui-input-block">
+                    <select id="typeSelect" name="type" lay-verify="required" lay-filter="typeSelect">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">处理文件</label>
+                <div class="layui-input-block">
+                    <select id="fileSelect" name="fid" lay-verify="required" lay-filter="fileSelect">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <!--sql内容-->
+            <!--<div class="layui-form-item layui-form-text">-->
+                <!--<label class="layui-form-label">处理文件</label>-->
+                <!--<div class="layui-input-block">-->
+                    <!--<select id="fileSelect" name="fid" lay-verify="required" lay-filter="fileSelect">-->
+                        <!--<option value=""></option>-->
+                    <!--</select>-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="layui-form-item">
+                <button class="layui-btn" id="save" lay-submit="" lay-filter="save">保存</button>
+            </div>
+        </form>
+    </template>
+    <template id="outputContent">
+        <form class="layui-form layui-form-pane" lay-filter="outputForm">
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">类型</label>
+                <div class="layui-input-block">
+                    <select id="typeSelect" name="type" lay-verify="required" lay-filter="typeSelect">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">ip</label>
+                <div class="layui-input-block">
+                    <input type="text" id="ip" name="ip" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">port</label>
+                <div class="layui-input-block">
+                    <input type="text" id="port" name="port" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">url</label>
+                <div class="layui-input-block">
+                    <input type="text" id="url" name="url" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <button class="layui-btn" id="save" lay-submit="" lay-filter="save">保存</button>
+            </div>
+        </form>
     </template>
 </div>
 
@@ -97,10 +151,11 @@
 
 </div>
 <script layout:fragment="script">
-    layui.use(['element', 'table', 'layer'], function () {
+    layui.use(['element', 'table', 'layer', 'form'], function () {
         var element = layui.element;
         var table = layui.table;
         var layer = layui.layer;
+        var form = layui.form;
 
         var tid = /.*(\d+).*/g.exec(window.location.pathname)[1];
 
@@ -451,7 +506,7 @@
                                 if (res.code === 0) {
                                     let $taskDetail = $("#task-detail");
                                     if ($taskDetail.attr("onselect") === tuid) {
-                                        $taskDetail.html("").append($("#no-click-content").html());
+                                        $taskDetail.html("").append($("#noClickContent").html());
                                     }
 
                                     instance.removeAllEndpoints($thisTaskButton.attr("id"));
@@ -475,8 +530,171 @@
                 $thisNode.addClass("click");
 
                 let $taskDetail = $("#task-detail");
-                $taskDetail.html("").append("123").attr("onselect", $thisNode.attr("id"));
+                let Type = $thisNode.attr("type");
+                let type = Type.toLowerCase();
+                let id = $thisNode.attr("id");
+                $taskDetail.html($("#" + type + "Content").html()); // .attr("onselect", id)
 
+                form.on("submit(save)", function (data) {
+                    console.log(data);
+                    $.ajax({
+                        url: ip + "/api/taskUnit" + Type + "/" + id,
+                        type: "post",
+                        data: JSON.stringify(data.field),
+                        contentType: "application/json",
+                        dataType: "json",
+                        success: function (res) {
+                            // console.log(res);
+                            if (res.code === 0) {
+                                layer.msg("保存成功", {icon: 1, time: 2000});
+                            } else {
+                                layer.msg(res.msg, {icon: 2, time: 2000});
+                            }
+                        }
+                    });
+                    return false;
+                });
+
+                let index = layer.load(2);
+                new Promise(function (resolve, reject) {
+                    $.ajax({
+                        url: ip + "/api/taskUnit" + Type + "/" + id,
+                        type: "get",
+                        contentType: "application/json",
+                        dataType: "json",
+                        success: function (res) {
+                            // console.log(res);
+                            if (res.code === 0) {
+                                let data = res.data;
+                                resolve(data);
+                            } else {
+                                layer.msg(res.msg, {icon: 2, time: 2000});
+                                reject();
+                            }
+                        }
+                    });
+                }).then(function (data) {
+                    console.log(data);
+                    switch (type) {
+                        case "input":
+                            let pidToTopic = {};
+                            $.ajax({
+                                url: ip + "/api/product?page=1&limit=-1",
+                                type: "get",
+                                contentType: "application/json",
+                                dataType: "json",
+                                success: function (res) {
+                                    // console.log(res);
+                                    layer.close(index);
+                                    if (res.code === 0) {
+                                        let list = res.data.list;
+                                        let $productSelect = $("#productSelect");
+                                        list.forEach(function (product) {
+                                            if (data.pid && product.pid === data.pid) {
+                                                $productSelect.append("<option value=" + product.pid + " selected>" + product.name + "</option>");
+                                                $("#productTopic").val(product.topic);
+                                            } else {
+                                                $productSelect.append("<option value=" + product.pid + ">" + product.name + "</option>");
+                                            }
+
+                                            pidToTopic[product.pid] = product.topic;
+                                        });
+                                        form.render('select');
+                                    } else {
+                                        layer.msg(res.msg, {icon: 2, time: 2000});
+                                    }
+                                }
+                            });
+
+                            form.on('select(productSelect)', function (data) {
+                                console.log(data);
+                                $("#productTopic").val(pidToTopic[data.value]);
+                            });
+                            break;
+
+                        case "handle":
+                            $.ajax({
+                                url: ip + "/api/file?page=1&limit=-1",
+                                type: "get",
+                                contentType: "application/json",
+                                dataType: "json",
+                                success: function (res) {
+                                    console.log(res);
+                                    if (res.code === 0) {
+                                        let list = res.data.list;
+                                        let $fileSelect = $("#fileSelect");
+                                        list.forEach(function (file) {
+                                            if (data.fid && file.fid === data.fid) {
+                                                $fileSelect.append("<option value=" + file.fid + " selected>" + file.name + "</option>");
+                                            } else {
+                                                $fileSelect.append("<option value=" + file.fid + ">" + file.name + "</option>");
+                                            }
+                                        });
+                                        form.render('select');
+                                    } else {
+                                        layer.msg(res.msg, {icon: 2, time: 2000});
+                                    }
+                                }
+                            });
+
+                            $.ajax({
+                                url: ip + "/api/commonJar/handle/types",
+                                type: "get",
+                                contentType: "application/json",
+                                dataType: "json",
+                                success: function (res) {
+                                    console.log(res);
+                                    if (res.code === 0) {
+                                        let list = res.data;
+                                        let $typeSelect = $("#typeSelect");
+                                        list.forEach(function (commonJarType) {
+                                            if (data.type && commonJarType === data.type) {
+                                                $typeSelect.append("<option value=" + commonJarType + " selected>" + commonJarType + "</option>");
+                                            } else {
+                                                $typeSelect.append("<option value=" + commonJarType + ">" + commonJarType + "</option>");
+                                            }
+                                        });
+                                        form.render('select');
+                                    } else {
+                                        layer.msg(res.msg, {icon: 2, time: 2000});
+                                    }
+                                }
+                            });
+
+                            layer.close(index);
+                            break;
+
+                        case "output":
+                            $.ajax({
+                                url: ip + "/api/commonJar/output/types",
+                                type: "get",
+                                contentType: "application/json",
+                                dataType: "json",
+                                success: function (res) {
+                                    console.log(res);
+                                    if (res.code === 0) {
+                                        let list = res.data;
+                                        let $typeSelect = $("#typeSelect");
+                                        list.forEach(function (commonJarType) {
+                                            if (data.type && commonJarType === data.type) {
+                                                $typeSelect.append("<option value=" + commonJarType + " selected>" + commonJarType + "</option>");
+                                            } else {
+                                                $typeSelect.append("<option value=" + commonJarType + ">" + commonJarType + "</option>");
+                                            }
+                                        });
+                                        form.render('select');
+                                    } else {
+                                        layer.msg(res.msg, {icon: 2, time: 2000});
+                                    }
+                                }
+                            });
+
+                            form.val("outputForm", data);
+
+                            layer.close(index);
+                            break;
+                    }
+                });
             });
 
             //基本连接线样式

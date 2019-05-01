@@ -42,10 +42,14 @@ public class ProductServiceImpl implements ProductService {
 
         HashMap<String, Object> map = new HashMap<>();
 
-        PageHelper.startPage(pageVO.getPage(), pageVO.getLimit());
+        if (pageVO.getLimit() != -1) {
+            PageHelper.startPage(pageVO.getPage(), pageVO.getLimit());
+        }
         List<Product> productList = productMapper.select(product);
 
-        map.put("total", ((Page)productList).getTotal());
+        if (pageVO.getLimit() != -1) {
+            map.put("total", ((Page)productList).getTotal());
+        }
         map.put("list", productList);
 
         return map;

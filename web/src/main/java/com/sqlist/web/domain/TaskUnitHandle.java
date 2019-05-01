@@ -20,12 +20,6 @@ public class TaskUnitHandle extends TaskUnit {
      */
     private Integer fid;
 
-    /**
-     * type为java时, jar
-     */
-    @Column(name = "main_class")
-    private String mainClass;
-
     private String content;
 
     /**
@@ -73,24 +67,6 @@ public class TaskUnitHandle extends TaskUnit {
      */
     public void setFid(Integer fid) {
         this.fid = fid;
-    }
-
-    /**
-     * 获取type为java时, jar
-     *
-     * @return main_class - type为java时, jar
-     */
-    public String getMainClass() {
-        return mainClass;
-    }
-
-    /**
-     * 设置type为java时, jar
-     *
-     * @param mainClass type为java时, jar
-     */
-    public void setMainClass(String mainClass) {
-        this.mainClass = mainClass == null ? null : mainClass.trim();
     }
 
     /**

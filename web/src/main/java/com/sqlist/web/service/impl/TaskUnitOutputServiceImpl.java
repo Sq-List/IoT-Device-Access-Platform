@@ -20,6 +20,13 @@ public class TaskUnitOutputServiceImpl implements TaskUnitOutputService {
     private TaskUnitOutputMapper taskUnitOutputMapper;
 
     @Override
+    public TaskUnitOutput get(String tuid) {
+        TaskUnitOutput taskUnitOutput = new TaskUnitOutput();
+        taskUnitOutput.setTuid(tuid);
+        return taskUnitOutputMapper.selectByPrimaryKey(taskUnitOutput);
+    }
+
+    @Override
     public List<TaskUnitOutput> list(Integer tid) {
         TaskUnitOutput taskUnitOutput = new TaskUnitOutput();
         taskUnitOutput.setTid(tid);

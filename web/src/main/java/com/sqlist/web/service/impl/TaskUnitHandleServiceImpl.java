@@ -20,6 +20,13 @@ public class TaskUnitHandleServiceImpl implements TaskUnitHandleService {
     private TaskUnitHandleMapper taskUnitHandleMapper;
 
     @Override
+    public TaskUnitHandle get(String tuid) {
+        TaskUnitHandle taskUnitHandle = new TaskUnitHandle();
+        taskUnitHandle.setTuid(tuid);
+        return taskUnitHandleMapper.selectByPrimaryKey(taskUnitHandle);
+    }
+
+    @Override
     public List<TaskUnitHandle> list(Integer tid) {
         TaskUnitHandle taskUnitHandle = new TaskUnitHandle();
         taskUnitHandle.setTid(tid);

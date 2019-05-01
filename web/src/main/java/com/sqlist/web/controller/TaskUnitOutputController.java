@@ -1,7 +1,12 @@
 package com.sqlist.web.controller;
 
+import com.sqlist.web.result.Result;
+import com.sqlist.web.service.TaskUnitOutputService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -13,4 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/taskUnitOutput")
 public class TaskUnitOutputController {
+
+    @Autowired
+    private TaskUnitOutputService taskUnitOutputService;
+
+    @RequestMapping(value = "/{tuid}", method = RequestMethod.GET)
+    public Result get(@PathVariable("tuid") String tuid) {
+        return Result.success(taskUnitOutputService.get(tuid));
+    }
 }

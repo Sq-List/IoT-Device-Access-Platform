@@ -1,6 +1,7 @@
 package com.sqlist.web.service;
 
 import com.sqlist.web.domain.TaskUnitInput;
+import com.sqlist.web.vo.TaskUnitInputVO;
 
 import java.util.List;
 
@@ -12,9 +13,22 @@ import java.util.List;
 public interface TaskUnitInputService {
 
     /**
+     * 获取某个input
+     * @param tuid
+     * @return
+     */
+    TaskUnitInput get(String tuid);
+
+    /**
      * 获取
      * @param tid
      * @return
      */
     List<TaskUnitInput> list(Integer tid);
+
+    /**
+     * 更新 detail
+     * @param taskUnitInputVO
+     */
+    void updateDetail(TaskUnitInputVO taskUnitInputVO);
 }

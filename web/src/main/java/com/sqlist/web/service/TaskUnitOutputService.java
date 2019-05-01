@@ -12,6 +12,13 @@ import java.util.List;
 public interface TaskUnitOutputService {
 
     /**
+     * 获取某个input
+     * @param tuid
+     * @return
+     */
+    TaskUnitOutput get(String tuid);
+
+    /**
      * 获取
      * @param tid
      * @return

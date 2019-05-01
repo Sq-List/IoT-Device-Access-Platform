@@ -1,7 +1,7 @@
 package com.sqlist.web.controller;
 
 import com.sqlist.web.result.Result;
-import com.sqlist.web.service.TaskUnitHandleService;
+import com.sqlist.web.service.CommonJarService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,19 +11,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author SqList
- * @date 2019/5/1 1:36
+ * @date 2019/5/2 2:15
  * @description
  **/
 @Slf4j
 @RestController
-@RequestMapping("/api/taskUnitHandle")
-public class TaskUnitHandleController {
+@RequestMapping("/api/commonJar")
+public class CommonJarController {
 
     @Autowired
-    private TaskUnitHandleService taskUnitHandleService;
+    private CommonJarService commonJarService;
 
-    @RequestMapping(value = "/{tuid}", method = RequestMethod.GET)
-    public Result get(@PathVariable("tuid") String tuid) {
-        return Result.success(taskUnitHandleService.get(tuid));
+    @RequestMapping(value = "/{taskUnitType}/types", method = RequestMethod.GET)
+    public Result getType(@PathVariable("taskUnitType") String taskUnitType) {
+        return Result.success(commonJarService.getType(taskUnitType));
     }
 }

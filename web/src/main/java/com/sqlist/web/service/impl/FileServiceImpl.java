@@ -44,12 +44,16 @@ public class FileServiceImpl implements FileService {
 
         HashMap<String, Object> map = new HashMap<>();
 
-        PageHelper.startPage(pageVO.getPage(), pageVO.getLimit());
+        if (pageVO.getLimit() != -1) {
+            PageHelper.startPage(pageVO.getPage(), pageVO.getLimit());
+        }
         List<File> fileList = fileMapper.select(file);
 
         fileList.forEach((tmpFile) -> tmpFile.setPath(null));
 
-        map.put("total", ((Page)fileList).getTotal());
+        if (pageVO.getLimit() != -1) {
+            map.put("total", ((Page)fileList).getTotal());
+        }
         map.put("list", fileList);
 
         return map;
