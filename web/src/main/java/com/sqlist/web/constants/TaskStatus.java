@@ -9,7 +9,7 @@ public enum TaskStatus {
     // 开发中
     CODING("开发中"),
     // 未使用
-    UNUSE("未使用"),
+    UNUSE("开发完成"),
     // 使用中
     USING("使用中");
 

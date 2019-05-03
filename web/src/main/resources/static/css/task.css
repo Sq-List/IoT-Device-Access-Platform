@@ -50,6 +50,10 @@
     filter: alpha(opacity=80);
 }
 
+#task-main .node.error {
+    border: 1px solid red;
+}
+
 #task-button {
     /*border: 1px solid #00bfff;*/
     /*height: 750px;*/

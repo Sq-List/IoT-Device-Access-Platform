@@ -13,12 +13,23 @@ public class GlobalException extends RuntimeException {
 
     private CodeMsg codeMsg;
 
+    private Object data;
+
     public GlobalException(CodeMsg codeMsg) {
         super(codeMsg.getMsg());
         this.codeMsg = codeMsg;
     }
 
+    public GlobalException(CodeMsg codeMsg, Object data) {
+        this(codeMsg);
+        this.data = data;
+    }
+
     public CodeMsg getCodeMsg() {
         return codeMsg;
+    }
+
+    public Object getData() {
+        return data;
     }
 }

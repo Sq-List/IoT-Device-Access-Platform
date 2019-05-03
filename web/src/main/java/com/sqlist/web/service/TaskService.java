@@ -36,4 +36,23 @@ public interface TaskService {
      * @param deleteList
      */
     void deleteMultiple(User user, List<Integer> deleteList);
+
+    /**
+     * 获取task信息
+     * @param tid
+     * @return
+     */
+    Task detail(Integer tid);
+
+    /**
+     * 更新 updateTime
+     * @param tid
+     */
+    void updateUpdateTime(Integer tid);
+
+    /**
+     * 开发完成
+     * @param tid
+     */
+    void finish(Integer tid);
 }

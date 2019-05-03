@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = GlobalException.class)
     public Result handleGlobalException(GlobalException e) {
         log.error("raised GlobalException: {}", e.getCodeMsg().toString());
-        return Result.fail(e.getCodeMsg());
+        return Result.fail(e.getCodeMsg(), e.getData());
     }
 
     @ExceptionHandler(value = {MethodArgumentNotValidException.class, BindException.class})

@@ -28,6 +28,11 @@ public class Result<T> {
         this.msg = codeMsg.getMsg();
     }
 
+    private Result(CodeMsg codeMsg, T data) {
+        this(codeMsg);
+        this.data = data;
+    }
+
     private Result(int code, String msg, T data) {
         this.code = code;
         this.msg = msg;
@@ -52,6 +57,10 @@ public class Result<T> {
      */
     public static <T> Result<T> fail(CodeMsg codeMsg) {
         return new Result<T>(codeMsg);
+    }
+
+    public static <T> Result<T> fail(CodeMsg codeMsg, T data) {
+        return new Result<T>(codeMsg, data);
     }
 
     public int getCode() {

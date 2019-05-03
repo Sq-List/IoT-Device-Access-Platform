@@ -48,6 +48,7 @@ public class TaskUnitConnectController {
 
     @RequestMapping(value = "", method = RequestMethod.DELETE)
     public Result delete(User user, @Validated({TaskUnitConnectVO.Delete.class}) @RequestBody TaskUnitConnectVO taskUnitConnectVO) {
+        taskUnitConnectService.delete(taskUnitConnectVO);
         return Result.success(null);
     }
 

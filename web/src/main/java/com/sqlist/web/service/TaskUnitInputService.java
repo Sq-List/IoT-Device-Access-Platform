@@ -31,4 +31,18 @@ public interface TaskUnitInputService {
      * @param taskUnitInputVO
      */
     void updateDetail(TaskUnitInputVO taskUnitInputVO);
+
+    /**
+     * 获取 tid 任务下 detail为 null 的 input
+     * @param tid
+     * @return
+     */
+    List<TaskUnitInput> countDetailNull(Integer tid);
+
+    /**
+     * 统计 tid 任务下 input 个数
+     * @param tid
+     * @return
+     */
+    Integer count(Integer tid);
 }

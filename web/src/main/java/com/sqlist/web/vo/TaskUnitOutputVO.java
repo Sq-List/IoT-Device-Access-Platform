@@ -7,17 +7,26 @@ import javax.validation.constraints.NotNull;
 
 /**
  * @author SqList
- * @date 2019/5/2 1:09
+ * @date 2019/5/3 17:54
  * @description
  **/
 @Data
 @ToString
-public class TaskUnitInputVO {
+public class TaskUnitOutputVO {
 
+    @NotNull
     private String tuid;
 
     @NotNull
-    private Integer pid;
+    private String type;
+
+    @NotNull
+    private String ip;
+
+    @NotNull
+    private String port;
+
+    private String url;
 
     @NotNull
     private Integer tid;

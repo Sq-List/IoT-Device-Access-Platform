@@ -4,23 +4,20 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sqlist.web.constants.TaskStatus;
 import com.sqlist.web.domain.Task;
+import com.sqlist.web.domain.TaskUnit;
+import com.sqlist.web.domain.TaskUnitInput;
 import com.sqlist.web.domain.User;
 import com.sqlist.web.exception.GlobalException;
 import com.sqlist.web.mapper.TaskMapper;
 import com.sqlist.web.result.CodeMsg;
-import com.sqlist.web.service.TaskService;
-import com.sqlist.web.service.TaskUnitConnectService;
-import com.sqlist.web.service.TaskUnitService;
+import com.sqlist.web.service.*;
 import com.sqlist.web.vo.PageVO;
 import com.sqlist.web.vo.TaskVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author SqList
@@ -38,6 +35,15 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private TaskUnitConnectService taskUnitConnectService;
+
+    @Autowired
+    private TaskUnitInputService taskUnitInputService;
+
+    @Autowired
+    private TaskUnitHandleService taskUnitHandleService;
+
+    @Autowired
+    private TaskUnitOutputService taskUnitOutputService;
 
     @Override
     public Map<String, Object> list(User user, PageVO pageVO) {
@@ -83,5 +89,53 @@ public class TaskServiceImpl implements TaskService {
         // 删除相关的unit和connect
         taskUnitService.deleteMultiple(tidList);
         taskUnitConnectService.deleteMultiple(tidList);
+    }
+
+    @Override
+    public Task detail(Integer tid) {
+        Task task = new Task();
+        task.setTid(tid);
+        return taskMapper.selectByPrimaryKey(task);
+    }
+
+    @Override
+    public void updateUpdateTime(Integer tid) {
+        Task task = new Task();
+        task.setTid(tid);
+        task.setUpdateTime(new Date());
+        taskMapper.updateByPrimaryKeySelective(task);
+    }
+
+    @Transactional(rollbackFor = RuntimeException.class)
+    @Override
+    public void finish(Integer tid) {
+        List<TaskUnit> unitList = new ArrayList<>(taskUnitInputService.countDetailNull(tid));
+        unitList.addAll(taskUnitHandleService.countDetailNull(tid));
+        unitList.addAll(taskUnitOutputService.countDetailNull(tid));
+
+        if (unitList.size() != 0) {
+            throw new GlobalException(CodeMsg.TASK_DETAIL_NULL, unitList);
+        }
+
+        int inputCount = taskUnitInputService.count(tid);
+        int handleCount = taskUnitHandleService.count(tid);
+        int outputCount = taskUnitOutputService.count(tid);
+
+        if (inputCount != 1) {
+            throw new GlobalException(CodeMsg.TASK_INPUT_ONE);
+        }
+
+        if (outputCount == 0) {
+            throw new GlobalException(CodeMsg.TASK_OUTPUT_ZERO);
+        }
+
+        if (inputCount + handleCount + outputCount != taskUnitConnectService.count(tid) + 1) {
+            throw new GlobalException(CodeMsg.TASK_CONNECT_LACK);
+        }
+
+        Task task = new Task();
+        task.setTid(tid);
+        task.setStatus(TaskStatus.UNUSE.name());
+        taskMapper.updateByPrimaryKeySelective(task);
     }
 }

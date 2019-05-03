@@ -67,4 +67,15 @@ public class TaskController {
 
         return Result.success(null);
     }
+
+    @RequestMapping(value = "/{tid}", method = RequestMethod.GET)
+    public Result detail(@PathVariable("tid") Integer tid) {
+        return Result.success(taskService.detail(tid));
+    }
+
+    @RequestMapping(value = "/{tid}/finish", method = RequestMethod.POST)
+    public Result finish(@PathVariable("tid") Integer tid) {
+        taskService.finish(tid);
+        return Result.success(null);
+    }
 }

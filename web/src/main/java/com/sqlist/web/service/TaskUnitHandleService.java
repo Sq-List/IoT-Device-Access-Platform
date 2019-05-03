@@ -1,6 +1,7 @@
 package com.sqlist.web.service;
 
 import com.sqlist.web.domain.TaskUnitHandle;
+import com.sqlist.web.vo.TaskUnitHandleVO;
 
 import java.util.List;
 
@@ -24,4 +25,24 @@ public interface TaskUnitHandleService {
      * @return
      */
     List<TaskUnitHandle> list(Integer tid);
+
+    /**
+     * 更新 detail
+     * @param taskUnitHandleVO
+     */
+    void updateDetail(TaskUnitHandleVO taskUnitHandleVO);
+
+    /**
+     * 获取 tid 任务下 detail为 null 的 input
+     * @param tid
+     * @return
+     */
+    List<TaskUnitHandle> countDetailNull(Integer tid);
+
+    /**
+     * 统计 tid 任务下 handle 个数
+     * @param tid
+     * @return
+     */
+    Integer count(Integer tid);
 }

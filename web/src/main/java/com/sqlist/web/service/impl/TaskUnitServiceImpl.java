@@ -3,6 +3,7 @@ package com.sqlist.web.service.impl;
 import com.sqlist.web.domain.TaskUnit;
 import com.sqlist.web.domain.TaskUnitConnect;
 import com.sqlist.web.mapper.TaskUnitMapper;
+import com.sqlist.web.service.TaskService;
 import com.sqlist.web.service.TaskUnitConnectService;
 import com.sqlist.web.service.TaskUnitService;
 import com.sqlist.web.util.UUIDUtil;
@@ -31,6 +32,9 @@ public class TaskUnitServiceImpl implements TaskUnitService {
 
     @Autowired
     private TaskUnitConnectService taskUnitConnectService;
+
+    @Autowired
+    private TaskService taskService;
 
     @Transactional(rollbackFor = RuntimeException.class)
     @Override
@@ -61,6 +65,9 @@ public class TaskUnitServiceImpl implements TaskUnitService {
         taskUnitConnect.setTid(taskUnitVO.getTid());
         taskUnitConnect.setSourceTuid(taskUnitVO.getTuid());
         taskUnitConnectService.taskUnitDelete(taskUnitConnect);
+
+        // 更新task的updateTime
+        taskService.updateUpdateTime(taskUnitVO.getTid());
     }
 
     @Override
@@ -78,5 +85,8 @@ public class TaskUnitServiceImpl implements TaskUnitService {
         taskUnit.setTopDis(taskUnitVO.getTop());
 
         taskUnitMapper.updateDis(taskUnitVO.getType().toLowerCase(), taskUnit);
+
+        // 更新task的updateTime
+        taskService.updateUpdateTime(taskUnitVO.getTid());
     }
 }

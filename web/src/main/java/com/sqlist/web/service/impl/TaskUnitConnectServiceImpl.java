@@ -2,6 +2,7 @@ package com.sqlist.web.service.impl;
 
 import com.sqlist.web.domain.TaskUnitConnect;
 import com.sqlist.web.mapper.TaskUnitConnectMapper;
+import com.sqlist.web.service.TaskService;
 import com.sqlist.web.service.TaskUnitConnectService;
 import com.sqlist.web.vo.TaskUnitConnectVO;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,9 @@ public class TaskUnitConnectServiceImpl implements TaskUnitConnectService {
     @Autowired
     private TaskUnitConnectMapper taskUnitConnectMapper;
 
+    @Autowired
+    private TaskService taskService;
+
     @Override
     public List<TaskUnitConnect> list(Integer tid) {
         TaskUnitConnect taskUnitConnect = new TaskUnitConnect();
@@ -47,8 +51,12 @@ public class TaskUnitConnectServiceImpl implements TaskUnitConnectService {
                 log.error("new connect already exist");
             }
         }
+
+        // 更新task的updateTime
+        taskService.updateUpdateTime(taskUnitConnectVO.getTid());
     }
 
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public void delete(TaskUnitConnectVO taskUnitConnectVO) {
         TaskUnitConnect taskUnitConnect = new TaskUnitConnect();
@@ -57,6 +65,9 @@ public class TaskUnitConnectServiceImpl implements TaskUnitConnectService {
         taskUnitConnect.setTid(taskUnitConnectVO.getTid());
 
         taskUnitConnectMapper.delete(taskUnitConnect);
+
+        // 更新task的updateTime
+        taskService.updateUpdateTime(taskUnitConnectVO.getTid());
     }
 
     @Override
@@ -104,5 +115,15 @@ public class TaskUnitConnectServiceImpl implements TaskUnitConnectService {
                 taskUnitConnectMapper.delete(oldConnect);
             }
         }
+
+        // 更新task的updateTime
+        taskService.updateUpdateTime(taskUnitConnectVO.getTid());
+    }
+
+    @Override
+    public Integer count(Integer tid) {
+        TaskUnitConnect taskUnitConnect = new TaskUnitConnect();
+        taskUnitConnect.setTid(tid);
+        return taskUnitConnectMapper.selectCount(taskUnitConnect);
     }
 }

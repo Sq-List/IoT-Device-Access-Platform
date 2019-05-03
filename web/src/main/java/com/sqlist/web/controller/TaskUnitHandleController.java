@@ -2,12 +2,11 @@ package com.sqlist.web.controller;
 
 import com.sqlist.web.result.Result;
 import com.sqlist.web.service.TaskUnitHandleService;
+import com.sqlist.web.vo.TaskUnitHandleVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author SqList
@@ -25,5 +24,12 @@ public class TaskUnitHandleController {
     @RequestMapping(value = "/{tuid}", method = RequestMethod.GET)
     public Result get(@PathVariable("tuid") String tuid) {
         return Result.success(taskUnitHandleService.get(tuid));
+    }
+
+    @RequestMapping(value = "/{tuid}", method = RequestMethod.POST)
+    public Result updateDetail(@PathVariable("tuid") String tuid, @Validated @RequestBody TaskUnitHandleVO taskUnitHandleVO) {
+        taskUnitHandleVO.setTuid(tuid);
+        taskUnitHandleService.updateDetail(taskUnitHandleVO);
+        return Result.success(null);
     }
 }

@@ -11,10 +11,7 @@ import com.sqlist.web.vo.TaskUnitVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -42,8 +39,8 @@ public class TaskUnitController {
     @Autowired
     private TaskUnitOutputService taskUnitOutputService;
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    public Result list(User user, Integer tid) {
+    @RequestMapping(value = "/{tid}", method = RequestMethod.GET)
+    public Result list(User user, @PathVariable("tid") Integer tid) {
         log.info("add(), user: {}, tid: {}", user, tid);
 
         Map<String, List> map = new HashMap<>();

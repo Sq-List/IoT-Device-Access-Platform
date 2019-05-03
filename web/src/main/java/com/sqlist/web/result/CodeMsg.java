@@ -28,6 +28,10 @@ public class CodeMsg {
      * Task 5003XX
      */
     public static CodeMsg TASK_NAME_REPEAT = new CodeMsg(500301, "任务名称不能重复");
+    public static CodeMsg TASK_DETAIL_NULL = new CodeMsg(500302, "任务单元详细信息未填写完全");
+    public static CodeMsg TASK_CONNECT_LACK = new CodeMsg(500303, "存在任务单元还未连接");
+    public static CodeMsg TASK_INPUT_ONE = new CodeMsg(500304, "输入单元需要存在且只有一个");
+    public static CodeMsg TASK_OUTPUT_ZERO = new CodeMsg(500305, "输出单元最少需要一个");
 
     /**
      * File 5004XX
@@ -36,10 +40,10 @@ public class CodeMsg {
     public static CodeMsg UPLOAD_FILE_IO_EXCEPTION = new CodeMsg(500402, "上传文件失败");
     public static CodeMsg FILE_NAME_REPEAT = new CodeMsg(500403, "文件名称不能重复");
 
-    private CodeMsg( ) {
+    private CodeMsg() {
     }
 
-    private CodeMsg( int code,String msg ) {
+    private CodeMsg(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }
@@ -47,12 +51,15 @@ public class CodeMsg {
     public int getCode() {
         return code;
     }
+
     public void setCode(int code) {
         this.code = code;
     }
+
     public String getMsg() {
         return msg;
     }
+
     public void setMsg(String msg) {
         this.msg = msg;
     }

@@ -20,7 +20,8 @@
         <div class="layui-col-md12 layui-col-lg12">
             <div class="tonghe-card">
                 <div class="tonghe-card-header">
-                    <div class="layui-btn layui-btn-primary">开发完成</div>
+                    <div class="layui-btn" id="finish">开发完成</div>
+                    <span id="saveTime" target="_blank" href="javascript:;" style="padding-left: 10px; height: 36px; line-height: 36px; color: #5FB878;"></span>
                 </div>
                 <div class="tonghe-card-body">
                     <div class="layui-row layui-col-space15">
@@ -182,10 +183,25 @@
                 let index = layer.load(2);
                 new Promise(function (resolve, reject) {
                     $.ajax({
-                        url: ip + "/api/taskUnit",
+                        url: ip + "/api/task/" + tid,
                         type: "get",
                         contentType: "application/json",
-                        data: "tid=" + tid,
+                        dataType: "json",
+                        success: function (res) {
+                            console.log(res);
+                            if (res.code === 0) {
+                                let data = res.data;
+                                autoSave(data.updateTime);
+                            } else {
+                                layer.msg(res.msg, {icon: 2, time: 2000});
+                            }
+                        }
+                    });
+
+                    $.ajax({
+                        url: ip + "/api/taskUnit/" + tid,
+                        type: "get",
+                        contentType: "application/json",
                         dataType: "json",
                         success: function (res) {
                             console.log(res);
@@ -264,7 +280,7 @@
                     success: function (res) {
                         console.log(res);
                         if (res.code === 0) {
-
+                            autoSave();
                         } else {
                             layer.msg(res.msg, {icon: 2, time: 2000});
                         }
@@ -300,7 +316,7 @@
                     success: function (res) {
                         console.log(res);
                         if (res.code === 0) {
-
+                            autoSave();
                         } else {
                             layer.msg(res.msg, {icon: 2, time: 2000});
                         }
@@ -331,7 +347,7 @@
                             console.log(res);
                             layer.close(index);
                             if (res.code === 0) {
-
+                                autoSave();
                             } else {
                                 layer.msg(res.msg, {icon: 2, time: 2000});
                             }
@@ -364,6 +380,12 @@
 
             function addTaskUnitDiv(type, id, left, top) {
                 let $taskMain = $("#task-main");
+
+                if (type === "input" && $("#task-main .node[type='input']").length === 1) {
+                    layer.msg("输入单元最多只能添加一个", {icon: 2, time: 2000});
+                    return;
+                }
+
                 $taskMain.append($("#" + type).clone().attr("id", id));
                 let $id = $("#" + id);
 
@@ -442,6 +464,7 @@
                         layer.close(index);
                         if (res.code === 0) {
                             resData = res.data;
+                            autoSave();
                         } else {
                             layer.msg(res.msg, {icon: 2, time: 2000});
                         }
@@ -456,6 +479,7 @@
 
                 position['tuid'] = tuid;
                 position['type'] = type;
+                position['tid'] = tid;
                 $.ajax({
                     url: ip + "/api/taskUnit",
                     type: "post",
@@ -466,7 +490,7 @@
                         // console.log(res);
                         layer.close(index);
                         if (res.code === 0) {
-
+                            autoSave();
                         } else {
                             layer.msg(res.msg, {icon: 2, time: 2000});
                         }
@@ -512,6 +536,7 @@
                                     instance.removeAllEndpoints($thisTaskButton.attr("id"));
                                     $thisTaskButton.remove();
                                     layer.close(index); //如果设定了yes回调，需进行手工关闭
+                                    autoSave();
                                 } else {
                                     layer.msg(res.msg, {icon: 2, time: 2000});
                                 }
@@ -536,6 +561,7 @@
                 $taskDetail.html($("#" + type + "Content").html()); // .attr("onselect", id)
 
                 form.on("submit(save)", function (data) {
+                    data.field["tid"] = tid;
                     console.log(data);
                     $.ajax({
                         url: ip + "/api/taskUnit" + Type + "/" + id,
@@ -546,6 +572,7 @@
                         success: function (res) {
                             // console.log(res);
                             if (res.code === 0) {
+                                autoSave();
                                 layer.msg("保存成功", {icon: 1, time: 2000});
                             } else {
                                 layer.msg(res.msg, {icon: 2, time: 2000});
@@ -696,6 +723,43 @@
                     }
                 });
             });
+
+            $("#finish").click(function () {
+                $.ajax({
+                    url: ip + "/api/task/" + tid + "/finish",
+                    type: "post",
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (res) {
+                        console.log(res);
+                        if (res.code === 0) {
+                            $("#task-main .node").removeClass("error");
+                            window.location.href = "/page/task";
+                        } else if (res.code === 500302) {
+                            layer.msg(res.msg, {icon: 2, time: 2000});
+                            let list = res.data;
+                            $("#task-main .node").removeClass("error");
+
+                            list.forEach(function (unit) {
+                                $("#" + unit.tuid).addClass("error");
+                            })
+                        } else {
+                            $("#task-main .node").removeClass("error");
+                            layer.msg(res.msg, {icon: 2, time: 2000});
+                        }
+                    }
+                });
+            });
+
+            function autoSave(updateTime) {
+                let time;
+                if (updateTime) {
+                    time = new Date(updateTime).format(commonDateFormat);
+                } else {
+                    time = new Date().format(commonDateFormat);
+                }
+                $("#saveTime").text("最后一次保存时间：" + time);
+            }
 
             //基本连接线样式
             var connectorPaintStyle = {

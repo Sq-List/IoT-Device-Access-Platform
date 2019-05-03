@@ -1,6 +1,7 @@
 package com.sqlist.web.service;
 
 import com.sqlist.web.domain.TaskUnitOutput;
+import com.sqlist.web.vo.TaskUnitOutputVO;
 
 import java.util.List;
 
@@ -24,4 +25,24 @@ public interface TaskUnitOutputService {
      * @return
      */
     List<TaskUnitOutput> list(Integer tid);
+
+    /**
+     * 更新 detail
+     * @param taskUnitOutputVO
+     */
+    void updateDetail(TaskUnitOutputVO taskUnitOutputVO);
+
+    /**
+     * 获取 tid 任务下 detail为 null 的 input
+     * @param tid
+     * @return
+     */
+    List<TaskUnitOutput> countDetailNull(Integer tid);
+
+    /**
+     * 统计 tid 任务下 output 个数
+     * @param tid
+     * @return
+     */
+    Integer count(Integer tid);
 }

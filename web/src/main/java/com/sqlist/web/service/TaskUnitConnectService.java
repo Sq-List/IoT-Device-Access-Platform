@@ -48,4 +48,11 @@ public interface TaskUnitConnectService {
      * @param taskUnitConnectVO
      */
     void update(TaskUnitConnectVO taskUnitConnectVO);
+
+    /**
+     * 统计 tid 任务的 connect
+     * @param tid
+     * @return
+     */
+    Integer count(Integer tid);
 }
