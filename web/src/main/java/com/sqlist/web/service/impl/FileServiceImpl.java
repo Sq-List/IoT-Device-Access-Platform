@@ -59,6 +59,13 @@ public class FileServiceImpl implements FileService {
         return map;
     }
 
+    @Override
+    public File get(Integer fid) {
+        File file = new File();
+        file.setFid(fid);
+        return fileMapper.selectByPrimaryKey(file);
+    }
+
     @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public void upload(User user, FileVO fileVO) {
@@ -84,8 +91,8 @@ public class FileServiceImpl implements FileService {
         }
 
         saveFile.setMainClass(fileVO.getMainClass());
-        saveFile.setPath(savePath);
         saveFile.setExtensions(extensions);
+        saveFile.setPath(new java.io.File(savePath, fileName).getPath());
         saveFile.setUploadTime(new Date());
         fileMapper.insert(saveFile);
     }
@@ -105,5 +112,14 @@ public class FileServiceImpl implements FileService {
 
             fileMapper.deleteByPrimaryKey(file);
         });
+    }
+
+    @Override
+    public void updateJarId(Integer fid, String jarId) {
+        File file = new File();
+        file.setFid(fid);
+        file.setJarId(jarId);
+
+        fileMapper.updateByPrimaryKeySelective(file);
     }
 }

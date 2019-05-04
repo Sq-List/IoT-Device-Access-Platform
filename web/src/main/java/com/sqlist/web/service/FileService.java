@@ -1,5 +1,6 @@
 package com.sqlist.web.service;
 
+import com.sqlist.web.domain.File;
 import com.sqlist.web.domain.User;
 import com.sqlist.web.vo.FileVO;
 import com.sqlist.web.vo.PageVO;
@@ -23,6 +24,13 @@ public interface FileService {
     Map<String, Object> list(User user, PageVO pageVO);
 
     /**
+     * 获取
+     * @param fid
+     * @return
+     */
+    File get(Integer fid);
+
+    /**
      * 上传 文件
      * @param user
      * @param fileVO
@@ -35,4 +43,11 @@ public interface FileService {
      * @param fidList
      */
     void delete(User user, List<Integer> fidList);
+
+    /**
+     * 更新 jarId
+     * @param fid
+     * @param jarId
+     */
+    void updateJarId(Integer fid, String jarId);
 }

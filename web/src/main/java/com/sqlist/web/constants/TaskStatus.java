@@ -10,8 +10,12 @@ public enum TaskStatus {
     CODING("开发中"),
     // 未使用
     UNUSE("开发完成"),
+    // 启动中
+    STARTING("启动中"),
     // 使用中
-    USING("使用中");
+    RUNNING("运行中"),
+    // 停止中
+    STOPING("停止中");
 
     private String msg;
 

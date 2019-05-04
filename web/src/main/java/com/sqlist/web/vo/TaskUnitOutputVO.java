@@ -14,7 +14,6 @@ import javax.validation.constraints.NotNull;
 @ToString
 public class TaskUnitOutputVO {
 
-    @NotNull
     private String tuid;
 
     @NotNull

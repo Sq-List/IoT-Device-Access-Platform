@@ -557,14 +557,15 @@
                 let $taskDetail = $("#task-detail");
                 let Type = $thisNode.attr("type");
                 let type = Type.toLowerCase();
-                let id = $thisNode.attr("id");
+                let tuid = $thisNode.attr("id");
                 $taskDetail.html($("#" + type + "Content").html()); // .attr("onselect", id)
 
                 form.on("submit(save)", function (data) {
+                    data.field["tuid"] = tuid;
                     data.field["tid"] = tid;
                     console.log(data);
                     $.ajax({
-                        url: ip + "/api/taskUnit" + Type + "/" + id,
+                        url: ip + "/api/taskUnit" + Type + "/" + tuid,
                         type: "post",
                         data: JSON.stringify(data.field),
                         contentType: "application/json",
@@ -585,7 +586,7 @@
                 let index = layer.load(2);
                 new Promise(function (resolve, reject) {
                     $.ajax({
-                        url: ip + "/api/taskUnit" + Type + "/" + id,
+                        url: ip + "/api/taskUnit" + Type + "/" + tuid,
                         type: "get",
                         contentType: "application/json",
                         dataType: "json",
@@ -734,7 +735,9 @@
                         console.log(res);
                         if (res.code === 0) {
                             $("#task-main .node").removeClass("error");
-                            window.location.href = "/page/task";
+                            layer.msg('保存成功', {icon: 1, time: 2000}, function () {
+                                window.location.href = "/page/task";
+                            });
                         } else if (res.code === 500302) {
                             layer.msg(res.msg, {icon: 2, time: 2000});
                             let list = res.data;

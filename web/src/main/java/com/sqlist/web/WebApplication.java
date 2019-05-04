@@ -2,6 +2,7 @@ package com.sqlist.web;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import tk.mybatis.spring.annotation.MapperScan;
 
@@ -9,6 +10,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  * @author SqList
  */
 @SpringBootApplication
+@EnableAsync
 @EnableTransactionManagement
 @MapperScan(basePackages = {"com.sqlist.web.mapper"})
 public class WebApplication {

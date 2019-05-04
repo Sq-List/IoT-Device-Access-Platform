@@ -26,8 +26,21 @@
         </div>
     </div>
     <template id="toolbar">
-        <a th:href="@{/page/task/{{ d.tid }}}" class="layui-btn layui-btn-primary layui-btn-xs">查看</a>
-        <a th:href="@{/page/task/{{ d.tid }}/edit}" class="layui-btn layui-btn-xs">编辑</a>
+        {{#  if (d.status === '开发完成'){ }}
+        <button class="layui-btn layui-btn-primary layui-btn-xs" id="start" tid="{{ d.tid }}">
+            <i class="fa fa-play" aria-hidden="true"></i>
+        </button>
+        {{#  } else if (d.status === '运行中' || d.status === '停止中') { }}
+        <button class="layui-btn layui-btn-primary layui-btn-xs" id="stop" tid="{{ d.tid }}">
+            <i class="fa fa-stop" aria-hidden="true"></i>
+        </button>
+        {{#  } else if (d.status === '启动中') { }}
+        <button class="layui-btn layui-btn-primary layui-btn-xs" id="starting" tid="{{ d.tid }}">
+            <i class="layui-icon layui-icon-loading" aria-hidden="true"></i>
+        </button>
+        {{#  } }}
+        <a th:href="@{/page/task/{{ d.tid }}}" class="layui-btn layui-btn-xs">查看</a>
+        <a th:href="@{/page/task/{{ d.tid }}/edit}" class="layui-btn layui-btn-primary layui-btn-xs">编辑</a>
     </template>
 </div>
 
@@ -134,6 +147,53 @@
                     });
                 }
             });
+        });
+
+        $(document).on("click", "#start", function () {
+            console.log("start.");
+            let timer;
+            let index1 = layer.load(2);
+            let tid = $(this).attr("tid");
+            $.ajax({
+                url: ip + "/api/task/" + tid + "/start",
+                type: "post",
+                contentType: "application/json",
+                dataType: "json",
+                success: function (res) {
+                    console.log(res);
+                    layer.close(index1);
+                    if (res.code === 0) {
+                        layer.msg('开始执行任务', {icon: 1, time: 2000});
+                        table.reload('tasksTable', {});
+                        timer = setInterval(function() {
+                            $.ajax({
+                                url: ip + "/api/task/" + tid,
+                                type: "get",
+                                contentType: "application/json",
+                                dataType: "json",
+                                success: function (res) {
+                                    console.log(res);
+                                    if (res.code === 0) {
+                                        let task = res.data;
+                                        if (task.status === "运行中") {
+                                            table.reload('tasksTable', {});
+                                            clearInterval(timer);
+                                        }
+                                    } else {
+                                        layer.msg(res.msg, {icon: 2, time: 2000});
+                                    }
+                                }
+                            });
+                        }, 2000);
+                    } else {
+                        layer.msg(res.msg, {icon: 2, time: 2000});
+                    }
+                }
+            });
+        });
+
+        $(document).on("click", "#stop", function () {
+            console.log("stop.");
         });
     });
 </script>

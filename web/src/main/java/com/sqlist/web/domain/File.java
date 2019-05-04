@@ -36,6 +36,9 @@ public class File {
      */
     private String path;
 
+    @Column(name = "jar_id")
+    private String jarId;
+
     /**
      * 上传时间
      */
@@ -135,6 +138,14 @@ public class File {
      */
     public void setPath(String path) {
         this.path = path == null ? null : path.trim();
+    }
+
+    public String getJarId() {
+        return jarId;
+    }
+
+    public void setJarId(String jarId) {
+        this.jarId = jarId;
     }
 
     /**

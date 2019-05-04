@@ -55,4 +55,16 @@ public interface TaskService {
      * @param tid
      */
     void finish(Integer tid);
+
+    /**
+     * 启动 任务
+     * @param tid
+     */
+    void start(Integer tid);
+
+    /**
+     * 停止 任务
+     * @param tid
+     */
+    void stop(Integer tid);
 }

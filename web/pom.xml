@@ -15,6 +15,19 @@
         <version>2.1.4.RELEASE</version>
     </parent>
 
+    <!--<repositories>-->
+        <!--<repository>-->
+            <!--<id>alimaven</id>-->
+            <!--<name>aliyun maven</name>-->
+            <!--<url>http://maven.aliyun.com/nexus/content/groups/public/</url>-->
+        <!--</repository>-->
+        <!--<repository>-->
+            <!--<id>spring</id>-->
+            <!--<name>spring maven</name>-->
+            <!--<url>https://maven.aliyun.com/nexus/content/repositories/spring</url>-->
+        <!--</repository>-->
+    <!--</repositories>-->
+
     <properties>
         <java.version>1.8</java.version>
         <thymeleaf-layout-dialect.version>2.3.0</thymeleaf-layout-dialect.version>
@@ -84,6 +97,23 @@
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>2.9.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>3.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.zhy</groupId>
+            <artifactId>okhttputils</artifactId>
+            <version>2.6.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>27.0.1-jre</version>
         </dependency>
 
         <dependency>

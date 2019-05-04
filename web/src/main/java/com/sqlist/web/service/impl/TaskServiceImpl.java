@@ -3,10 +3,7 @@ package com.sqlist.web.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sqlist.web.constants.TaskStatus;
-import com.sqlist.web.domain.Task;
-import com.sqlist.web.domain.TaskUnit;
-import com.sqlist.web.domain.TaskUnitInput;
-import com.sqlist.web.domain.User;
+import com.sqlist.web.domain.*;
 import com.sqlist.web.exception.GlobalException;
 import com.sqlist.web.mapper.TaskMapper;
 import com.sqlist.web.result.CodeMsg;
@@ -17,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -44,6 +43,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private TaskUnitOutputService taskUnitOutputService;
+
+    @Autowired
+    private TaskFlinkService taskFlinkService;
 
     @Override
     public Map<String, Object> list(User user, PageVO pageVO) {
@@ -121,14 +123,17 @@ public class TaskServiceImpl implements TaskService {
         int handleCount = taskUnitHandleService.count(tid);
         int outputCount = taskUnitOutputService.count(tid);
 
+        // input 有且仅有一个
         if (inputCount != 1) {
             throw new GlobalException(CodeMsg.TASK_INPUT_ONE);
         }
 
+        // output 至少要有一个
         if (outputCount == 0) {
             throw new GlobalException(CodeMsg.TASK_OUTPUT_ZERO);
         }
 
+        // 连接线 要比 unit 少一个  这样所有的unit才都是已连接
         if (inputCount + handleCount + outputCount != taskUnitConnectService.count(tid) + 1) {
             throw new GlobalException(CodeMsg.TASK_CONNECT_LACK);
         }
@@ -137,5 +142,19 @@ public class TaskServiceImpl implements TaskService {
         task.setTid(tid);
         task.setStatus(TaskStatus.UNUSE.name());
         taskMapper.updateByPrimaryKeySelective(task);
+    }
+
+    @Override
+    public void start(Integer tid) {
+        Task task = new Task();
+        task.setTid(tid);
+        task.setStatus(TaskStatus.STARTING.name());
+
+        taskMapper.updateByPrimaryKeySelective(task);
+    }
+
+    @Override
+    public void stop(Integer tid) {
+
     }
 }

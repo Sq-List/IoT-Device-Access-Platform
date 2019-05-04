@@ -16,6 +16,6 @@
     <!--
       WARNING - @mbg.generated
     -->
-    fid, name, main_class, extensions, path, upload_time, uid
+    fid, name, main_class, extensions, path, jar_id, upload_time, uid
   </sql>
 </mapper>
