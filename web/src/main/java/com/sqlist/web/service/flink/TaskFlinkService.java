@@ -1,5 +1,4 @@
-package com.sqlist.web.service;
-
+package com.sqlist.web.service.flink;
 
 /**
  * @author SqList

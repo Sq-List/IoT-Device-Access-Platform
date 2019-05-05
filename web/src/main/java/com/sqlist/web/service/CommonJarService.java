@@ -1,5 +1,7 @@
 package com.sqlist.web.service;
 
+import com.sqlist.web.domain.CommonJar;
+
 import java.util.List;
 
 /**
@@ -15,4 +17,12 @@ public interface CommonJarService {
      * @return
      */
     List<String> getType(String taskUnitType);
+
+    /**
+     * 根据 unitType type 获取 commonJar
+     * @param unitType
+     * @param type
+     * @return
+     */
+    CommonJar get(String unitType, String type);
 }

@@ -26,7 +26,7 @@
         </div>
     </div>
     <template id="toolbar">
-        {{#  if (d.status === '开发完成'){ }}
+        {{#  if (d.status === '开发完成') { }}
         <button class="layui-btn layui-btn-primary layui-btn-xs" id="start" tid="{{ d.tid }}">
             <i class="fa fa-play" aria-hidden="true"></i>
         </button>
@@ -39,8 +39,12 @@
             <i class="layui-icon layui-icon-loading" aria-hidden="true"></i>
         </button>
         {{#  } }}
-        <a th:href="@{/page/task/{{ d.tid }}}" class="layui-btn layui-btn-xs">查看</a>
+
+        {{# if (d.status === '开发完成') { }}
         <a th:href="@{/page/task/{{ d.tid }}/edit}" class="layui-btn layui-btn-primary layui-btn-xs">编辑</a>
+        {{#  } else { }}
+        <a th:href="@{/page/task/{{ d.tid }}}" class="layui-btn layui-btn-xs">查看</a>
+        {{#  } }}
     </template>
 </div>
 
@@ -59,6 +63,14 @@
             page: true,
             url: ip + "/api/task",
             parseData: function(res) { //res 即为原始返回的数据
+                let list = res.data.list;
+                for (let i = 0; i < list.length; i++) {
+                    // 遍历获取的数据，如果已经选择，则在table上选中
+                    if (list[i].status === "启动中") {
+                        getTaskStatus();
+                        break;
+                    }
+                }
                 return {
                     "code": res.code, //解析接口状态
                     "msg": res.msg, //解析提示文本
@@ -151,7 +163,6 @@
 
         $(document).on("click", "#start", function () {
             console.log("start.");
-            let timer;
             let index1 = layer.load(2);
             let tid = $(this).attr("tid");
             $.ajax({
@@ -165,26 +176,7 @@
                     if (res.code === 0) {
                         layer.msg('开始执行任务', {icon: 1, time: 2000});
                         table.reload('tasksTable', {});
-                        timer = setInterval(function() {
-                            $.ajax({
-                                url: ip + "/api/task/" + tid,
-                                type: "get",
-                                contentType: "application/json",
-                                dataType: "json",
-                                success: function (res) {
-                                    console.log(res);
-                                    if (res.code === 0) {
-                                        let task = res.data;
-                                        if (task.status === "运行中") {
-                                            table.reload('tasksTable', {});
-                                            clearInterval(timer);
-                                        }
-                                    } else {
-                                        layer.msg(res.msg, {icon: 2, time: 2000});
-                                    }
-                                }
-                            });
-                        }, 2000);
+                        getTaskStatus();
                     } else {
                         layer.msg(res.msg, {icon: 2, time: 2000});
                     }
@@ -194,7 +186,31 @@
 
         $(document).on("click", "#stop", function () {
             console.log("stop.");
+            let index1 = layer.load(2);
+            let tid = $(this).attr("tid");
+            $.ajax({
+                url: ip + "/api/task/" + tid + "/stop",
+                type: "patch",
+                contentType: "application/json",
+                dataType: "json",
+                success: function (res) {
+                    console.log(res);
+                    layer.close(index1);
+                    if (res.code === 0) {
+                        layer.msg('停止任务', {icon: 1, time: 2000});
+                        table.reload('tasksTable', {});
+                    } else {
+                        layer.msg(res.msg, {icon: 2, time: 2000});
+                    }
+                }
+            });
         });
+
+        function getTaskStatus() {
+            setTimeout(function () {
+                table.reload('tasksTable', {});
+            }, 2000);
+        }
     });
 </script>
 </html>

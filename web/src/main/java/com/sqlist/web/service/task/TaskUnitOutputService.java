@@ -1,4 +1,4 @@
-package com.sqlist.web.service;
+package com.sqlist.web.service.task;
 
 import com.sqlist.web.domain.TaskUnitOutput;
 import com.sqlist.web.vo.TaskUnitOutputVO;
@@ -45,4 +45,10 @@ public interface TaskUnitOutputService {
      * @return
      */
     Integer count(Integer tid);
+
+    /**
+     * 更新
+     * @param taskUnitOutput
+     */
+    void update(TaskUnitOutput taskUnitOutput);
 }

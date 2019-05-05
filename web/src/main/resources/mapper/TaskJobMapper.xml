@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sqlist.web.mapper.TaskJobMapper">
+    <resultMap id="BaseResultMap" type="com.sqlist.web.domain.TaskUnitJob">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="tuid" property="tuid" jdbcType="VARCHAR"/>
+        <result column="left_dis" property="leftDis" jdbcType="INTEGER"/>
+        <result column="top_dis" property="topDis" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="job_id" property="jobId" jdbcType="VARCHAR"/>
+        <result column="tid" property="tid" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="JobResultMap" type="com.sqlist.web.domain.TaskUnitJob">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="tuid" property="tuid" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="job_id" property="jobId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        tuid, left_dis, top_dis, status, create_time, job_id, tid
+    </sql>
+
+    <select id="selectStartingJob" resultMap="JobResultMap">
+        ( SELECT tuid, STATUS, job_id
+        FROM task_unit_handle
+        WHERE tid = #{tid}
+          AND STATUS = "RUNNING" )
+        UNION
+        ( SELECT tuid, STATUS, job_id
+        FROM task_unit_output
+        WHERE tid = #{tid}
+          AND STATUS = "RUNNING" )
+    </select>
+</mapper>

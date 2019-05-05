@@ -1,11 +1,11 @@
-package com.sqlist.web.service.impl;
+package com.sqlist.web.service.impl.task;
 
 import com.sqlist.web.domain.TaskUnit;
 import com.sqlist.web.domain.TaskUnitConnect;
 import com.sqlist.web.mapper.TaskUnitMapper;
-import com.sqlist.web.service.TaskService;
-import com.sqlist.web.service.TaskUnitConnectService;
-import com.sqlist.web.service.TaskUnitService;
+import com.sqlist.web.service.task.TaskService;
+import com.sqlist.web.service.task.TaskUnitConnectService;
+import com.sqlist.web.service.task.TaskUnitService;
 import com.sqlist.web.util.UUIDUtil;
 import com.sqlist.web.vo.TaskUnitVO;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +24,6 @@ import java.util.List;
 @Slf4j
 @Service
 public class TaskUnitServiceImpl implements TaskUnitService {
-
-    public static final String TASK_UNIT_UID_PREFIX = "tu-";
 
     @Autowired
     private TaskUnitMapper taskUnitMapper;

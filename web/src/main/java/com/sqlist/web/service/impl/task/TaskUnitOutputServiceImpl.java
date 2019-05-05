@@ -1,9 +1,10 @@
-package com.sqlist.web.service.impl;
+package com.sqlist.web.service.impl.task;
 
+import com.sqlist.web.constants.TaskJobStatus;
 import com.sqlist.web.domain.TaskUnitOutput;
 import com.sqlist.web.mapper.TaskUnitOutputMapper;
-import com.sqlist.web.service.TaskService;
-import com.sqlist.web.service.TaskUnitOutputService;
+import com.sqlist.web.service.task.TaskService;
+import com.sqlist.web.service.task.TaskUnitOutputService;
 import com.sqlist.web.vo.TaskUnitOutputVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,7 @@ public class TaskUnitOutputServiceImpl implements TaskUnitOutputService {
     public void updateDetail(TaskUnitOutputVO taskUnitOutputVO) {
         TaskUnitOutput taskUnitOutput = new TaskUnitOutput();
         taskUnitOutput.setTuid(taskUnitOutputVO.getTuid());
+        taskUnitOutput.setStatus(TaskJobStatus.UNUSE.name());
         taskUnitOutput.setType(taskUnitOutputVO.getType());
         taskUnitOutput.setIp(taskUnitOutputVO.getIp());
         taskUnitOutput.setPort(taskUnitOutputVO.getPort());
@@ -68,5 +70,10 @@ public class TaskUnitOutputServiceImpl implements TaskUnitOutputService {
         TaskUnitOutput taskUnitOutput = new TaskUnitOutput();
         taskUnitOutput.setTid(tid);
         return taskUnitOutputMapper.selectCount(taskUnitOutput);
+    }
+
+    @Override
+    public void update(TaskUnitOutput taskUnitOutput) {
+        taskUnitOutputMapper.updateByPrimaryKeySelective(taskUnitOutput);
     }
 }

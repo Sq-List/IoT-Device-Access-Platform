@@ -1,4 +1,4 @@
-package com.sqlist.web.service;
+package com.sqlist.web.service.task;
 
 import com.sqlist.web.domain.TaskUnit;
 import com.sqlist.web.vo.TaskUnitVO;
@@ -36,4 +36,6 @@ public interface TaskUnitService {
      * @param taskUnitVO
      */
     void updateDis(TaskUnitVO taskUnitVO);
+
+
 }

@@ -1,9 +1,9 @@
-package com.sqlist.web.service.impl;
+package com.sqlist.web.service.impl.task;
 
 import com.sqlist.web.domain.TaskUnitConnect;
 import com.sqlist.web.mapper.TaskUnitConnectMapper;
-import com.sqlist.web.service.TaskService;
-import com.sqlist.web.service.TaskUnitConnectService;
+import com.sqlist.web.service.task.TaskService;
+import com.sqlist.web.service.task.TaskUnitConnectService;
 import com.sqlist.web.vo.TaskUnitConnectVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

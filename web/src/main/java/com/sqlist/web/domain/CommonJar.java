@@ -1,6 +1,7 @@
 package com.sqlist.web.domain;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @author SqList
@@ -38,6 +39,12 @@ public class CommonJar {
      */
     @Column(name = "main_class")
     private String mainClass;
+
+    @Column(name = "jar_id")
+    private String jarId;
+
+    @Column(name = "create_time")
+    private Date createTime;
 
     /**
      * @return cjid
@@ -141,5 +148,21 @@ public class CommonJar {
      */
     public void setMainClass(String mainClass) {
         this.mainClass = mainClass == null ? null : mainClass.trim();
+    }
+
+    public String getJarId() {
+        return jarId;
+    }
+
+    public void setJarId(String jarId) {
+        this.jarId = jarId;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

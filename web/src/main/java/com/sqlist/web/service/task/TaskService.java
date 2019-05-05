@@ -1,4 +1,4 @@
-package com.sqlist.web.service;
+package com.sqlist.web.service.task;
 
 import com.sqlist.web.domain.Task;
 import com.sqlist.web.domain.User;
@@ -49,6 +49,18 @@ public interface TaskService {
      * @param tid
      */
     void updateUpdateTime(Integer tid);
+
+    /**
+     * 更新
+     * @param task
+     */
+    void update(Task task);
+
+    /**
+     * 获取处于 启动中 的任务
+     * @return
+     */
+    List<Task> getStartingTask();
 
     /**
      * 开发完成

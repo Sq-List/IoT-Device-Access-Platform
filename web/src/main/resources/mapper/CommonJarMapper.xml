@@ -20,7 +20,7 @@
     </sql>
 
     <select id="selectAllTypeByTaskUnitType" resultType="String">
-        SELECT type
+        SELECT DISTINCT type
         FROM common_jar
         WHERE task_unit_type = #{taskUnitType}
     </select>

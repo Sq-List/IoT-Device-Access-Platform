@@ -1,4 +1,4 @@
-package com.sqlist.web.service;
+package com.sqlist.web.service.task;
 
 import com.sqlist.web.domain.TaskUnitConnect;
 import com.sqlist.web.vo.TaskUnitConnectVO;

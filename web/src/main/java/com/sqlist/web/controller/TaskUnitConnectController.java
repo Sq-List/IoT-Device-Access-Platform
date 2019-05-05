@@ -3,7 +3,7 @@ package com.sqlist.web.controller;
 import com.sqlist.web.domain.TaskUnitConnect;
 import com.sqlist.web.domain.User;
 import com.sqlist.web.result.Result;
-import com.sqlist.web.service.TaskUnitConnectService;
+import com.sqlist.web.service.task.TaskUnitConnectService;
 import com.sqlist.web.vo.TaskUnitConnectVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

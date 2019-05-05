@@ -1,5 +1,6 @@
 package com.sqlist.web.service.impl;
 
+import com.sqlist.web.domain.CommonJar;
 import com.sqlist.web.mapper.CommonJarMapper;
 import com.sqlist.web.service.CommonJarService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,5 +24,13 @@ public class CommonJarServiceImpl implements CommonJarService {
     @Override
     public List<String> getType(String taskUnitType) {
         return commonJarMapper.selectAllTypeByTaskUnitType(taskUnitType);
+    }
+
+    @Override
+    public CommonJar get(String unitType, String type) {
+        CommonJar commonJar = new CommonJar();
+        commonJar.setTaskUnitType(unitType);
+        commonJar.setType(type);
+        return commonJarMapper.select(commonJar).get(0);
     }
 }

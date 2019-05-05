@@ -8,7 +8,7 @@ import javax.persistence.*;
  * @description
  **/
 @Table(name = "task_unit_handle")
-public class TaskUnitHandle extends TaskUnit {
+public class TaskUnitHandle extends TaskUnitJob {
 
     /**
      * java, sql...
@@ -21,17 +21,6 @@ public class TaskUnitHandle extends TaskUnit {
     private Integer fid;
 
     private String content;
-
-    /**
-     * 任务单元状态
-     */
-    private String status;
-
-    /**
-     * 任务单元提交到flink的job_id
-     */
-    @Column(name = "job_id")
-    private String jobId;
 
     /**
      * 获取java, sql...
@@ -81,41 +70,5 @@ public class TaskUnitHandle extends TaskUnit {
      */
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
-    }
-
-    /**
-     * 获取任务单元状态
-     *
-     * @return status - 任务单元状态
-     */
-    public String getStatus() {
-        return status;
-    }
-
-    /**
-     * 设置任务单元状态
-     *
-     * @param status 任务单元状态
-     */
-    public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
-    }
-
-    /**
-     * 获取任务单元提交到flink的job_id
-     *
-     * @return job_id - 任务单元提交到flink的job_id
-     */
-    public String getJobId() {
-        return jobId;
-    }
-
-    /**
-     * 设置任务单元提交到flink的job_id
-     *
-     * @param jobId 任务单元提交到flink的job_id
-     */
-    public void setJobId(String jobId) {
-        this.jobId = jobId == null ? null : jobId.trim();
     }
 }

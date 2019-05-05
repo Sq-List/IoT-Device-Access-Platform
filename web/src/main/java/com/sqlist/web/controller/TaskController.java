@@ -1,10 +1,9 @@
 package com.sqlist.web.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.sqlist.web.domain.Task;
 import com.sqlist.web.domain.User;
 import com.sqlist.web.result.Result;
-import com.sqlist.web.service.TaskService;
+import com.sqlist.web.service.task.TaskService;
 import com.sqlist.web.vo.PageVO;
 import com.sqlist.web.vo.TaskVO;
 import lombok.extern.slf4j.Slf4j;

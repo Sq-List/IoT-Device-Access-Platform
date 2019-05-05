@@ -1,4 +1,4 @@
-package com.sqlist.web.service.impl;
+package com.sqlist.web.service.impl.task;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -7,15 +7,16 @@ import com.sqlist.web.domain.*;
 import com.sqlist.web.exception.GlobalException;
 import com.sqlist.web.mapper.TaskMapper;
 import com.sqlist.web.result.CodeMsg;
-import com.sqlist.web.service.*;
+import com.sqlist.web.service.flink.TaskFlinkService;
+import com.sqlist.web.service.task.*;
 import com.sqlist.web.vo.PageVO;
 import com.sqlist.web.vo.TaskVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -23,6 +24,7 @@ import java.util.*;
  * @date 2019/4/21 0:24
  * @description
  **/
+@Slf4j
 @Service
 public class TaskServiceImpl implements TaskService {
 
@@ -44,6 +46,7 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private TaskUnitOutputService taskUnitOutputService;
 
+    @Lazy
     @Autowired
     private TaskFlinkService taskFlinkService;
 
@@ -108,6 +111,18 @@ public class TaskServiceImpl implements TaskService {
         taskMapper.updateByPrimaryKeySelective(task);
     }
 
+    @Override
+    public void update(Task task) {
+        taskMapper.updateByPrimaryKeySelective(task);
+    }
+
+    @Override
+    public List<Task> getStartingTask() {
+        Task task = new Task();
+        task.setStatus(TaskStatus.STARTING.name());
+        return taskMapper.select(task);
+    }
+
     @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public void finish(Integer tid) {
@@ -150,11 +165,23 @@ public class TaskServiceImpl implements TaskService {
         task.setTid(tid);
         task.setStatus(TaskStatus.STARTING.name());
 
+        log.info("before start.");
+        taskFlinkService.start(tid);
+        log.info("after start.");
+
         taskMapper.updateByPrimaryKeySelective(task);
     }
 
     @Override
     public void stop(Integer tid) {
+        Task task = new Task();
+        task.setTid(tid);
+        task.setStatus(TaskStatus.UNUSE.name());
 
+        log.info("before stop.");
+        taskFlinkService.stop(tid);
+        log.info("after stop.");
+
+        taskMapper.updateByPrimaryKeySelective(task);
     }
 }

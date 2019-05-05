@@ -1,9 +1,9 @@
-package com.sqlist.web.service.impl;
+package com.sqlist.web.service.impl.task;
 
 import com.sqlist.web.domain.TaskUnitInput;
 import com.sqlist.web.mapper.TaskUnitInputMapper;
-import com.sqlist.web.service.TaskService;
-import com.sqlist.web.service.TaskUnitInputService;
+import com.sqlist.web.service.task.TaskService;
+import com.sqlist.web.service.task.TaskUnitInputService;
 import com.sqlist.web.vo.TaskUnitInputVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

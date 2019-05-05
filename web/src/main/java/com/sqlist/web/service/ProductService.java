@@ -43,4 +43,11 @@ public interface ProductService {
      * @param pidList
      */
     void deleteMultiple(User user, List<Integer> pidList);
+
+    /**
+     * 获取
+     * @param pid
+     * @return
+     */
+    Product get(Integer pid);
 }

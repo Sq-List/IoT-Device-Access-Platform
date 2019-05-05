@@ -83,4 +83,11 @@ public class ProductServiceImpl implements ProductService {
         device.setUid(user.getUid());
         deviceService.updatePidMultipleByPid(device, pidList);
     }
+
+    @Override
+    public Product get(Integer pid) {
+        Product product = new Product();
+        product.setPid(pid);
+        return productMapper.selectByPrimaryKey(product);
+    }
 }

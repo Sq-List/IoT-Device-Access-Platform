@@ -7,6 +7,7 @@ import com.sqlist.web.domain.User;
 import com.sqlist.web.exception.GlobalException;
 import com.sqlist.web.mapper.FileMapper;
 import com.sqlist.web.result.CodeMsg;
+import com.sqlist.web.service.flink.FileFlinkService;
 import com.sqlist.web.service.FileService;
 import com.sqlist.web.util.FileUnit;
 import com.sqlist.web.vo.FileVO;
@@ -36,6 +37,9 @@ public class FileServiceImpl implements FileService {
 
     @Autowired
     private FileMapper fileMapper;
+
+    @Autowired
+    private FileFlinkService fileFlinkService;
 
     @Override
     public Map<String, Object> list(User user, PageVO pageVO) {
@@ -74,6 +78,7 @@ public class FileServiceImpl implements FileService {
         String originalName = file.getOriginalFilename();
         String extensions = originalName.substring(originalName.lastIndexOf(".") + 1);
         String fileName = fileVO.getName() + "." + extensions;
+        String fileFullPath = new java.io.File(savePath, fileName).getPath();
 
         File saveFile = new File();
         saveFile.setName(fileVO.getName());
@@ -83,8 +88,10 @@ public class FileServiceImpl implements FileService {
             throw new GlobalException(CodeMsg.FILE_NAME_REPEAT);
         }
 
+        String jarId;
         try {
             FileUnit.save(savePath, fileName, fileVO.getFile());
+            jarId = fileFlinkService.upload(fileFullPath);
         } catch (IOException e) {
             e.printStackTrace();
             throw new GlobalException(CodeMsg.UPLOAD_FILE_IO_EXCEPTION);
@@ -92,7 +99,8 @@ public class FileServiceImpl implements FileService {
 
         saveFile.setMainClass(fileVO.getMainClass());
         saveFile.setExtensions(extensions);
-        saveFile.setPath(new java.io.File(savePath, fileName).getPath());
+        saveFile.setPath(fileFullPath);
+        saveFile.setJarId(jarId);
         saveFile.setUploadTime(new Date());
         fileMapper.insert(saveFile);
     }

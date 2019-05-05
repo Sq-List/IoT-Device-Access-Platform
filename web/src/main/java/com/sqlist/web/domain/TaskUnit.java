@@ -9,6 +9,11 @@ import javax.persistence.*;
  * @description
  **/
 public class TaskUnit {
+
+    public static final String INPUT = "input";
+    public static final String HANDLE = "handle";
+    public static final String OUTPUT = "output";
+
     /**
      * 任务单元id,uuid
      */

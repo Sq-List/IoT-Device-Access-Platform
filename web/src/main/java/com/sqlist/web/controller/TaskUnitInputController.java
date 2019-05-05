@@ -1,7 +1,7 @@
 package com.sqlist.web.controller;
 
 import com.sqlist.web.result.Result;
-import com.sqlist.web.service.TaskUnitInputService;
+import com.sqlist.web.service.task.TaskUnitInputService;
 import com.sqlist.web.vo.TaskUnitInputVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
