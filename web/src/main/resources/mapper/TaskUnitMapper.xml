@@ -33,14 +33,15 @@
 
     <update id="updateDis">
         UPDATE task_unit_${type}
-        SET left_dis = #{taskUnit.leftDis}
-        AND top_dis = #{taskUnit.topDis}
+        SET left_dis = #{taskUnit.leftDis}, top_dis = #{taskUnit.topDis}
         WHERE tid = #{taskUnit.tid}
+          AND tuid = #{taskUnit.tuid}
     </update>
 
     <delete id="delete">
-        DELETE FROM task_unit_${type}
+        DELETE
+        FROM task_unit_${type}
         WHERE tuid = #{taskUnit.tuid}
-        AND tid = #{taskUnit.tid}
+          AND tid = #{taskUnit.tid}
     </delete>
 </mapper>

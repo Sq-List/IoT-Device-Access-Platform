@@ -81,6 +81,7 @@ public class TaskUnitServiceImpl implements TaskUnitService {
         taskUnit.setTuid(taskUnitVO.getTuid());
         taskUnit.setLeftDis(taskUnitVO.getLeft());
         taskUnit.setTopDis(taskUnitVO.getTop());
+        taskUnit.setTid(taskUnitVO.getTid());
 
         taskUnitMapper.updateDis(taskUnitVO.getType().toLowerCase(), taskUnit);
 

@@ -18,8 +18,9 @@ public class FileVO {
     @NotNull
     private String name;
 
-    @NotNull
     private String mainClass;
+
+    private String implementClass;
 
     @NotNull(message = "上传文件空，上传失败")
     private MultipartFile file;

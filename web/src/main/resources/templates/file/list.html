@@ -35,9 +35,23 @@
             </div>
             <div class="layui-form-item">
                 <label for="chooseFile" class="layui-btn">选择文件</label>
-                <input type="file" id="chooseFile" name="file" accept=".jar" style="position: absolute; clip: rect(0 0 0 0);"/>
+                <input type="file" id="chooseFile" name="file" accept=".jar, .lua" style="position: absolute; clip: rect(0 0 0 0);"/>
             </div>
         </form>
+    </template>
+    <template id="jarDetailTemplate">
+        <div class="layui-form-item">
+            <label class="layui-form-label">入口类</label>
+            <div class="layui-input-block">
+                <input type="text" id="mainClass" name="mainClass" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">实现类</label>
+            <div class="layui-input-block">
+                <input type="text" id="implementClass" name="mainClass" class="layui-input">
+            </div>
+        </div>
     </template>
 </div>
 
@@ -160,13 +174,7 @@
 
                 if (extensions === "jar") {
                     console.log($("#fileAddForm"));
-                    $($("#fileAddForm").children()[0]).after("" +
-                        "<div class=\"layui-form-item\">\n" +
-                        "    <label class=\"layui-form-label\">mainClass</label>\n" +
-                        "    <div class=\"layui-input-block\">\n" +
-                        "        <input type=\"text\" id=\"mainClass\" name=\"mainClass\" class=\"layui-input\">\n" +
-                        "    </div>\n" +
-                        "</div>");
+                    $($("#fileAddForm").children()[0]).after($("#jarDetailTemplate").html());
                 }
 
                 $("#fileName").val(name);

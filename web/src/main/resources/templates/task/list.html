@@ -40,9 +40,9 @@
         </button>
         {{#  } }}
 
-        {{# if (d.status === '开发完成') { }}
+        {{# if (d.status === '开发完成' || d.status === '开发中') { }}
         <a th:href="@{/page/task/{{ d.tid }}/edit}" class="layui-btn layui-btn-primary layui-btn-xs">编辑</a>
-        {{#  } else { }}
+        {{#  } else if (d.status === '运行中') { }}
         <a th:href="@{/page/task/{{ d.tid }}}" class="layui-btn layui-btn-xs">查看</a>
         {{#  } }}
     </template>

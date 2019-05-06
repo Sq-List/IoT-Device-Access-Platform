@@ -26,7 +26,7 @@ public class TaskUnitVO {
     @NotNull(groups = {Add.class, Update.class})
     private Integer left;
 
-    @NotNull(groups = {Add.class, Delete.class})
+    @NotNull(groups = {Add.class, Delete.class, Update.class})
     private Integer tid;
 
     public interface Add {}

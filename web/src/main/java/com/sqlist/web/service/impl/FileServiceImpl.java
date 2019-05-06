@@ -74,9 +74,9 @@ public class FileServiceImpl implements FileService {
     @Override
     public void upload(User user, FileVO fileVO) {
         MultipartFile file = fileVO.getFile();
-        String savePath = path + java.io.File.separator + user.getUsername();
         String originalName = file.getOriginalFilename();
         String extensions = originalName.substring(originalName.lastIndexOf(".") + 1);
+        String savePath = path + java.io.File.separator + user.getUsername() + java.io.File.separator + extensions;
         String fileName = fileVO.getName() + "." + extensions;
         String fileFullPath = new java.io.File(savePath, fileName).getPath();
 
@@ -98,6 +98,7 @@ public class FileServiceImpl implements FileService {
         }
 
         saveFile.setMainClass(fileVO.getMainClass());
+        saveFile.setImplementClass(fileVO.getImplementClass());
         saveFile.setExtensions(extensions);
         saveFile.setPath(fileFullPath);
         saveFile.setJarId(jarId);

@@ -26,6 +26,9 @@ public class File {
     @Column(name = "main_class")
     private String mainClass;
 
+    @Column(name = "implement_class")
+    private String implementClass;
+
     /**
      * 文件扩展名
      */
@@ -102,6 +105,14 @@ public class File {
      */
     public void setMainClass(String mainClass) {
         this.mainClass = mainClass == null ? null : mainClass.trim();
+    }
+
+    public String getImplementClass() {
+        return implementClass;
+    }
+
+    public void setImplementClass(String implementClass) {
+        this.implementClass = implementClass;
     }
 
     /**
