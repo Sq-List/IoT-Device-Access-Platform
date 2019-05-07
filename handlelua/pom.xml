@@ -21,7 +21,7 @@ under the License.
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.sqlist</groupId>
-	<artifactId>handle-java</artifactId>
+	<artifactId>handle-lua</artifactId>
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
@@ -70,6 +70,11 @@ under the License.
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-connector-kafka-0.11_2.12</artifactId>
 			<version>${flink.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.luaj</groupId>
+			<artifactId>luaj-jse</artifactId>
+			<version>3.0.1</version>
 		</dependency>
 
 		<!-- Add connector dependencies here. They must be in the default scope (compile). -->
