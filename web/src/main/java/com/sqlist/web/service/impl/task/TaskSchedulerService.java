@@ -29,7 +29,7 @@ import java.util.List;
 @Service
 public class TaskSchedulerService {
 
-    @Value("http://${config.flink.rest.ip}")
+    @Value("http://${config.flink.rest.ip}:${config.flink.rest.port}")
     private String flinkIp;
 
     @Autowired

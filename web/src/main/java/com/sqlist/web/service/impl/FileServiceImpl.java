@@ -9,7 +9,8 @@ import com.sqlist.web.mapper.FileMapper;
 import com.sqlist.web.result.CodeMsg;
 import com.sqlist.web.service.flink.FileFlinkService;
 import com.sqlist.web.service.FileService;
-import com.sqlist.web.util.FileUnit;
+import com.sqlist.web.util.FileUtil;
+import com.sqlist.web.util.ScpUtil;
 import com.sqlist.web.vo.FileVO;
 import com.sqlist.web.vo.PageVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +33,20 @@ import java.util.Map;
 @Service
 public class FileServiceImpl implements FileService {
 
-    @Value("${config.file.path}")
-    private String path;
+    @Value("${config.file.localPath}")
+    private String localPath;
+
+    @Value("${config.file.remotePath}")
+    private String remotePath;
 
     @Autowired
     private FileMapper fileMapper;
 
     @Autowired
     private FileFlinkService fileFlinkService;
+
+    @Autowired
+    private ScpUtil scpUtil;
 
     @Override
     public Map<String, Object> list(User user, PageVO pageVO) {
@@ -64,6 +71,14 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public List<File> list(User user, String extensions) {
+        File file = new File();
+        file.setUid(user.getUid());
+        file.setExtensions(extensions);
+        return fileMapper.select(file);
+    }
+
+    @Override
     public File get(Integer fid) {
         File file = new File();
         file.setFid(fid);
@@ -76,9 +91,9 @@ public class FileServiceImpl implements FileService {
         MultipartFile file = fileVO.getFile();
         String originalName = file.getOriginalFilename();
         String extensions = originalName.substring(originalName.lastIndexOf(".") + 1);
-        String savePath = path + java.io.File.separator + user.getUsername() + java.io.File.separator + extensions;
+        String savePath = localPath + java.io.File.separator + user.getUsername() + java.io.File.separator + extensions;
         String fileName = fileVO.getName() + "." + extensions;
-        String fileFullPath = new java.io.File(savePath, fileName).getPath();
+        String localFileFullPath = new java.io.File(savePath, fileName).getPath();
 
         File saveFile = new File();
         saveFile.setName(fileVO.getName());
@@ -88,10 +103,15 @@ public class FileServiceImpl implements FileService {
             throw new GlobalException(CodeMsg.FILE_NAME_REPEAT);
         }
 
-        String jarId;
+        String jarId = null;
         try {
-            FileUnit.save(savePath, fileName, fileVO.getFile());
-            jarId = fileFlinkService.upload(fileFullPath);
+            FileUtil.save(localFileFullPath, fileVO.getFile());
+            if (extensions.equals(File.JAR)) {
+                jarId = fileFlinkService.upload(localFileFullPath);
+            } else if (extensions.equals(File.LUA)){
+                jarId = remotePath + "/" + user.getUsername() + "-" + fileName;
+                scpUtil.remoteSave(localFileFullPath, jarId);
+            }
         } catch (IOException e) {
             e.printStackTrace();
             throw new GlobalException(CodeMsg.UPLOAD_FILE_IO_EXCEPTION);
@@ -100,7 +120,7 @@ public class FileServiceImpl implements FileService {
         saveFile.setMainClass(fileVO.getMainClass());
         saveFile.setImplementClass(fileVO.getImplementClass());
         saveFile.setExtensions(extensions);
-        saveFile.setPath(fileFullPath);
+        saveFile.setPath(localFileFullPath);
         saveFile.setJarId(jarId);
         saveFile.setUploadTime(new Date());
         fileMapper.insert(saveFile);
@@ -117,7 +137,7 @@ public class FileServiceImpl implements FileService {
 
             String deletePath = file.getPath();
             String fileName = file.getName() + "." + file.getExtensions();
-            FileUnit.delete(deletePath, fileName);
+            FileUtil.delete(deletePath, fileName);
 
             fileMapper.deleteByPrimaryKey(file);
         });

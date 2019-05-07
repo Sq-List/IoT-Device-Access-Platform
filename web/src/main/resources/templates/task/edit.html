@@ -641,54 +641,68 @@
                             break;
 
                         case "handle":
-                            $.ajax({
-                                url: ip + "/api/file?page=1&limit=-1",
-                                type: "get",
-                                contentType: "application/json",
-                                dataType: "json",
-                                success: function (res) {
-                                    console.log(res);
-                                    if (res.code === 0) {
-                                        let list = res.data.list;
-                                        let $fileSelect = $("#fileSelect");
-                                        list.forEach(function (file) {
-                                            if (data.fid && file.fid === data.fid) {
-                                                $fileSelect.append("<option value=" + file.fid + " selected>" + file.name + "</option>");
-                                            } else {
-                                                $fileSelect.append("<option value=" + file.fid + ">" + file.name + "</option>");
-                                            }
-                                        });
-                                        form.render('select');
-                                    } else {
-                                        layer.msg(res.msg, {icon: 2, time: 2000});
+                            function updateTypeSelect(type) {
+                                $.ajax({
+                                    url: ip + "/api/file/" + type,
+                                    type: "get",
+                                    contentType: "application/json",
+                                    dataType: "json",
+                                    success: function (res) {
+                                        console.log(res);
+                                        if (res.code === 0) {
+                                            let list = res.data;
+                                            let $fileSelect = $("#fileSelect");
+                                            list.forEach(function (file) {
+                                                if (data.fid && file.fid === data.fid) {
+                                                    $fileSelect.append("<option value=" + file.fid + " selected>" + file.name + "</option>");
+                                                } else {
+                                                    $fileSelect.append("<option value=" + file.fid + ">" + file.name + "</option>");
+                                                }
+                                            });
+                                            form.render('select');
+                                        } else {
+                                            layer.msg(res.msg, {icon: 2, time: 2000});
+                                        }
                                     }
+                                });
+                            }
+
+                            new Promise(function (resolve, reject) {
+                                $.ajax({
+                                    url: ip + "/api/commonJar/handle/types",
+                                    type: "get",
+                                    contentType: "application/json",
+                                    dataType: "json",
+                                    success: function (res) {
+                                        console.log(res);
+                                        if (res.code === 0) {
+                                            let list = res.data;
+                                            let $typeSelect = $("#typeSelect");
+                                            list.forEach(function (commonJarType) {
+                                                if (data.type && commonJarType === data.type) {
+                                                    $typeSelect.append("<option value=" + commonJarType + " selected>" + commonJarType + "</option>");
+                                                } else {
+                                                    $typeSelect.append("<option value=" + commonJarType + ">" + commonJarType + "</option>");
+                                                }
+                                            });
+                                            form.render('select');
+                                            resolve();
+                                        } else {
+                                            layer.msg(res.msg, {icon: 2, time: 2000});
+                                            reject();
+                                        }
+                                    }
+                                });
+                            }).then(function () {
+                                if (data.type) {
+                                    updateTypeSelect(data.type);
                                 }
                             });
 
-                            $.ajax({
-                                url: ip + "/api/commonJar/handle/types",
-                                type: "get",
-                                contentType: "application/json",
-                                dataType: "json",
-                                success: function (res) {
-                                    console.log(res);
-                                    if (res.code === 0) {
-                                        let list = res.data;
-                                        let $typeSelect = $("#typeSelect");
-                                        list.forEach(function (commonJarType) {
-                                            if (data.type && commonJarType === data.type) {
-                                                $typeSelect.append("<option value=" + commonJarType + " selected>" + commonJarType + "</option>");
-                                            } else {
-                                                $typeSelect.append("<option value=" + commonJarType + ">" + commonJarType + "</option>");
-                                            }
-                                        });
-                                        form.render('select');
-                                    } else {
-                                        layer.msg(res.msg, {icon: 2, time: 2000});
-                                    }
-                                }
+                            form.on('select(typeSelect)', function (data) {
+                                console.log(data);
+                                updateTypeSelect(data.value);
                             });
-
                             layer.close(index);
                             break;
 

@@ -8,10 +8,7 @@ import com.sqlist.web.vo.PageVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,6 +28,11 @@ public class FileController {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public Result list(User user, @Validated PageVO pageVO) {
         return Result.success(fileService.list(user, pageVO));
+    }
+
+    @RequestMapping(value = "/{extensions}", method = RequestMethod.GET)
+    public Result list(User user, @PathVariable("extensions") String extensions) {
+        return Result.success(fileService.list(user, extensions));
     }
 
     @RequestMapping(value = "", method = RequestMethod.PUT)

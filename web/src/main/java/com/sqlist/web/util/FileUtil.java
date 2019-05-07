@@ -12,10 +12,10 @@ import java.io.IOException;
  * @description
  **/
 @Slf4j
-public class FileUnit {
+public class FileUtil {
 
-    public static void save(String path, String fileFullName, MultipartFile file) throws IOException {
-        File filePath = new File(path, fileFullName);
+    public static void save(String path, MultipartFile file) throws IOException {
+        File filePath = new File(path);
         if (!filePath.getParentFile().exists()) {
             log.debug("create path: {}", filePath.getParentFile().getPath());
             filePath.getParentFile().mkdirs();

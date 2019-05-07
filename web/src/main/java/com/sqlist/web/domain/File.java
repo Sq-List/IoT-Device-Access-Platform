@@ -9,6 +9,10 @@ import javax.persistence.*;
  * @description
  **/
 public class File {
+
+    public static final String JAR = "jar";
+    public static final String LUA = "lua";
+
     /**
      * 文件id
      */

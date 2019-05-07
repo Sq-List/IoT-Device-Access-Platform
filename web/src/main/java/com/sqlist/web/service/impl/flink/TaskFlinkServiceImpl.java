@@ -10,8 +10,6 @@ import com.sqlist.web.service.task.*;
 import com.zhy.http.okhttp.OkHttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.MediaType;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,13 +35,13 @@ public class TaskFlinkServiceImpl implements TaskFlinkService {
 
     public static final String JAVA = "java";
 
-    @Value("http://${config.flink.rest.ip}")
+    @Value("http://${config.flink.rest.ip}:${config.flink.rest.port}")
     private String flinkIp;
 
-    @Value("${config.kafka.ip}")
+    @Value("${config.kafka.ip}:${config.kafka.port}")
     private String kafkaIp;
 
-    @Value("${config.zookeeper.ip}")
+    @Value("${config.zookeeper.ip}:${config.zookeeper.port}")
     private String zookeeperIp;
 
     @Value("${config.jar.mainClass}")
@@ -82,10 +80,13 @@ public class TaskFlinkServiceImpl implements TaskFlinkService {
     @Transactional(rollbackFor = RuntimeException.class)
     public void inputToHandle(TaskUnitInput input, TaskUnitHandle handle) throws IOException {
         Product product = productService.get(input.getPid());
-        if (JAVA.equals(handle.getType())) {
-            com.sqlist.web.domain.File file = fileService.get(handle.getFid());
+
+        String url = "";
+        Map<String, String> paramsMap = new HashMap<>();
+        if (File.JAR.equals(handle.getType())) {
+            File file = fileService.get(handle.getFid());
             String jarId = file.getJarId();
-            String url = flinkIp + "/jars/" + jarId + "/run";
+            url = flinkIp + "/jars/" + jarId + "/run";
 
             StringBuilder paramsArgs = new StringBuilder();
             paramsArgs.append("--consumerIp ").append(kafkaIp)
@@ -93,31 +94,35 @@ public class TaskFlinkServiceImpl implements TaskFlinkService {
                     .append(" --consumerGroup ").append(handle.getTuid()).append("-group")
                     .append(" --consumerZookeeperIp ").append(zookeeperIp)
                     .append(" --producerIp ").append(kafkaIp)
-                    .append(" --producerTopic ").append(handle.getTuid());
+                    .append(" --producerTopic ").append(handle.getTuid())
+                    .append(" --implementClass ").append(file.getImplementClass());
 
-            Map<String, String> paramsMap = new HashMap<>();
             paramsMap.put("programArgs", paramsArgs.toString());
-            paramsMap.put("entryClass", mainClass);
+            paramsMap.put("entryClass", file.getMainClass());
 
-            log.info("request: {}", url);
-            String paramsString = JSON.toJSONString(paramsMap);
-            log.debug("params: {}", paramsString);
-            Response response = OkHttpUtils.postString()
-                    .content(paramsString)
-                    .mediaType(MediaType.parse("application/json; charset=utf-8"))
-                    .url(url)
-                    .build()
-                    .execute();
+        } else if (File.LUA.equals(handle.getType())) {
+            CommonJar commonJar = commonJarService.get(TaskUnit.HANDLE, handle.getType());
+            String jarId = commonJar.getJarId();
+            File file = fileService.get(handle.getFid());
+            url = flinkIp + "/jars/" + jarId + "/run";
 
-            String resString = response.body().string();
-            log.debug("response: {}", resString);
+            StringBuilder paramsArgs = new StringBuilder();
+            paramsArgs.append("--consumerIp ").append(kafkaIp)
+                    .append(" --consumerTopic ").append(product.getTopic())
+                    .append(" --consumerGroup ").append(handle.getTuid()).append("-group")
+                    .append(" --consumerZookeeperIp ").append(zookeeperIp)
+                    .append(" --producerIp ").append(kafkaIp)
+                    .append(" --producerTopic ").append(handle.getTuid())
+                    .append(" --luaFilePath ").append(file.getJarId());
 
-            JSONObject resJson = JSON.parseObject(resString);
-            String jobid = resJson.getString("jobid");
-            handle.setJobId(jobid);
-            handle.setStatus(TaskJobStatus.STARTING.name());
-            taskUnitHandleService.update(handle);
+            paramsMap.put("programArgs", paramsArgs.toString());
+            paramsMap.put("entryClass", commonJar.getMainClass());
         }
+
+        String jobid = request(url, paramsMap);
+        handle.setJobId(jobid);
+        handle.setStatus(TaskJobStatus.STARTING.name());
+        taskUnitHandleService.update(handle);
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
@@ -143,6 +148,13 @@ public class TaskFlinkServiceImpl implements TaskFlinkService {
         paramsMap.put("programArgs", paramsArgs.toString());
         paramsMap.put("entryClass", mainClass);
 
+        String jobid = request(url, paramsMap);
+        output.setJobId(jobid);
+        output.setStatus(TaskJobStatus.STARTING.name());
+        taskUnitOutputService.update(output);
+    }
+
+    private String request(String url, Map<String, String> paramsMap) throws IOException {
         log.info("request: {}", url);
         String paramsString = JSON.toJSONString(paramsMap);
         log.debug("params: {}", paramsString);
@@ -157,10 +169,7 @@ public class TaskFlinkServiceImpl implements TaskFlinkService {
         log.debug("response: {}", resString);
 
         JSONObject resJson = JSON.parseObject(resString);
-        String jobid = resJson.getString("jobid");
-        output.setJobId(jobid);
-        output.setStatus(TaskJobStatus.STARTING.name());
-        taskUnitOutputService.update(output);
+        return resJson.getString("jobid");
     }
 
     @Async

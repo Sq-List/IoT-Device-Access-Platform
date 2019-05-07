@@ -24,6 +24,14 @@ public interface FileService {
     Map<String, Object> list(User user, PageVO pageVO);
 
     /**
+     * 获取 某extensions 后缀的所有上传文件
+     * @param user
+     * @param extensions
+     * @return
+     */
+    List<File> list(User user, String extensions);
+
+    /**
      * 获取
      * @param fid
      * @return
