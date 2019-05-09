@@ -1,4 +1,4 @@
-package com.sqlist.web.util;
+package com.sqlist.access.util;
 
 import java.util.UUID;
 
@@ -10,9 +10,5 @@ import java.util.UUID;
 public class UUIDUtil {
     public static String uuid() {
         return UUID.randomUUID().toString().replace("-", "");
-    }
-
-    public static String uuid(String seed) {
-        return UUID.fromString(seed).toString().replace("-", "");
     }
 }

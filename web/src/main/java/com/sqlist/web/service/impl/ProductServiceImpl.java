@@ -8,6 +8,7 @@ import com.sqlist.web.domain.User;
 import com.sqlist.web.mapper.ProductMapper;
 import com.sqlist.web.service.DeviceService;
 import com.sqlist.web.service.ProductService;
+import com.sqlist.web.util.UUIDUtil;
 import com.sqlist.web.vo.PageVO;
 import com.sqlist.web.vo.ProductVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = new Product();
         product.setUid(user.getUid());
         product.setName(productVO.getName());
+        product.setProductKey(UUIDUtil.uuid(product.getName()));
         product.setCreateTime(new Date());
         product.setTopic(user.getUsername() + SPLIT + product.getName());
 

@@ -1,13 +1,8 @@
-package com.sqlist.web.domain;
+package com.sqlist.access.domain;
 
 import java.util.Date;
 import javax.persistence.*;
 
-/**
- * @author SqList
- * @date 2019/4/25 10:31
- * @description
- **/
 public class Product {
     /**
      * 产品id

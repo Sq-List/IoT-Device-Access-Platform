@@ -30,8 +30,6 @@ public class ScpUtil {
 
     private SSHClient sshClient;
 
-//    private String
-
     public ScpUtil() {
         DefaultConfig defaultConfig = new DefaultConfig();
         defaultConfig.setKeepAliveProvider(KeepAliveProvider.KEEP_ALIVE);

@@ -6,8 +6,10 @@ import com.sqlist.web.domain.Device;
 import com.sqlist.web.domain.User;
 import com.sqlist.web.mapper.DeviceMapper;
 import com.sqlist.web.service.DeviceService;
+import com.sqlist.web.util.UUIDUtil;
 import com.sqlist.web.vo.DeviceVO;
 import com.sqlist.web.vo.PageVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +52,12 @@ public class DeviceServiceImpl implements DeviceService {
         Device device = new Device();
         device.setUid(user.getUid());
         device.setName(deviceVO.getName());
+        if (StringUtils.isEmpty(deviceVO.getDeviceKey())) {
+            device.setDeviceKey(UUIDUtil.uuid());
+        } else {
+            device.setDeviceKey(deviceVO.getDeviceKey());
+        }
+        device.setDeviceSecret(UUIDUtil.uuid(device.getDeviceKey()));
         device.setCreateTime(new Date());
 
         deviceMapper.insert(device);

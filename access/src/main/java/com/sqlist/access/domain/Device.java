@@ -1,13 +1,8 @@
-package com.sqlist.web.domain;
+package com.sqlist.access.domain;
 
 import java.util.Date;
 import javax.persistence.*;
 
-/**
- * @author SqList
- * @date 2019/4/25 10:31
- * @description
- **/
 public class Device {
     /**
      * 设备id
@@ -18,12 +13,17 @@ public class Device {
     /**
      * 设备名称
      */
-    @Column(name = "device_name")
     private String name;
 
+    /**
+     * 设备key
+     */
     @Column(name = "device_key")
     private String deviceKey;
 
+    /**
+     * 设备secret
+     */
     @Column(name = "device_secret")
     private String deviceSecret;
 
@@ -51,7 +51,7 @@ public class Device {
     private Date lastTime;
 
     /**
-     * 设备属于的产品id
+     * 设备属于的产品id，0说明还没有所属产品
      */
     private Integer pid;
 
@@ -97,6 +97,42 @@ public class Device {
     }
 
     /**
+     * 获取设备key
+     *
+     * @return device_key - 设备key
+     */
+    public String getDeviceKey() {
+        return deviceKey;
+    }
+
+    /**
+     * 设置设备key
+     *
+     * @param deviceKey 设备key
+     */
+    public void setDeviceKey(String deviceKey) {
+        this.deviceKey = deviceKey == null ? null : deviceKey.trim();
+    }
+
+    /**
+     * 获取设备secret
+     *
+     * @return device_secret - 设备secret
+     */
+    public String getDeviceSecret() {
+        return deviceSecret;
+    }
+
+    /**
+     * 设置设备secret
+     *
+     * @param deviceSecret 设备secret
+     */
+    public void setDeviceSecret(String deviceSecret) {
+        this.deviceSecret = deviceSecret == null ? null : deviceSecret.trim();
+    }
+
+    /**
      * 获取设备状态
      *
      * @return status - 设备状态
@@ -112,22 +148,6 @@ public class Device {
      */
     public void setStatus(String status) {
         this.status = status == null ? null : status.trim();
-    }
-
-    public String getDeviceKey() {
-        return deviceKey;
-    }
-
-    public void setDeviceKey(String deviceKey) {
-        this.deviceKey = deviceKey;
-    }
-
-    public String getDeviceSecret() {
-        return deviceSecret;
-    }
-
-    public void setDeviceSecret(String deviceSecret) {
-        this.deviceSecret = deviceSecret;
     }
 
     /**
@@ -185,27 +205,37 @@ public class Device {
     }
 
     /**
-     * 获取设备属于的产品id
+     * 获取设备属于的产品id，0说明还没有所属产品
      *
-     * @return pid - 设备属于的产品id
+     * @return pid - 设备属于的产品id，0说明还没有所属产品
      */
     public Integer getPid() {
         return pid;
     }
 
     /**
-     * 设置设备属于的产品id
+     * 设置设备属于的产品id，0说明还没有所属产品
      *
-     * @param pid 设备属于的产品id
+     * @param pid 设备属于的产品id，0说明还没有所属产品
      */
     public void setPid(Integer pid) {
         this.pid = pid;
     }
 
+    /**
+     * 获取设备属于的用户id
+     *
+     * @return uid - 设备属于的用户id
+     */
     public Integer getUid() {
         return uid;
     }
 
+    /**
+     * 设置设备属于的用户id
+     *
+     * @param uid 设备属于的用户id
+     */
     public void setUid(Integer uid) {
         this.uid = uid;
     }

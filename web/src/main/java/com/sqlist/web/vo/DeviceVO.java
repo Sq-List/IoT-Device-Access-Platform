@@ -23,6 +23,8 @@ public class DeviceVO {
     @NotNull(groups = {Product.class, Device.class})
     private Integer uid;
 
+    private String deviceKey;
+
     public interface Product {}
 
     public interface Device {}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sqlist.access.mapper.DeviceMapper">
+    <resultMap id="BaseResultMap" type="com.sqlist.access.domain.Device">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="did" property="did" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="device_key" property="deviceKey" jdbcType="VARCHAR"/>
+        <result column="device_secret" property="deviceSecret" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="active_time" property="activeTime" jdbcType="TIMESTAMP"/>
+        <result column="last_time" property="lastTime" jdbcType="TIMESTAMP"/>
+        <result column="pid" property="pid" jdbcType="INTEGER"/>
+        <result column="uid" property="uid" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        did, name, device_key, device_secret, status, create_time, active_time, last_time,
+        pid, uid
+    </sql>
+
+    <select id="countByProductAndDevice">
+        SELECT COUNT(*)
+        FROM device d,
+             product p
+        WHERE d.device_key = #{info.deviceKey}
+          AND d.device_secret = #{info.deviceSecret}
+          AND p.product_key = #{info.productKey}
+    </select>
+</mapper>
