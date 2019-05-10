@@ -48,12 +48,17 @@ public class PushCallback implements MqttCallback {
     @Override
     public void messageArrived(String topic, MqttMessage mqttMessage) {
         String message = new String(mqttMessage.getPayload());
+        log.info("收到 topic: {}, message: {}", topic, message);
+
         try {
             if (topic.startsWith(SESSION)) {
-                DeviceInfo deviceInfo = JSON.parseObject(message, DeviceInfo.class);
-                sessionService.login(deviceInfo);
+                log.info("session 消息");
+                sessionService.session(topic, message);
             } else if (topic.startsWith(MESSAGE)) {
-                messageService.send(topic, message);
+                log.info("message 消息");
+                messageService.message(topic, message);
+            } else {
+
             }
         } catch (MqttException e) {
             e.printStackTrace();
@@ -66,6 +71,6 @@ public class PushCallback implements MqttCallback {
      */
     @Override
     public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-
+        log.info("已发送");
     }
 }

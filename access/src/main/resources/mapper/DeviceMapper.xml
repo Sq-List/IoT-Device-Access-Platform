@@ -24,12 +24,12 @@
         pid, uid
     </sql>
 
-    <select id="countByProductAndDevice">
+    <select id="countByProductAndDevice" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM device d,
              product p
-        WHERE d.device_key = #{info.deviceKey}
-          AND d.device_secret = #{info.deviceSecret}
-          AND p.product_key = #{info.productKey}
+        WHERE d.device_key = #{deviceKey}
+          AND d.device_secret = #{deviceSecret}
+          AND p.product_key = #{productKey}
     </select>
 </mapper>

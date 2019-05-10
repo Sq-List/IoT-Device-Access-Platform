@@ -15,4 +15,16 @@ public interface DeviceService {
      * @return
      */
     boolean isExist(DeviceInfo deviceInfo);
+
+    /**
+     * 设备上线
+     * @param deviceKey
+     */
+    void login(String deviceKey);
+
+    /**
+     * 设备下线
+     * @param deviceKey
+     */
+    void loginOut(String deviceKey);
 }

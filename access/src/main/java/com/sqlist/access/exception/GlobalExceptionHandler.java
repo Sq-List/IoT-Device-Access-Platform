@@ -24,9 +24,14 @@ public class GlobalExceptionHandler {
     private MqttClient mqttClient;
 
     @ExceptionHandler(value = MqttGlobalException.class)
-    public void handleGlobalException(MqttGlobalException e) throws MqttException {
+    public void handleMqttGlobalException(MqttGlobalException e) throws MqttException {
         log.error("raised MqttGlobalException: {}", e.getCodeMsg().toString());
         mqttClient.publish(e.getTopic(), JSON.toJSONString(Result.fail(e.getCodeMsg())));
+    }
+
+    @ExceptionHandler(value = MqttException.class)
+    public void handleMqttException(MqttException e) {
+        e.printStackTrace();
     }
 
     @ExceptionHandler(value = Exception.class)

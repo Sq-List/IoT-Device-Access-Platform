@@ -65,7 +65,7 @@ public class MqttClient {
         mqttClient.setCallback(callback);
         mqttClient.connect(options);
 
-        String[] topics = {subscribeLogin, subscribeLogin};
+        String[] topics = {subscribeLogin, subscribeMessage};
         int[] qos = {2, 2};
         mqttClient.subscribe(topics, qos);
     }
