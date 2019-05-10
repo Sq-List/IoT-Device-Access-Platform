@@ -57,7 +57,7 @@
                 [
                     {type:'checkbox'},
                     {field: 'name', title: "名称"},
-                    {field: 'status', title: "状态"},
+                    {field: 'productKey', title: "产品key"},
                     {field: 'createTime', title: "创建时间", templet: function (d) {
                             return new Date(d.createTime).format(commonDateFormat);
                         }},
@@ -67,7 +67,6 @@
         });
 
         $("#productAdd").click(function () {
-            let index1 = layer.load(2);
             layer.prompt({
                 title: '输入产品名称'
             }, function(value, index, elem){
@@ -80,7 +79,6 @@
                     }),
                     dataType: "json",
                     success: function (res) {
-                        layer.close(index1);
                         console.log(res);
                         if (res.code === 0) {
                             layer.msg('添加成功！', {icon: 1, time: 2000}, function () {

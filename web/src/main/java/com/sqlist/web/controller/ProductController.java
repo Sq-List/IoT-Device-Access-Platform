@@ -56,23 +56,23 @@ public class ProductController {
         return Result.success(deviceService.list(deviceVO, pageVO));
     }
 
-    /**
-     * 从product中删除device时，pid为0
-     * @param user
-     * @param pid
-     * @param didList
-     * @return
-     */
-    @RequestMapping(value = "/{pid}/devices", method = {RequestMethod.PUT, RequestMethod.DELETE})
-    public Result addDevices(User user, @PathVariable("pid") Integer pid, @RequestBody List<Integer> didList) {
-        Device device = new Device();
-        device.setUid(user.getUid());
-        device.setPid(pid);
-
-        deviceService.updatePidMultipleByDid(device, didList);
-
-        return Result.success(null);
-    }
+//    /**
+//     * 从product中删除device时，pid为0
+//     * @param user
+//     * @param pid
+//     * @param didList
+//     * @return
+//     */
+//    @RequestMapping(value = "/{pid}/devices", method = {RequestMethod.PUT, RequestMethod.DELETE})
+//    public Result addDevices(User user, @PathVariable("pid") Integer pid, @RequestBody List<Integer> didList) {
+//        Device device = new Device();
+//        device.setUid(user.getUid());
+//        device.setPid(pid);
+//
+//        deviceService.updatePidMultipleByDid(device, didList);
+//
+//        return Result.success(null);
+//    }
 
     @RequestMapping(value = "", method = RequestMethod.PUT)
     public Result add(User user, @Validated @RequestBody ProductVO productVO) {

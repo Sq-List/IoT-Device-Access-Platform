@@ -75,11 +75,11 @@ public class DeviceController {
         return Result.success(map);
     }
 
-    @RequestMapping(value = "/noProduct", method = RequestMethod.GET)
-    public Result noProductDevice(User user, @Validated PageVO pageVO) {
-        DeviceVO deviceVO = new DeviceVO();
-        deviceVO.setUid(user.getUid());
-        deviceVO.setPid(0);
-        return Result.success(deviceService.list(deviceVO, pageVO));
-    }
+//    @RequestMapping(value = "/noProduct", method = RequestMethod.GET)
+//    public Result noProductDevice(User user, @Validated PageVO pageVO) {
+//        DeviceVO deviceVO = new DeviceVO();
+//        deviceVO.setUid(user.getUid());
+//        deviceVO.setPid(0);
+//        return Result.success(deviceService.list(deviceVO, pageVO));
+//    }
 }

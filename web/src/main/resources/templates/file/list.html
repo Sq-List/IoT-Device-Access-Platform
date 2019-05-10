@@ -25,6 +25,9 @@
             </div>
         </div>
     </div>
+    <template id="toolbar">
+        <a th:href="@{/api/file/{{ d.fid }}}" target="_blank" class="layui-btn layui-btn-primary layui-btn-xs">下载</a>
+    </template>
     <template id="fileAddLayer">
         <form id="fileAddForm" class="layui-form  layui-form-pane" enctype="multipart/form-data" method="post" style="text-align: center;">
             <div class="layui-form-item">
@@ -84,7 +87,8 @@
                     {field: 'extensions', title: "扩展名"},
                     {field: 'uploadTime', title: "上传时间", templet: function (d) {
                             return new Date(d.uploadTime).format(commonDateFormat);
-                        }}
+                        }},
+                    {fixed: 'right', align:'center', toolbar: '#toolbar'}
                 ]
             ]
         });

@@ -14,55 +14,80 @@
 <div layout:fragment="content">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md12 layui-col-lg12">
-            <div class="tonghe-card">
-                <div class="tonghe-card-header">
-                    <div class="layui-btn" id="productChange">选择产品</div>
-                </div>
-                <div class="tonghe-card-body">
-                    <form class="layui-form  layui-form-pane" lay-filter="detailForm">
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">设备名称</label>
-                            <div class="layui-input-block">
-                                <input type="text" name="name" class="layui-input" readonly>
+            <div class="layui-tab layui-tab-card" lay-filter="deviceTab">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">设备信息</li>
+                    <li>设备Topic</li>
+                </ul>
+                <div class="layui-tab-content" style="background: white;">
+                    <div class="layui-tab-item layui-show">
+                        <div class="tonghe-card">
+                            <div class="tonghe-card-header">
+                                <div class="layui-btn" id="productChange">更换产品</div>
+                            </div>
+                            <div class="tonghe-card-body">
+                                <form class="layui-form  layui-form-pane" lay-filter="detailForm">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">设备名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="name" class="layui-input" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">设备状态</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="status" class="layui-input" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">产品 key</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="productKey" class="layui-input" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">设备 key</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="deviceKey" class="layui-input" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">设备 secret</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="deviceSecret" class="layui-input" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">创建时间</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="createTime" class="layui-input" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">激活时间</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="activeTime" class="layui-input" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">最后一次上线时间</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="lastTime" class="layui-input" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">所属产品</label>
+                                        <div class="layui-input-block">
+                                            <a id="productName" target="_blank" href="javascript:;" style="padding-left: 10px; height: 36px; line-height: 36px;">无</a>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                        <!--<div class="layui-form-item">-->
-                            <!--<label class="layui-form-label">产品 key</label>-->
-                            <!--<div class="layui-input-block">-->
-                                <!--<input type="text" name="productKey" class="layui-input" readonly>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="layui-form-item">-->
-                            <!--<label class="layui-form-label">产品 secret</label>-->
-                            <!--<div class="layui-input-block">-->
-                                <!--<input type="text" name="productSecret" class="layui-input" readonly>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">创建时间</label>
-                            <div class="layui-input-block">
-                                <input type="text" name="createTime" class="layui-input" readonly>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">激活时间</label>
-                            <div class="layui-input-block">
-                                <input type="text" name="activeTime" class="layui-input" readonly>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">最后一次上线时间</label>
-                            <div class="layui-input-block">
-                                <input type="text" name="lastTime" class="layui-input" readonly>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">所属产品</label>
-                            <div class="layui-input-block">
-                                <a id="productName" target="_blank" href="javascript:;" style="padding-left: 10px; height: 36px; line-height: 36px;">无</a>
-                            </div>
-                        </div>
-                    </form>
+                    </div>
+                    <div class="layui-tab-item">
+                        <table id="topicTable" lay-filter="topicTable"></table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -100,41 +125,85 @@
         var layer = layui.layer;
         var form = layui.form;
 
-        var did = /.*(\d+).*/g.exec(window.location.pathname)[1];
+        var did = /.*\/(\d+)\/.*/g.exec(window.location.pathname)[1];
 
         let currentProduct;
         init();
 
         function init() {
-            let index = layer.load(2);
-            $.ajax({
-                url: ip + "/api/device/" + did,
-                type: "get",
-                contentType: "application/json",
-                dataType: "json",
-                success: function (res) {
-                    console.log(res);
-                    layer.close(index);
-                    if (res.code === 0) {
-                        let data = res.data.device;
-                        data.createTime = new Date(data.createTime).format(commonDateFormat);
-                        if (data.activeTime != null) {
-                            data.activeTime = new Date(data.activeTime).format(commonDateFormat);
-                        }
-                        if (data.lastTime != null) {
-                            data.lastTime = new Date(data.lastTime).format(commonDateFormat);
-                        }
-                        form.val("detailForm", data);
+            new Promise(function (resolve, reject) {
+                let index = layer.load(2);
+                $.ajax({
+                    url: ip + "/api/device/" + did,
+                    type: "get",
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (res) {
+                        console.log(res);
+                        layer.close(index);
+                        if (res.code === 0) {
+                            let data = res.data.device;
+                            data.createTime = new Date(data.createTime).format(commonDateFormat);
+                            if (data.activeTime != null) {
+                                data.activeTime = new Date(data.activeTime).format(commonDateFormat);
+                            }
+                            if (data.lastTime != null) {
+                                data.lastTime = new Date(data.lastTime).format(commonDateFormat);
+                            }
 
-                        if (res.data.product != null) {
-                            currentProduct = res.data.product;
-                            $("#productName").attr("href", "/page/product/" + currentProduct.pid + "/detail").text(currentProduct.name);
+                            if (res.data.product != null) {
+                                currentProduct = res.data.product;
+                                $("#productName").attr("href", "/page/product/" + currentProduct.pid + "/detail").text(currentProduct.name);
+                                data['productKey'] = currentProduct.productKey;
+                            }
+
+                            form.val("detailForm", data);
+
+                            resolve(data);
+                        } else {
+                            layer.msg(res.msg, {icon: 2, time: 2000});
                         }
-                    } else {
-                        layer.msg(res.msg, {icon: 2, time: 2000});
                     }
-                }
-            });
+                });
+            }).then(function (value) {
+                let topics = [{
+                    "topic": "/session/{productKey}/{deviceKey}/thing/login",
+                    "acl": "发布",
+                    "remark": "上线"
+                }, {
+                    "topic": "/session/{productKey}/{deviceKey}/thing/login_out",
+                    "acl": "发布",
+                    "remark": "下线"
+                }, {
+                    "topic": "/client/session/{productKey}/{deviceKey}/thing/login",
+                    "acl": "订阅",
+                    "remark": "上线时，服务端返回"
+                }, {
+                    "topic": "/message/{productKey}/{deviceKey}/thing/send",
+                    "acl": "发布",
+                    "remark": "发送消息"
+                }];
+
+                topics.forEach(function (topic) {
+                    topic.topic = topic.topic.format(value);
+                });
+
+                console.log(topics);
+
+                table.render({
+                    elem: '#topicTable',
+                    even: true,
+                    limit: 10, //每页默认显示的数量
+                    cols: [
+                        [
+                            {field: 'topic', title: "topic"},
+                            {field: 'acl', title: "权限", width: 150},
+                            {field: 'remark', title: "备注", width: 200}
+                        ]
+                    ],
+                    data: topics
+                });
+            })
         }
 
         $("#productChange").click(function () {

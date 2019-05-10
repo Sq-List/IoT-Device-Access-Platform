@@ -33,8 +33,10 @@ public class DeviceServiceImpl implements DeviceService {
         device = deviceMapper.selectOne(device);
 
         Date now = new Date();
+        if (device.getActiveTime() == null) {
+            device.setActiveTime(now);
+        }
         device.setStatus(DeviceStatus.ONLINE.name());
-        device.setActiveTime(now);
         device.setLastTime(now);
 
         deviceMapper.updateByPrimaryKeySelective(device);

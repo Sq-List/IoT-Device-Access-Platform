@@ -39,6 +39,7 @@ public class CodeMsg {
     public static CodeMsg UPLOAD_FILE_EMPET = new CodeMsg(500401, "上传文件空，上传失败");
     public static CodeMsg UPLOAD_FILE_IO_EXCEPTION = new CodeMsg(500402, "上传文件失败");
     public static CodeMsg FILE_NAME_REPEAT = new CodeMsg(500403, "文件名称不能重复");
+    public static CodeMsg FILE_NOT_EXIST = new CodeMsg(500404, "下载文件失败，文件不存在");
 
     private CodeMsg() {
     }

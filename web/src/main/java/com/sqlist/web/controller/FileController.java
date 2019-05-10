@@ -1,6 +1,9 @@
 package com.sqlist.web.controller;
 
+import com.sqlist.web.domain.File;
 import com.sqlist.web.domain.User;
+import com.sqlist.web.exception.GlobalException;
+import com.sqlist.web.result.CodeMsg;
 import com.sqlist.web.result.Result;
 import com.sqlist.web.service.FileService;
 import com.sqlist.web.vo.FileVO;
@@ -10,6 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -30,7 +37,7 @@ public class FileController {
         return Result.success(fileService.list(user, pageVO));
     }
 
-    @RequestMapping(value = "/{extensions}", method = RequestMethod.GET)
+    @RequestMapping(value = "/extensions/{extensions}", method = RequestMethod.GET)
     public Result list(User user, @PathVariable("extensions") String extensions) {
         return Result.success(fileService.list(user, extensions));
     }
@@ -45,5 +52,11 @@ public class FileController {
     public Result delete(User user, @RequestBody List<Integer> fidList) {
         fileService.delete(user, fidList);
         return Result.success(null);
+    }
+
+    @RequestMapping(value = "/{fid}", method = RequestMethod.GET)
+    public void download(HttpServletRequest request, HttpServletResponse response, @PathVariable("fid") Integer fid) throws UnsupportedEncodingException {
+        log.info("下载文件 fid: {}", fid);
+        fileService.download(response, fid);
     }
 }

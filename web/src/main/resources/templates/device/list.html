@@ -29,13 +29,41 @@
         <a th:href="@{/page/device/{{ d.did }}/detail}" class="layui-btn layui-btn-primary layui-btn-xs">查看</a>
         <!--<a th:href="@{/page/device/{{ d.did }}}" class="layui-btn layui-btn-xs">编辑</a>-->
     </template>
+    <template id="productToolbar">
+        <a th:href="@{/page/product/{{ d.pid }}/detail}">{{ d.productName }}</a>
+    </template>
+    <template id="deviceAddLayer">
+        <form id="deviceAddForm" class="layui-form  layui-form-pane" enctype="multipart/form-data" method="post" style="text-align: center;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">产品</label>
+                <div class="layui-input-block">
+                    <select id="productSelect" name="pid" lay-verify="required" lay-filter="productSelect">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-block">
+                    <input type="text" id="name" name="name" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">设备key</label>
+                <div class="layui-input-block">
+                    <input type="text" id="deviceKey" name="deviceKey" placeholder="（可选）" class="layui-input">
+                </div>
+            </div>
+        </form>
+    </template>
 </div>
 
 <script layout:fragment="script">
-    layui.use(['element', 'table', 'layer'], function () {
+    layui.use(['element', 'table', 'layer', 'form'], function () {
         var element = layui.element;
         var table = layui.table;
         var layer = layui.layer;
+        var form = layui.form;
 
         table.render({
             elem: "#devicesTable",
@@ -46,6 +74,7 @@
             page: true,
             url: ip + "/api/device",
             parseData: function(res) { //res 即为原始返回的数据
+                console.log(res);
                 return {
                     "code": res.code, //解析接口状态
                     "msg": res.msg, //解析提示文本
@@ -57,6 +86,7 @@
                 [
                     {type: 'checkbox'},
                     {field: 'name', title: "名称"},
+                    {field: 'deviceKey', title: "deviceKey"},
                     {field: 'status', title: "状态"},
                     {field: 'createTime', title: "创建时间", templet: function (d) {
                             return new Date(d.createTime).format(commonDateFormat);
@@ -73,37 +103,65 @@
                             }
                             return "";
                         }},
+                    {field: 'pid', title: "所属产品", toolbar: '#productToolbar'},
                     {fixed: 'right', align:'center', toolbar: '#toolbar'}
                 ]
             ]
         });
 
         $("#deviceAdd").click(function () {
-            let index1 = layer.load(2);
-            layer.prompt({
-                title: '输入设备名称'
-            }, function(value, index, elem){
-                $.ajax({
-                    url: ip + "/api/device",
-                    type: "put",
-                    contentType: "application/json",
-                    data: JSON.stringify({
-                        name: value
-                    }),
-                    dataType: "json",
-                    success: function (res) {
-                        layer.close(index1);
-                        console.log(res);
-                        if (res.code === 0) {
-                            layer.msg('添加成功！', {icon: 1, time: 2000}, function () {
-                                layer.close(index);
-                                table.reload('devicesTable', {});
-                            });
-                        } else {
-                            layer.msg(res.msg, {icon: 2, time: 2000});
+            layer.open({
+                title: "添加设备",
+                content: $("#deviceAddLayer").html(),
+                type: 0,
+                area: ['1000px', '500px'],
+                offset: '100px',
+                yes: function (index, layero) {
+                    console.log($("#deviceAddForm").serializeObject());
+                    let index1 = layer.load(2);
+                    $.ajax({
+                        url: ip + "/api/device",
+                        type: "put",
+                        contentType: "application/json",
+                        data: JSON.stringify($("#deviceAddForm").serializeObject()),
+                        dataType: "json",
+                        success: function (res) {
+                            layer.close(index1);
+                            console.log(res);
+                            if (res.code === 0) {
+                                layer.msg('添加成功！', {icon: 1, time: 2000}, function () {
+                                    layer.close(index);
+                                    table.reload('devicesTable', {});
+                                });
+                            } else {
+                                layer.msg(res.msg, {icon: 2, time: 2000});
+                            }
                         }
-                    }
-                });
+                    });
+                },
+                success: function (index, layero) {
+                    let index1 = layer.load(2);
+                    $.ajax({
+                        url: ip + "/api/product?page=1&limit=-1",
+                        type: "get",
+                        contentType: "application/json",
+                        dataType: "json",
+                        success: function (res) {
+                            // console.log(res);
+                            layer.close(index1);
+                            if (res.code === 0) {
+                                let list = res.data.list;
+                                let $productSelect = $("#productSelect");
+                                list.forEach(function (product) {
+                                    $productSelect.append("<option value=" + product.pid + ">" + product.name + "</option>");
+                                });
+                                form.render('select');
+                            } else {
+                                layer.msg(res.msg, {icon: 2, time: 2000});
+                            }
+                        }
+                    });
+                }
             });
         });
 

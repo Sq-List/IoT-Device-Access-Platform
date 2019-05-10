@@ -11,6 +11,7 @@ import com.sqlist.web.service.ProductService;
 import com.sqlist.web.util.UUIDUtil;
 import com.sqlist.web.vo.PageVO;
 import com.sqlist.web.vo.ProductVO;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,11 +67,15 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void add(User user, ProductVO productVO) {
         Product product = new Product();
+
+        do {
+            product.setTopic(user.getUsername() + SPLIT + RandomStringUtils.randomAlphabetic(8));
+        } while (productMapper.selectCount(product) != 0);
+
         product.setUid(user.getUid());
         product.setName(productVO.getName());
-        product.setProductKey(UUIDUtil.uuid(product.getName()));
+        product.setProductKey(UUIDUtil.uuid());
         product.setCreateTime(new Date());
-        product.setTopic(user.getUsername() + SPLIT + product.getName());
 
         productMapper.insert(product);
     }
@@ -80,10 +85,10 @@ public class ProductServiceImpl implements ProductService {
     public void deleteMultiple(User user, List<Integer> pidList) {
         productMapper.deleteMultiple(user, pidList);
 
-        // 原本属于此产品的设备需要将pid设为0
+        // 原本属于此产品的设备直接删除
         Device device = new Device();
         device.setUid(user.getUid());
-        deviceService.updatePidMultipleByPid(device, pidList);
+        deviceService.deleteMultipleByPid(device, pidList);
     }
 
     @Override

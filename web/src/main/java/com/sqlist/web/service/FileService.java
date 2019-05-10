@@ -5,6 +5,8 @@ import com.sqlist.web.domain.User;
 import com.sqlist.web.vo.FileVO;
 import com.sqlist.web.vo.PageVO;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +46,13 @@ public interface FileService {
      * @param fileVO
      */
     void upload(User user, FileVO fileVO);
+
+    /**
+     * 下载文件
+     * @param response
+     * @param fid
+     */
+    void download(HttpServletResponse response, Integer fid) throws UnsupportedEncodingException;
 
     /**
      * 删除 文件

@@ -2,11 +2,13 @@ package com.sqlist.web.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sqlist.web.constants.DeviceStatus;
 import com.sqlist.web.domain.Device;
 import com.sqlist.web.domain.User;
 import com.sqlist.web.mapper.DeviceMapper;
 import com.sqlist.web.service.DeviceService;
 import com.sqlist.web.util.UUIDUtil;
+import com.sqlist.web.vo.DeviceResponseVO;
 import com.sqlist.web.vo.DeviceVO;
 import com.sqlist.web.vo.PageVO;
 import org.apache.commons.lang3.StringUtils;
@@ -39,10 +41,11 @@ public class DeviceServiceImpl implements DeviceService {
         HashMap<String, Object> map = new HashMap<>();
 
         PageHelper.startPage(pageVO.getPage(), pageVO.getLimit());
-        List<Device> deviceList = deviceMapper.select(device);
+        List<DeviceResponseVO> deviceResponseVOList = deviceMapper.selectWithProduct(device);
+        deviceResponseVOList.forEach((tmpDevice) -> tmpDevice.setStatus(DeviceStatus.valueOf(tmpDevice.getStatus()).getMsg()));
 
-        map.put("total", ((Page)deviceList).getTotal());
-        map.put("list", deviceList);
+        map.put("total", ((Page)deviceResponseVOList).getTotal());
+        map.put("list", deviceResponseVOList);
 
         return map;
     }
@@ -57,7 +60,9 @@ public class DeviceServiceImpl implements DeviceService {
         } else {
             device.setDeviceKey(deviceVO.getDeviceKey());
         }
-        device.setDeviceSecret(UUIDUtil.uuid(device.getDeviceKey()));
+        device.setDeviceSecret(UUIDUtil.uuid());
+        device.setPid(deviceVO.getPid());
+        device.setStatus(DeviceStatus.UNACTIVE.name());
         device.setCreateTime(new Date());
 
         deviceMapper.insert(device);
@@ -68,20 +73,26 @@ public class DeviceServiceImpl implements DeviceService {
         deviceMapper.deleteMultiple(user, didList);
     }
 
-    @Transactional(rollbackFor = RuntimeException.class)
     @Override
-    public void updatePidMultipleByDid(Device device, List<Integer> didList) {
-        deviceMapper.updatePidMultipleByDid(device, didList);
+    public void deleteMultipleByPid(Device device, List<Integer> pidList) {
+        deviceMapper.deleteMultipleByPid(device, pidList);
     }
 
-    @Override
-    public void updatePidMultipleByPid(Device device, List<Integer> pidList) {
-        deviceMapper.updatePidMultipleByPid(device, pidList);
-    }
+//    @Transactional(rollbackFor = RuntimeException.class)
+//    @Override
+//    public void updatePidMultipleByDid(Device device, List<Integer> didList) {
+//        deviceMapper.updatePidMultipleByDid(device, didList);
+//    }
+//
+//    @Override
+//    public void updatePidMultipleByPid(Device device, List<Integer> pidList) {
+//        deviceMapper.updatePidMultipleByPid(device, pidList);
+//    }
 
     @Override
     public Device detail(Device device) {
         device = deviceMapper.selectByPrimaryKey(device);
+        device.setStatus(DeviceStatus.valueOf(device.getStatus()).getMsg());
         return device;
     }
 }

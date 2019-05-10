@@ -18,7 +18,6 @@ public class Device {
     /**
      * 设备名称
      */
-    @Column(name = "device_name")
     private String name;
 
     @Column(name = "device_key")

@@ -4,19 +4,19 @@
 <div class="layui-side layui-bg-black" th:fragment="onselectLayout (parent, child)">
     <div class="layui-side-scroll">
         <ul class="layui-nav layui-nav-tree">
-            <li class="layui-nav-item" th:classappend="(${parent} == 'device') ? 'layui-nav-itemed' : ''">
-                <a class="" href="javascript:;">设备</a>
-                <dl class="layui-nav-child">
-                    <dd th:class="(${child} == 'deviceList') ? 'layui-this' : ''">
-                        <a th:href="@{/page/device/list}">列表</a>
-                    </dd>
-                </dl>
-            </li>
             <li class="layui-nav-item" th:classappend="(${parent} == 'product') ? 'layui-nav-itemed' : ''">
                 <a class="" href="javascript:;">产品</a>
                 <dl class="layui-nav-child">
                     <dd th:class="(${child} == 'productList') ? 'layui-this' : ''">
                         <a th:href="@{/page/product/list}">列表</a>
+                    </dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item" th:classappend="(${parent} == 'device') ? 'layui-nav-itemed' : ''">
+                <a class="" href="javascript:;">设备</a>
+                <dl class="layui-nav-child">
+                    <dd th:class="(${child} == 'deviceList') ? 'layui-this' : ''">
+                        <a th:href="@{/page/device/list}">列表</a>
                     </dd>
                 </dl>
             </li>

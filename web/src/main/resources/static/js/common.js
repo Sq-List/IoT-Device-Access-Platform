@@ -18,6 +18,43 @@ Date.prototype.format = function (format) {
     return format;
 };
 
+String.prototype.format = function(args) {
+    var result = this;
+    if (arguments.length < 1) {
+        return result;
+    }
+
+    var data = arguments;       //如果模板参数是数组
+    if (arguments.length == 1 && typeof (args) == "object") {
+        //如果模板参数是对象
+        data = args;
+    }
+    for (var key in data) {
+        var value = data[key];
+        if (undefined != value) {
+            result = result.replace("{" + key + "}", value);
+        }
+    }
+    return result;
+}
+
+$.fn.serializeObject = function()
+{
+    var o = {};
+    var a = this.serializeArray();
+    $.each(a, function() {
+        if (o[this.name] !== undefined) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+};
+
 
 //图片上传进行预览
 function preview(fileId, imgId, classes) {

@@ -3,6 +3,7 @@ package com.sqlist.web.mapper;
 import com.sqlist.web.domain.Device;
 import com.sqlist.web.domain.User;
 import com.sqlist.web.util.MyMapper;
+import com.sqlist.web.vo.DeviceResponseVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -15,18 +16,32 @@ import java.util.List;
 public interface DeviceMapper extends MyMapper<Device> {
 
     /**
-     * 根据did更新设备的pid
+     * 获取 设备及所属产品
      * @param device
-     * @param didList
+     * @return
      */
-    void updatePidMultipleByDid(@Param("device") Device device, @Param("didList") List<Integer> didList);
+    List<DeviceResponseVO> selectWithProduct(Device device);
+
+//    /**
+//     * 根据did更新设备的pid
+//     * @param device
+//     * @param didList
+//     */
+//    void updatePidMultipleByDid(@Param("device") Device device, @Param("didList") List<Integer> didList);
+//
+//    /**
+//     * 根据pid更新设备pid（主要是用于删除product时）
+//     * @param device
+//     * @param pidList
+//     */
+//    void updatePidMultipleByPid(@Param("device") Device device, @Param("pidList") List<Integer> pidList);
 
     /**
-     * 根据pid更新设备pid（主要是用于删除product时）
+     * 删除某产品下的所有设备
      * @param device
      * @param pidList
      */
-    void updatePidMultipleByPid(@Param("device") Device device, @Param("pidList") List<Integer> pidList);
+    void deleteMultipleByPid(@Param("device") Device device, @Param("pidList") List<Integer> pidList);
 
     /**
      * 根据did删除多个任务

@@ -20,25 +20,44 @@
         did, name, status, create_time, active_time, last_time, pid
     </sql>
 
-    <update id="updatePidMultipleByDid">
-        UPDATE device
-        SET pid = #{device.pid}
-        WHERE uid = #{device.uid}
-        AND did IN
-        <foreach item="item" collection="didList" separator="," open="(" close=")" index="">
-            #{item}
-        </foreach>
-    </update>
+    <select id="selectWithProduct" resultType="com.sqlist.web.vo.DeviceResponseVO">
+        SELECT d.*, p.name productName
+        FROM device d, product p
+        WHERE d.uid = #{uid}
+        <if test="pid != null">
+            AND d.pid = ${pid}
+        </if>
+        AND d.pid = p.pid
+    </select>
 
-    <update id="updatePidMultipleByPid">
-        UPDATE device
-        SET pid = 0
+    <!--<update id="updatePidMultipleByDid">-->
+        <!--UPDATE device-->
+        <!--SET pid = #{device.pid}-->
+        <!--WHERE uid = #{device.uid}-->
+        <!--AND did IN-->
+        <!--<foreach item="item" collection="didList" separator="," open="(" close=")" index="">-->
+            <!--#{item}-->
+        <!--</foreach>-->
+    <!--</update>-->
+
+    <!--<update id="updatePidMultipleByPid">-->
+        <!--UPDATE device-->
+        <!--SET pid = 0-->
+        <!--WHERE uid = #{device.uid}-->
+        <!--AND pid IN-->
+        <!--<foreach item="item" collection="pidList" separator="," open="(" close=")" index="">-->
+            <!--#{item}-->
+        <!--</foreach>-->
+    <!--</update>-->
+
+    <delete id="deleteMultipleByPid">
+        DELETE FROM device
         WHERE uid = #{device.uid}
         AND pid IN
         <foreach item="item" collection="pidList" separator="," open="(" close=")" index="">
             #{item}
         </foreach>
-    </update>
+    </delete>
 
     <delete id="deleteMultiple">
         DELETE FROM device

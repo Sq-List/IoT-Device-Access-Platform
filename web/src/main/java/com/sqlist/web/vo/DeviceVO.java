@@ -17,7 +17,7 @@ public class DeviceVO {
     @NotNull(groups = Add.class)
     private String name;
 
-    @NotNull(groups = Product.class)
+    @NotNull(groups = {Product.class, Add.class})
     private Integer pid;
 
     @NotNull(groups = {Product.class, Device.class})

@@ -13,13 +13,16 @@ import com.sqlist.web.util.FileUtil;
 import com.sqlist.web.util.ScpUtil;
 import com.sqlist.web.vo.FileVO;
 import com.sqlist.web.vo.PageVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +33,7 @@ import java.util.Map;
  * @date 2019/4/28 2:05
  * @description
  **/
+@Slf4j
 @Service
 public class FileServiceImpl implements FileService {
 
@@ -124,6 +128,57 @@ public class FileServiceImpl implements FileService {
         saveFile.setJarId(jarId);
         saveFile.setUploadTime(new Date());
         fileMapper.insert(saveFile);
+    }
+
+    @Override
+    public void download(HttpServletResponse response, Integer fid) throws UnsupportedEncodingException {
+        File file = get(fid);
+
+        String fileName = file.getName() + "." + file.getExtensions();
+        String path = file.getPath();
+        java.io.File localFile = new java.io.File(path);
+        if (!localFile.exists()) {
+            log.error("下载文件不存在");
+            throw new GlobalException(CodeMsg.FILE_NOT_EXIST);
+        }
+        log.info("文件存在");
+
+        // 配置文件下载
+        response.setHeader("content-type", "application/octet-stream");
+        response.setContentType("application/octet-stream");
+        // 下载文件能正常显示中文
+        response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
+        byte[] buffer = new byte[1024];
+        FileInputStream fis = null;
+        BufferedInputStream bis = null;
+        try {
+            fis = new FileInputStream(localFile);
+            bis = new BufferedInputStream(fis);
+            OutputStream os = response.getOutputStream();
+            int i = bis.read(buffer);
+            while (i != -1) {
+                os.write(buffer, 0, i);
+                i = bis.read(buffer);
+            }
+            log.info("传输完成");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (bis != null) {
+                try {
+                    bis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @Transactional(rollbackFor = RuntimeException.class)

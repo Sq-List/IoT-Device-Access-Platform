@@ -66,12 +66,12 @@
                     </select>
                 </div>
             </div>
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">Topic</label>
-                <div class="layui-input-block">
-                    <input type="text" id="productTopic" name="topic" class="layui-input" readonly>
-                </div>
-            </div>
+            <!--<div class="layui-form-item layui-form-text">-->
+                <!--<label class="layui-form-label">Topic</label>-->
+                <!--<div class="layui-input-block">-->
+                    <!--<input type="text" id="productTopic" name="topic" class="layui-input" readonly>-->
+                <!--</div>-->
+            <!--</div>-->
             <div class="layui-form-item">
                 <button class="layui-btn" id="save" lay-submit="" lay-filter="save">保存</button>
             </div>
@@ -158,7 +158,7 @@
         var layer = layui.layer;
         var form = layui.form;
 
-        var tid = /.*(\d+).*/g.exec(window.location.pathname)[1];
+        var tid = /.*\/(\d+)\/.*/g.exec(window.location.pathname)[1];
 
         jsPlumb.ready(function () {
             var instance = jsPlumb.getInstance({
@@ -605,7 +605,7 @@
                     console.log(data);
                     switch (type) {
                         case "input":
-                            let pidToTopic = {};
+                            // let pidToTopic = {};
                             $.ajax({
                                 url: ip + "/api/product?page=1&limit=-1",
                                 type: "get",
@@ -625,7 +625,7 @@
                                                 $productSelect.append("<option value=" + product.pid + ">" + product.name + "</option>");
                                             }
 
-                                            pidToTopic[product.pid] = product.topic;
+                                            // pidToTopic[product.pid] = product.topic;
                                         });
                                         form.render('select');
                                     } else {
@@ -634,16 +634,16 @@
                                 }
                             });
 
-                            form.on('select(productSelect)', function (data) {
-                                console.log(data);
-                                $("#productTopic").val(pidToTopic[data.value]);
-                            });
+                            // form.on('select(productSelect)', function (data) {
+                            //     console.log(data);
+                            //     $("#productTopic").val(pidToTopic[data.value]);
+                            // });
                             break;
 
                         case "handle":
                             function updateTypeSelect(type) {
                                 $.ajax({
-                                    url: ip + "/api/file/" + type,
+                                    url: ip + "/api/file/extensions/" + type,
                                     type: "get",
                                     contentType: "application/json",
                                     dataType: "json",
