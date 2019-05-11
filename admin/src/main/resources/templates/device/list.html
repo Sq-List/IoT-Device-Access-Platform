@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="base/layout">
+
+<title layout:fragment="title">设备列表</title>
+<div layout:fragment="side" th:replace="base/side::onselectLayout ('device', 'deviceList')"></div>
+<div layout:fragment="content-header" class="layui-card tonghe-header">
+    <span class="layui-breadcrumb">
+        <a href="javascript:;" class="layui-breadcrumb-unclick">设备</a>
+        <a><cite>列表</cite></a>
+    </span>
+</div>
+<div layout:fragment="content">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12 layui-col-lg12">
+            <div class="tonghe-card">
+                <div class="tonghe-card-header">
+                    <div class="layui-btn layui-btn-danger" id="deviceDel">删除设备</div>
+                </div>
+                <div class="tonghe-card-body">
+                    <table id="devicesTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <template id="toolbar">
+        <a th:href="@{/page/device/{{ d.did }}/detail}" class="layui-btn layui-btn-primary layui-btn-xs">查看</a>
+    </template>
+    <template id="productToolbar">
+        <a th:href="@{/page/product/{{ d.pid }}/detail}">{{ d.productName }}</a>
+    </template>
+</div>
+
+<script layout:fragment="script">
+    layui.use(['element', 'table', 'layer', 'form'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+
+        table.render({
+            elem: "#devicesTable",
+            even: true,
+            toolbar: true,
+            defaultToolbar: ['filter'],
+            limit: 10, //每页默认显示的数量
+            page: true,
+            url: ip + "/api/device",
+            parseData: function(res) { //res 即为原始返回的数据
+                console.log(res);
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度
+                    "data": res.data.list //解析数据列表
+                }
+            },
+            cols: [
+                [
+                    {type: 'checkbox'},
+                    {field: 'name', title: "名称"},
+                    {field: 'deviceKey', title: "deviceKey"},
+                    {field: 'status', title: "状态"},
+                    {field: 'createTime', title: "创建时间", templet: function (d) {
+                            return new Date(d.createTime).format(commonDateFormat);
+                        }},
+                    {field: 'activeTime', title: "激活时间", templet: function (d) {
+                            if (d.activeTime) {
+                                return new Date(d.activeTime).format(commonDateFormat);
+                            }
+                            return "";
+                        }},
+                    {field: 'lastTime', title: "最后一次上线时间", templet: function (d) {
+                            if (d.lastTime) {
+                                return new Date(d.lastTime).format(commonDateFormat);
+                            }
+                            return "";
+                        }},
+                    {field: 'pid', title: "所属产品", toolbar: '#productToolbar'},
+                    {fixed: 'right', align:'center', toolbar: '#toolbar'}
+                ]
+            ]
+        });
+
+        $("#deviceDel").click(function () {
+            let checkStatus = table.checkStatus('devicesTable');
+
+            if (checkStatus.data.length === 0) {
+                layer.msg('请勾选', {icon: 2, time: 2000});
+                return;
+            }
+
+            console.log(checkStatus);
+            let list = [];
+            checkStatus.data.forEach(function (currentValue, index, arr) {
+                list.push(currentValue.did);
+            });
+            layer.open({
+                content: '确定要删除吗?',
+                yes: function (index, layero) {
+                    $.ajax({
+                        url: ip + "/api/device",
+                        type: "delete",
+                        contentType: "application/json",
+                        data: JSON.stringify(list),
+                        dataType: "json",
+                        success: function (res) {
+                            // console.log(res);
+                            layer.close(index);
+                            if (res.code === 0) {
+
+                                table.reload('devicesTable', {});
+                                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                            } else {
+                                layer.msg(res.msg, {icon: 2, time: 2000});
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+</html>

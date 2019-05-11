@@ -18,7 +18,7 @@ public class LoginPageController {
     public String loginView(User user) {
 
         if (user != null) {
-            return "redirect:/page/index";
+            return "redirect:/page/overview";
         }
 
         return "login";

@@ -1,0 +1,52 @@
+.container-fluid
+{
+	/*background: -webkit-linear-gradient(to top right, #cde0e9, #FFFFFF, #FFFFFF, #cde0e9);*/
+	/*background: linear-gradient(to top right, #cde0e9, #ffffff, #FFFFFF, #cde0e9);*/
+	min-height: 389px;
+	overflow: auto;
+	background-attachment:fixed;
+}
+
+.login-div
+{
+	position: absolute;
+	top:50%;
+	left:50%;
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	-o-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+
+.login-title
+{
+	text-align: center;
+	padding-bottom: 20px;
+	font-size: 1.7em;
+}
+
+.login-content
+{
+	width: 384px;
+	-webkit-box-shadow: 5px 5px 5px 0px #dddddd;
+	-moz-box-shadow: 5px 5px 5px 0px #dddddd;
+	box-shadow: 5px 5px 5px 0px #dddddd;
+}
+
+.login-tab-content
+{
+	padding: 10px;
+	padding-top: 30px;
+}
+
+.login-form-item
+{
+	padding-top: 20px;
+	text-align: center;
+}
+
+.login-form-item > button
+{
+	width: 80%;
+}

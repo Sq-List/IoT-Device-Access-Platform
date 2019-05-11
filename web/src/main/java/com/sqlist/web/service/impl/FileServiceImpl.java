@@ -191,8 +191,7 @@ public class FileServiceImpl implements FileService {
             file = fileMapper.selectByPrimaryKey(file);
 
             String deletePath = file.getPath();
-            String fileName = file.getName() + "." + file.getExtensions();
-            FileUtil.delete(deletePath, fileName);
+            FileUtil.delete(deletePath);
 
             fileMapper.deleteByPrimaryKey(file);
         });

@@ -27,8 +27,8 @@ public class FileUtil {
         log.info("file save success");
     }
 
-    public static void delete(String path, String fileFullName) {
-        File file = new File(path, fileFullName);
+    public static void delete(String path) {
+        File file = new File(path);
         log.info("file path: {}", file.getPath());
 
         if (!file.exists()) {

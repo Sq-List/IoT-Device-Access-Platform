@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="base/layout">
+
+<title layout:fragment="title">流处理平台</title>
+<div layout:fragment="side" th:replace="base/side::onselectLayout ('overview', '')"></div>
+<div layout:fragment="content-header" class="layui-card tonghe-header">
+
+</div>
+<div layout:fragment="content">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md3 layui-col-lg4">
+            <div class="overview-num-div panel-success">
+                <i class="fa fa-bar-chart pull-left"></i>
+                <span class="total">产品数量&nbsp;&nbsp;</span>
+                <span class="total-num" id="productNum">21</span>
+            </div>
+        </div>
+        <div class="layui-col-md3 layui-col-lg4">
+            <div class="overview-num-div panel-info">
+                <i class="fa fa-bar-chart pull-left"></i>
+                <span class="total">设备数量&nbsp;&nbsp;</span>
+                <span class="total-num" id="deviceNum">30</span>
+            </div>
+        </div>
+        <div class="layui-col-md3 layui-col-lg4">
+            <div class="overview-num-div panel-primary">
+                <i class="fa fa-bar-chart pull-left"></i>
+                <span class="total">任务数量&nbsp;&nbsp;</span>
+                <span class="total-num" id="taskNum">37</span>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md3 layui-col-lg4">
+            <div class="overview-num-div panel-warning">
+                <i class="fa fa-bar-chart pull-left"></i>
+                <span class="total">文件数量&nbsp;&nbsp;</span>
+                <span class="total-num" id="fileNum">10</span>
+            </div>
+        </div>
+        <div class="layui-col-md3 layui-col-lg4">
+            <div class="overview-num-div layui-bg-blue">
+                <i class="fa fa-bar-chart pull-left"></i>
+                <span class="total">运行设备数量&nbsp;&nbsp;</span>
+                <span class="total-num" id="runningDeviceNum">10</span>
+            </div>
+        </div>
+        <div class="layui-col-md3 layui-col-lg4">
+            <div class="overview-num-div layui-bg-red">
+                <i class="fa fa-bar-chart pull-left"></i>
+                <span class="total">运行任务数量&nbsp;&nbsp;</span>
+                <span class="total-num" id="runningTaskNum">10</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script layout:fragment="script">
+    layui.use(['element'], function () {
+        var element = layui.element;
+    });
+</script>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="base/layout">
+
+<title layout:fragment="title">任务列表</title>
+<div layout:fragment="side" th:replace="base/side::onselectLayout ('task', 'taskList')"></div>
+<div layout:fragment="content-header" class="layui-card tonghe-header">
+    <span class="layui-breadcrumb">
+        <a href="javascript:;" class="layui-breadcrumb-unclick">任务</a>
+        <a><cite>列表</cite></a>
+    </span>
+</div>
+<div layout:fragment="content">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12 layui-col-lg12">
+            <div class="tonghe-card">
+                <div class="tonghe-card-header">
+                    <div class="layui-btn layui-btn-danger" id="taskDel">删除任务</div>
+                </div>
+                <div class="tonghe-card-body">
+                    <table id="tasksTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script layout:fragment="script">
+    layui.use(['element', 'table', 'layer'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var layer = layui.layer;
+
+        table.render({
+            elem: "#tasksTable",
+            even: true,
+            toolbar: true,
+            defaultToolbar: ['filter'],
+            limit: 10, //每页默认显示的数量
+            page: true,
+            url: ip + "/api/task",
+            parseData: function(res) { //res 即为原始返回的数据
+                let list = res.data.list;
+                for (let i = 0; i < list.length; i++) {
+                    // 遍历获取的数据，如果已经选择，则在table上选中
+                    if (list[i].status === "启动中") {
+                        getTaskStatus();
+                        break;
+                    }
+                }
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度
+                    "data": res.data.list //解析数据列表
+                }
+            },
+            cols: [
+                [
+                    {type:'checkbox'},
+                    {field: 'name', title: "名称"},
+                    {field: 'status', title: "状态"},
+                    {field: 'createTime', title: "创建时间", templet: function (d) {
+                            return new Date(d.createTime).format(commonDateFormat);
+                        }},
+                    {field: 'updateTime', title: "最后一次更新时间", templet: function (d) {
+                            return new Date(d.updateTime).format(commonDateFormat);
+                        }}
+                ]
+            ]
+        });
+
+        $("#taskDel").click(function () {
+            let checkStatus = table.checkStatus('tasksTable');
+
+            if (checkStatus.data.length === 0) {
+                layer.msg('请勾选', {icon: 2, time: 2000});
+                return;
+            }
+
+            console.log(checkStatus);
+            let list = [];
+            checkStatus.data.forEach(function (currentValue, index, arr) {
+                list.push(currentValue.tid);
+            });
+            layer.open({
+                content: '确定要删除吗?',
+                yes: function (index, layero) {
+                    $.ajax({
+                        url: ip + "/api/task",
+                        type: "delete",
+                        contentType: "application/json",
+                        data: JSON.stringify(list),
+                        dataType: "json",
+                        success: function (res) {
+                            // console.log(res);
+                            layer.close(index);
+                            if (res.code === 0) {
+
+                                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                                table.reload('tasksTable', {});
+                            } else {
+                                layer.msg(res.msg, {icon: 2, time: 2000});
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on("click", "#start", function () {
+            console.log("start.");
+            let index1 = layer.load(2);
+            let tid = $(this).attr("tid");
+            $.ajax({
+                url: ip + "/api/task/" + tid + "/start",
+                type: "post",
+                contentType: "application/json",
+                dataType: "json",
+                success: function (res) {
+                    console.log(res);
+                    layer.close(index1);
+                    if (res.code === 0) {
+                        layer.msg('开始执行任务', {icon: 1, time: 2000});
+                        table.reload('tasksTable', {});
+                        getTaskStatus();
+                    } else {
+                        layer.msg(res.msg, {icon: 2, time: 2000});
+                    }
+                }
+            });
+        });
+
+        $(document).on("click", "#stop", function () {
+            console.log("stop.");
+            let index1 = layer.load(2);
+            let tid = $(this).attr("tid");
+            $.ajax({
+                url: ip + "/api/task/" + tid + "/stop",
+                type: "patch",
+                contentType: "application/json",
+                dataType: "json",
+                success: function (res) {
+                    console.log(res);
+                    layer.close(index1);
+                    if (res.code === 0) {
+                        layer.msg('停止任务', {icon: 1, time: 2000});
+                        table.reload('tasksTable', {});
+                    } else {
+                        layer.msg(res.msg, {icon: 2, time: 2000});
+                    }
+                }
+            });
+        });
+
+        function getTaskStatus() {
+            setTimeout(function () {
+                table.reload('tasksTable', {});
+            }, 2000);
+        }
+    });
+</script>
+</html>

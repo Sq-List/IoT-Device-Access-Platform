@@ -1,0 +1,148 @@
+.layui-breadcrumb a.layui-breadcrumb-unclick:hover {
+    cursor: auto;
+    color: #999 !important;
+}
+
+@-webkit-keyframes tonghe-down { /* 从最底部往上滑入 */
+    from {
+        -webkit-transform: translate3d(0, -100%, 0);
+        opacity: 0.3;
+    }
+    to {
+        -webkit-transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+}
+
+@keyframes tonghe-down {
+    from {
+        transform: translate3d(0, -100%, 0);
+        opacity: 0.3;
+    }
+    to {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+}
+
+.tonghe-anim-down {
+    -webkit-animation-name: tonghe-down;
+    animation-name: tonghe-down;
+}
+
+.tonghe-header {
+    height: 50px;
+    line-height: 50px;
+    padding: 0 15px;
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
+.tonghe-card {
+    margin-bottom: 15px;
+    border-radius: 2px;
+    background-color: #fff;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+.tonghe-card:last-child {
+    margin-bottom: 0;
+}
+
+.tonghe-card-header, .tonghe-card-body {
+    position: relative;
+}
+
+.tonghe-card-header {
+    padding: 10px 15px;
+    border-bottom: 1px solid #F6F6F6;
+    color: #333;
+    border-radius: 2px 2px 0 0;
+    font-size: 14px;
+}
+
+.tonghe-card-body {
+    padding: 10px 15px;
+    line-height: 24px;
+}
+
+.tonghe-bg-white {
+    background: #fff;
+}
+
+img.tonghe-upload-preview-img {
+    /*width: 750px;*/
+    height: 436px;
+}
+
+img.tonghe-preview-img {
+    /*width: 375px;*/
+    height: 218px;
+    cursor: pointer;
+}
+
+img.tonghe-form-img {
+    margin-right: 5px;
+    width: 200px;
+    height: 200px;
+}
+
+/*img.tonghe-preview-img:hover {*/
+/*content: '+';*/
+/*cursor: pointer;*/
+/*}*/
+
+/* 解决选择框被table遮挡的问题 */
+.layui-collapse {
+    position: relative;
+    z-index: 99999999;
+}
+
+.layui-form-pane .layui-form-label {
+    width: 160px;
+}
+
+.layui-form-pane .layui-input-block {
+    margin-left: 160px;
+}
+
+
+/*overview*/
+.overview-num-div {
+    padding: 8px;
+    border-radius: 3px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    line-height: 60px;
+    height: 60px;
+
+    text-align: center;
+}
+
+.total {
+    font-size: 1.2em;
+    font-weight: 200;
+}
+
+.total-num {
+    font-size: 3.0em;
+}
+
+.panel-success {
+    background: #1f7bb6;
+    color: #ffffff;
+}
+
+.panel-info {
+    background: #1ab394;
+    color: #ffffff;
+}
+
+.panel-primary {
+    background: #29a3cc;
+    color: #ffffff;
+}
+
+.panel-warning {
+    background: #EF9F00;
+    color: #ffffff;
+}

@@ -24,15 +24,19 @@ public class SessionInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // 获取header和cookie里面的token值
         String paramToken = request.getParameter(SessionServiceImpl.COOKIE_NAME_TOKEN);
         String cookieToken = CookieUtil.getCookieValue(request, SessionServiceImpl.COOKIE_NAME_TOKEN);
         if(StringUtils.isEmpty(cookieToken) && StringUtils.isEmpty(paramToken)) {
+            // 都不存在，说明没有登录
             response.sendRedirect("/login");
             return false;
         }
 
+        // 取其中一个有值的
         String token = StringUtils.isEmpty(paramToken) ? cookieToken : paramToken;
         if (sessionService.getByToken(token) == null) {
+            // 缓存中不存在该token的key，说明登录失效
             response.sendRedirect("/login");
             return false;
         }

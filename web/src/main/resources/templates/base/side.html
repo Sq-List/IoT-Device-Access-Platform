@@ -4,37 +4,20 @@
 <div class="layui-side layui-bg-black" th:fragment="onselectLayout (parent, child)">
     <div class="layui-side-scroll">
         <ul class="layui-nav layui-nav-tree">
-            <li class="layui-nav-item" th:classappend="(${parent} == 'product') ? 'layui-nav-itemed' : ''">
-                <a class="" href="javascript:;">产品</a>
-                <dl class="layui-nav-child">
-                    <dd th:class="(${child} == 'productList') ? 'layui-this' : ''">
-                        <a th:href="@{/page/product/list}">列表</a>
-                    </dd>
-                </dl>
+            <li class="layui-nav-item" th:classappend="(${parent} == 'overview') ? 'layui-this' : ''">
+                <a th:href="@{/page}">概览</a>
             </li>
-            <li class="layui-nav-item" th:classappend="(${parent} == 'device') ? 'layui-nav-itemed' : ''">
-                <a class="" href="javascript:;">设备</a>
-                <dl class="layui-nav-child">
-                    <dd th:class="(${child} == 'deviceList') ? 'layui-this' : ''">
-                        <a th:href="@{/page/device/list}">列表</a>
-                    </dd>
-                </dl>
+            <li class="layui-nav-item" th:classappend="(${parent} == 'productList') ? 'layui-this' : ''">
+                <a th:href="@{/page/product/list}">产品列表</a>
             </li>
-            <li class="layui-nav-item" th:classappend="(${parent} == 'file') ? 'layui-nav-itemed' : ''">
-                <a class="" href="javascript:;">文件</a>
-                <dl class="layui-nav-child">
-                    <dd th:class="(${child} == 'fileList') ? 'layui-this' : ''">
-                        <a th:href="@{/page/file/list}">列表</a>
-                    </dd>
-                </dl>
+            <li class="layui-nav-item" th:classappend="(${parent} == 'deviceList') ? 'layui-this' : ''">
+                <a th:href="@{/page/device/list}">设备列表</a>
             </li>
-            <li class="layui-nav-item" th:classappend="(${parent} == 'task') ? 'layui-nav-itemed' : ''">
-                <a class="" href="javascript:;">任务</a>
-                <dl class="layui-nav-child">
-                    <dd th:class="(${child} == 'taskList') ? 'layui-this' : ''">
-                        <a th:href="@{/page/task/list}">列表</a>
-                    </dd>
-                </dl>
+            <li class="layui-nav-item" th:classappend="(${parent} == 'fileList') ? 'layui-this' : ''">
+                <a th:href="@{/page/file/list}">文件列表</a>
+            </li>
+            <li class="layui-nav-item" th:classappend="(${parent} == 'taskList') ? 'layui-this' : ''">
+                <a th:href="@{/page/task/list}">任务列表</a>
             </li>
         </ul>
     </div>

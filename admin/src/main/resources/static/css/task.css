@@ -1,0 +1,103 @@
+.node {
+    box-shadow: 2px 2px 19px #aaa;
+    -o-box-shadow: 2px 2px 19px #aaa;
+    -webkit-box-shadow: 2px 2px 19px #aaa;
+    -moz-box-shadow: 2px 2px 19px #aaa;
+    -moz-border-radius: 0.5em;
+    border-radius: 0.5em;
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+    border: 1px solid #346789;
+    width: 70px;
+    /*line-height: 40px;*/
+    text-align: center;
+    z-index: 20;
+    position: relative;
+    background-color: #eeeeef;
+    color: black;
+    padding: 10px;
+    font-size: 9pt;
+    cursor: pointer;
+    height: 20px;
+    line-height: 20px;
+}
+
+.radius {
+    border-radius: 25em;
+}
+
+[id^="task"] {
+    box-sizing: border-box;
+    border: 1px solid #7c7c7c;
+    height: 740px;
+}
+
+.node:hover {
+    box-shadow: 2px 2px 19px #444;
+    -o-box-shadow: 2px 2px 19px #444;
+    -webkit-box-shadow: 2px 2px 19px #444;
+    -moz-box-shadow: 2px 2px 19px #444;
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+}
+
+#task-main .node.click {
+    box-shadow: 2px 2px 19px #444;
+    -o-box-shadow: 2px 2px 19px #444;
+    -webkit-box-shadow: 2px 2px 19px #444;
+    -moz-box-shadow: 2px 2px 19px #444;
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+}
+
+#task-main .node.error {
+    border: 1px solid red;
+}
+
+#task-button {
+    /*border: 1px solid #00bfff;*/
+    /*height: 750px;*/
+    /*position: absolute;*/
+}
+
+#task-button > .node {
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#task-main {
+    /*border: 1px solid #00bfff;*/
+    /*width: 1024px;*/
+    position: relative;
+    /*height: 750px;*/
+    /*left: 215px;*/
+    /*background: rgb(110, 110, 110);*/
+}
+
+#task-main .node {
+    position: absolute;
+}
+
+#task-main .node .close {
+    position: absolute;
+    left: 80px;
+    top: 0px;
+}
+
+#task-detail {
+    padding: 10px 5px 5px;
+}
+
+#task-detail .center {
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+}

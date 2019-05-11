@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="base/layout">
+
+<title layout:fragment="title">产品列表</title>
+<div layout:fragment="side" th:replace="base/side::onselectLayout ('product', 'productList')"></div>
+<div layout:fragment="content-header" class="layui-card tonghe-header">
+    <span class="layui-breadcrumb">
+        <a href="javascript:;" class="layui-breadcrumb-unclick">产品</a>
+        <a><cite>列表</cite></a>
+    </span>
+</div>
+<div layout:fragment="content">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12 layui-col-lg12">
+            <div class="tonghe-card">
+                <div class="tonghe-card-header">
+                    <div class="layui-btn layui-btn-danger" id="productDel">删除产品</div>
+                </div>
+                <div class="tonghe-card-body">
+                    <table id="productsTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <template id="toolbar">
+        <a th:href="@{/page/product/{{ d.pid }}/detail}" class="layui-btn layui-btn-primary layui-btn-xs">查看</a>
+    </template>
+</div>
+
+<script layout:fragment="script">
+    layui.use(['element', 'table', 'layer'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var layer = layui.layer;
+
+        table.render({
+            elem: "#productsTable",
+            even: true,
+            toolbar: true,
+            defaultToolbar: ['filter'],
+            limit: 10, //每页默认显示的数量
+            page: true,
+            url: ip + "/api/product",
+            parseData: function(res) { //res 即为原始返回的数据
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度
+                    "data": res.data.list //解析数据列表
+                }
+            },
+            cols: [
+                [
+                    {type:'checkbox'},
+                    {field: 'name', title: "名称"},
+                    {field: 'productKey', title: "产品key"},
+                    {field: 'createTime', title: "创建时间", templet: function (d) {
+                            return new Date(d.createTime).format(commonDateFormat);
+                        }},
+                    {fixed: 'right', align:'center', toolbar: '#toolbar'}
+                ]
+            ]
+        });
+
+        $("#productDel").click(function () {
+            let checkStatus = table.checkStatus('productsTable');
+
+            if (checkStatus.data.length === 0) {
+                layer.msg('请勾选', {icon: 2, time: 2000});
+                return;
+            }
+
+            console.log(checkStatus);
+            let list = [];
+            checkStatus.data.forEach(function (currentValue, index, arr) {
+                list.push(currentValue.pid);
+            });
+            layer.open({
+                content: '确定要删除吗?',
+                yes: function (index, layero) {
+                    $.ajax({
+                        url: ip + "/api/product",
+                        type: "delete",
+                        contentType: "application/json",
+                        data: JSON.stringify(list),
+                        dataType: "json",
+                        success: function (res) {
+                            // console.log(res);
+                            layer.close(index);
+                            if (res.code === 0) {
+                                table.reload('productsTable', {});
+                                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                            } else {
+                                layer.msg(res.msg, {icon: 2, time: 2000});
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+</html>

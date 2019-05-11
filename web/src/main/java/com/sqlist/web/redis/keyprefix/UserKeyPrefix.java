@@ -10,7 +10,7 @@ import com.sqlist.web.service.impl.SessionServiceImpl;
  **/
 public class UserKeyPrefix extends BaseKeyPrefix {
 
-    public static final int TOKEN_EXPIRE = 3600 * 24 * 2;
+    public static final int TOKEN_EXPIRE = 60 * 60 * 2;
 
     public UserKeyPrefix(int expireSeconds, String prefix) {
         super(expireSeconds, prefix);

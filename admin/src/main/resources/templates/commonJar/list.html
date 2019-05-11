@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="base/layout">
+
+<title layout:fragment="title">公共Jar列表</title>
+<div layout:fragment="side" th:replace="base/side::onselectLayout ('file', 'commonJarList')"></div>
+<div layout:fragment="content-header" class="layui-card tonghe-header">
+    <span class="layui-breadcrumb">
+        <a href="javascript:;" class="layui-breadcrumb-unclick">公共Jar</a>
+        <a><cite>列表</cite></a>
+    </span>
+</div>
+<div layout:fragment="content">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12 layui-col-lg12">
+            <div class="tonghe-card">
+                <div class="tonghe-card-header">
+                    <div class="layui-btn" id="jarAdd">上传Jar</div>
+                    <div class="layui-btn layui-btn-danger" id="jarDel">删除Jar</div>
+                </div>
+                <div class="tonghe-card-body">
+                    <table id="jarsTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <template id="toolbar">
+        <a th:href="@{/api/commonJar/{{ d.cjid }}}" target="_blank" class="layui-btn layui-btn-primary layui-btn-xs">下载</a>
+    </template>
+    <template id="jarAddLayer">
+        <form id="jarAddForm" class="layui-form  layui-form-pane" enctype="multipart/form-data" method="post" style="text-align: center;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-block">
+                    <input type="text" id="jarName" name="name" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">单元类型</label>
+                <div class="layui-input-block">
+                    <select id="taskUnitTypeSelect" name="taskUnitType" lay-verify="required" lay-filter="taskUnitTypeSelect">
+                        <option value=""></option>
+                        <option value="handle">处理</option>
+                        <option value="output">输出</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">处理类型</label>
+                <div class="layui-input-block">
+                    <input type="text" id="type" name="type" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">入口类</label>
+                <div class="layui-input-block">
+                    <input type="text" id="mainClass" name="mainClass" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="chooseJar" class="layui-btn">选择文件</label>
+                <input type="file" id="chooseJar" name="file" accept=".jar" style="position: absolute; clip: rect(0 0 0 0);"/>
+            </div>
+        </form>
+    </template>
+</div>
+
+<script layout:fragment="script">
+    layui.use(['element', 'table', 'layer', 'form'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+
+        table.render({
+            elem: "#jarsTable",
+            even: true,
+            toolbar: true,
+            defaultToolbar: ['filter'],
+            limit: 10, //每页默认显示的数量
+            page: true,
+            url: ip + "/api/commonJar",
+            parseData: function(res) { //res 即为原始返回的数据
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度
+                    "data": res.data.list //解析数据列表
+                }
+            },
+            cols: [
+                [
+                    {type:'checkbox'},
+                    {field: 'name', title: "名称"},
+                    {field: 'taskUnitType', title: "单元类型", templet: function (d) {
+                        if (d.taskUnitType === "handle") {
+                            return "处理";
+                        } else if (d.taskUnitType === "output") {
+                            return "输出";
+                        }
+                        }},
+                    {field: 'type', title: '处理类型'},
+                    {field: 'mainClass', title: '入口类'},
+                    {field: 'createTime', title: "上传时间", templet: function (d) {
+                            return new Date(d.createTime).format(commonDateFormat);
+                        }},
+                    {fixed: 'right', align:'center', toolbar: '#toolbar'}
+                ]
+            ]
+        });
+
+        $("#jarAdd").click(function () {
+            layer.open({
+                title: "上传文件",
+                content: $("#jarAddLayer").html(),
+                type: 0,
+                area: '1000px',
+                offset: '100px',
+                yes: function (index, layero) {
+                    let index1 = layer.load(2);
+                    $.ajax({
+                        url: ip + "/api/commonJar",
+                        type: "put",
+                        data: new FormData($("#jarAddForm").get(0)),
+                        processData: false,
+                        cache: false,
+                        contentType: false,
+                        dataType: "json",
+                        success: function (res) {
+                            layer.close(index1);
+                            console.log(res);
+                            if (res.code === 0) {
+                                layer.msg('上传成功！', {icon: 1, time: 2000}, function () {
+                                    layer.close(index);
+                                    table.reload('filesTable', {});
+                                });
+                            } else {
+                                layer.msg(res.msg, {icon: 2, time: 2000});
+                            }
+                        }
+                    });
+                },
+                success: function (index, layero) {
+                    form.render();
+                }
+            });
+        });
+
+        $("#jarDel").click(function () {
+            let checkStatus = table.checkStatus('jarsTable');
+
+            if (checkStatus.data.length === 0) {
+                layer.msg('请勾选', {icon: 2, time: 2000});
+                return;
+            }
+
+            console.log(checkStatus);
+            let list = [];
+            checkStatus.data.forEach(function (currentValue, index, arr) {
+                list.push(currentValue.cjid);
+            });
+            layer.open({
+                content: '确定要删除吗?',
+                yes: function (index, layero) {
+                    $.ajax({
+                        url: ip + "/api/commonJar",
+                        type: "delete",
+                        contentType: "application/json",
+                        data: JSON.stringify(list),
+                        dataType: "json",
+                        success: function (res) {
+                            // console.log(res);
+                            layer.close(index);
+                            if (res.code === 0) {
+                                table.reload('jarsTable', {});
+                                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                            } else {
+                                layer.msg(res.msg, {icon: 2, time: 2000});
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on("change", "#chooseJar", function (data) {
+            let $fileDom = $("#chooseJar");
+            let fileDom = $fileDom.get(0);
+
+            if (fileDom.files && fileDom.files[0]) {
+                let pointIndex = fileDom.files[0].name.lastIndexOf(".");
+                let name = fileDom.files[0].name.slice(0, pointIndex);
+
+                $("#jarName").val(name);
+            }
+        });
+    });
+</script>
+</html>

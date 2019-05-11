@@ -1,6 +1,7 @@
 package com.sqlist.web.domain;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @author SqList
@@ -14,6 +15,9 @@ public class User {
     private String username;
 
     private String password;
+
+    @Column(name = "create_time")
+    private Date createTime;
 
     /**
      * @return uid
@@ -55,5 +59,13 @@ public class User {
      */
     public void setPassword(String password) {
         this.password = password == null ? null : password.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }
