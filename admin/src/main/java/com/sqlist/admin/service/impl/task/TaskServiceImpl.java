@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author SqList
@@ -48,8 +49,8 @@ public class TaskServiceImpl implements TaskService {
         HashMap<String, Object> map = new HashMap<>();
 
         PageHelper.startPage(pageVO.getPage(), pageVO.getLimit());
-        List<Task> taskList = taskMapper.select(task);
-        taskList.forEach((tmpTask) -> tmpTask.setStatus(TaskStatus.valueOf(tmpTask.getStatus()).getMsg()));
+        List<Map<String, String>> taskList = taskMapper.selectWithUser(task);
+        taskList.forEach((tmpTask) -> tmpTask.put("status", TaskStatus.valueOf(tmpTask.get("status")).getMsg()));
 
         map.put("total", ((Page)taskList).getTotal());
         map.put("list", taskList);
@@ -67,6 +68,18 @@ public class TaskServiceImpl implements TaskService {
         taskUnitConnectService.deleteMultiple(tidList);
     }
 
+    @Transactional(rollbackFor = RuntimeException.class)
+    @Override
+    public void deleteMultiple(Integer uid) {
+        Task task = new Task();
+        task.setUid(uid);
+        List<Task> taskList = taskMapper.select(task);
+
+        deleteMultiple(taskList.stream()
+                                .map(Task::getTid)
+                                .collect(Collectors.toList()));
+    }
+
     @Override
     public Task detail(Integer tid) {
         Task task = new Task();
@@ -75,9 +88,14 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> getStartingTask() {
+    public Integer count() {
+        return taskMapper.selectCount(new Task());
+    }
+
+    @Override
+    public Integer countRunning() {
         Task task = new Task();
-        task.setStatus(TaskStatus.STARTING.name());
-        return taskMapper.select(task);
+        task.setStatus(TaskStatus.RUNNING.name());
+        return taskMapper.selectCount(task);
     }
 }

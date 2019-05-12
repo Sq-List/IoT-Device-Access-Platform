@@ -6,6 +6,7 @@ import com.sqlist.admin.util.MyMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author SqList
@@ -19,4 +20,11 @@ public interface TaskMapper extends MyMapper<Task> {
      * @param tidList
      */
     void deleteMultiple(@Param("tidList") List<Integer> tidList);
+
+    /**
+     * select 产品 和对应的用户
+     * @param task
+     * @return
+     */
+    List<Map<String, String>> selectWithUser(Task task);
 }

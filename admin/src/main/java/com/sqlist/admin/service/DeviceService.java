@@ -41,4 +41,16 @@ public interface DeviceService {
      * @return
      */
     Device detail(Device device);
+
+    /**
+     * 获取所有设备数
+     * @return
+     */
+    Integer count();
+
+    /**
+     * 获取在线设备
+     * @return
+     */
+    Integer countOnline();
 }

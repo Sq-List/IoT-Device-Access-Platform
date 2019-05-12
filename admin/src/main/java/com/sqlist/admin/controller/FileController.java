@@ -2,7 +2,6 @@ package com.sqlist.admin.controller;
 
 import com.sqlist.admin.result.Result;
 import com.sqlist.admin.service.FileService;
-import com.sqlist.admin.vo.FileVO;
 import com.sqlist.admin.vo.PageVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ public class FileController {
 
     @RequestMapping(value = "", method = RequestMethod.DELETE)
     public Result delete(@RequestBody List<Integer> fidList) {
-        fileService.delete(fidList);
+        fileService.deleteMultiple(fidList);
         return Result.success(null);
     }
 

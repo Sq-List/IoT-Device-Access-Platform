@@ -36,9 +36,9 @@ public class FileUtil {
             return;
         }
 
-        log.debug("delete before, file exist: {}", file.exists());
+        log.debug("deleteMultiple before, file exist: {}", file.exists());
         file.delete();
-        log.debug("delete after, file exist: {}", file.exists());
+        log.debug("deleteMultiple after, file exist: {}", file.exists());
     }
 
     public static void download(HttpServletResponse response, String fileName, File file) throws UnsupportedEncodingException {

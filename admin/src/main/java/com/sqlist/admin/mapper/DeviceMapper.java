@@ -6,6 +6,7 @@ import com.sqlist.admin.vo.response.DeviceResponseVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author SqList
@@ -19,7 +20,7 @@ public interface DeviceMapper extends MyMapper<Device> {
      * @param device
      * @return
      */
-    List<DeviceResponseVO> selectWithProduct(Device device);
+    List<Map<String, String>> selectWithProductAndUser(Device device);
 
     /**
      * 删除某产品下的所有设备

@@ -37,9 +37,21 @@ public interface ProductService {
     void deleteMultiple(List<Integer> pidList);
 
     /**
+     * 根据用户下的所有产品
+     * @param uid
+     */
+    void deleteMultiple(Integer uid);
+
+    /**
      * 获取
      * @param pid
      * @return
      */
     Product get(Integer pid);
+
+    /**
+     * 获取所有产品数
+     * @return
+     */
+    Integer count();
 }

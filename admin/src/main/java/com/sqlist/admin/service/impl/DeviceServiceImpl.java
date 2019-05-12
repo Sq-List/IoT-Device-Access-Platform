@@ -4,18 +4,13 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sqlist.admin.constants.DeviceStatus;
 import com.sqlist.admin.domain.Device;
-import com.sqlist.admin.domain.User;
 import com.sqlist.admin.mapper.DeviceMapper;
 import com.sqlist.admin.service.DeviceService;
-import com.sqlist.admin.util.UUIDUtil;
-import com.sqlist.admin.vo.response.DeviceResponseVO;
 import com.sqlist.admin.vo.DeviceVO;
 import com.sqlist.admin.vo.PageVO;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,8 +35,8 @@ public class DeviceServiceImpl implements DeviceService {
         HashMap<String, Object> map = new HashMap<>();
 
         PageHelper.startPage(pageVO.getPage(), pageVO.getLimit());
-        List<DeviceResponseVO> deviceResponseVOList = deviceMapper.selectWithProduct(device);
-        deviceResponseVOList.forEach((tmpDevice) -> tmpDevice.setStatus(DeviceStatus.valueOf(tmpDevice.getStatus()).getMsg()));
+        List<Map<String, String>> deviceResponseVOList = deviceMapper.selectWithProductAndUser(device);
+        deviceResponseVOList.forEach((tmpDevice) -> tmpDevice.put("status", DeviceStatus.valueOf(tmpDevice.get("status")).getMsg()));
 
         map.put("total", ((Page)deviceResponseVOList).getTotal());
         map.put("list", deviceResponseVOList);
@@ -64,5 +59,17 @@ public class DeviceServiceImpl implements DeviceService {
         device = deviceMapper.selectByPrimaryKey(device);
         device.setStatus(DeviceStatus.valueOf(device.getStatus()).getMsg());
         return device;
+    }
+
+    @Override
+    public Integer count() {
+        return deviceMapper.selectCount(new Device());
+    }
+
+    @Override
+    public Integer countOnline() {
+        Device device = new Device();
+        device.setStatus(DeviceStatus.ONLINE.name());
+        return deviceMapper.selectCount(device);
     }
 }

@@ -20,6 +20,7 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author SqList
@@ -45,9 +46,9 @@ public class FileServiceImpl implements FileService {
         if (pageVO.getLimit() != -1) {
             PageHelper.startPage(pageVO.getPage(), pageVO.getLimit());
         }
-        List<File> fileList = fileMapper.select(file);
+        List<Map<String, String>> fileList = fileMapper.selectWithUser(file);
 
-        fileList.forEach((tmpFile) -> tmpFile.setPath(null));
+        fileList.forEach((tmpFile) -> tmpFile.remove("path"));
 
         if (pageVO.getLimit() != -1) {
             map.put("total", ((Page)fileList).getTotal());
@@ -87,7 +88,7 @@ public class FileServiceImpl implements FileService {
 
     @Transactional(rollbackFor = RuntimeException.class)
     @Override
-    public void delete(List<Integer> fidList) {
+    public void deleteMultiple(List<Integer> fidList) {
         fidList.forEach((fid) -> {
             File file = new File();
             file.setFid(fid);
@@ -98,5 +99,17 @@ public class FileServiceImpl implements FileService {
 
             fileMapper.deleteByPrimaryKey(file);
         });
+    }
+
+    @Transactional(rollbackFor = RuntimeException.class)
+    @Override
+    public void deleteMultiple(Integer uid) {
+        File file = new File();
+        file.setUid(uid);
+        List<File> fileList = fileMapper.select(file);
+
+        deleteMultiple(fileList.stream()
+                                .map(File::getFid)
+                                .collect(Collectors.toList()));
     }
 }

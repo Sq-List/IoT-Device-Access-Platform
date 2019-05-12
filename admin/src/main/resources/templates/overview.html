@@ -40,13 +40,308 @@
         </div>
     </div>
     <div class="layui-row layui-col-space15">
-
+        <div class="layui-col-md4 layui-col-lg4">
+            <div class="tonghe-card">
+                <div class="tonghe-card-header">
+                    <i class="fa fa-bar-chart pull-left"></i>
+                    实时在线用户数（近5分钟）
+                </div>
+                <div class="tonghe-card-body">
+                    <div id="realTimeOnlineUser" style="width: 100%; height: 600px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4 layui-col-lg4">
+            <div class="tonghe-card">
+                <div class="tonghe-card-header">
+                    <i class="fa fa-bar-chart pull-left"></i>
+                    实时在线设备数（近5分钟）
+                </div>
+                <div class="tonghe-card-body">
+                    <div id="realTimeOnlineDevice" style="width: 100%; height: 600px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4 layui-col-lg4">
+            <div class="tonghe-card">
+                <div class="tonghe-card-header">
+                    <i class="fa fa-bar-chart pull-left"></i>
+                    实时运行任务数（近5分钟）
+                </div>
+                <div class="tonghe-card-body">
+                    <div id="realTimeRunningTask" style="width: 100%; height: 600px;"></div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
+<div layout:fragment="otherScriptAfter">
+    <script th:src="@{/plugins/echarts.min.js}"></script>
+</div>
 <script layout:fragment="script">
-    layui.use(['element'], function () {
+    layui.use(['element', 'layer'], function () {
         var element = layui.element;
+        var layer = layui.layer;
+
+        getNums();
+
+        function getNums() {
+            $.ajax({
+                url: ip + "/api/overview/nums",
+                type: "get",
+                contentType: "application/json",
+                dataType: "json",
+                success: function (res) {
+                    // console.log(res);
+                    if (res.code === 0) {
+                        let data = res.data;
+
+                        for (let numKey in data) {
+                            $("#" + numKey).text(data[numKey]);
+                        }
+                    } else {
+                        layer.msg(res.msg, {icon: 2, time: 2000});
+                    }
+                }
+            });
+        }
+
+        var onlineUserChart = echarts.init($("#realTimeOnlineUser").get(0));
+        var onlineDeviceChart = echarts.init($("#realTimeOnlineDevice").get(0));
+        var runningTaskChart = echarts.init($("#realTimeRunningTask").get(0));
+
+        initOnlineUser();
+        initOnlineDevice();
+        initRunningTask();
+
+        function initOnlineUser() {
+            var data = [];
+
+            let option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross'
+                    }
+                },
+                xAxis: {
+                    type: 'time',
+                    boundaryGap: false
+                },
+                yAxis: {
+                    minInterval: 1,
+                    boundaryGap: [0, '50%'],
+                    type: 'value',
+                    axisPointer: {
+                        label: {
+                            formatter: getInteger
+                        }
+                    }
+                },
+                series: [
+                    {
+                        name:'在线人数',
+                        type:'line',
+                        data: data
+                    }
+                ]
+            };
+
+            onlineUserChart.setOption(option);
+            updateData();
+
+            function updateData() {
+                console.log(data);
+                if (data.length === 5) {
+                    data.shift();
+                }
+
+                $.ajax({
+                    url: ip + "/api/overview/user/online/num",
+                    type: "get",
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (res) {
+                        // console.log(res);
+                        if (res.code === 0) {
+                            // data.push([getClock().getTime(), getRandomInt(100)]);
+                            data.push([getClock().getTime(), res.data]);
+                            console.log(data);
+                            onlineUserChart.setOption({
+                                series: [{
+                                    data: data
+                                }]
+                            });
+                        } else {
+                            layer.msg(res.msg, {icon: 2, time: 2000});
+                        }
+                    }
+                });
+            }
+
+            setInterval(function () {
+                updateData();
+            }, 60000);
+        }
+
+        function initOnlineDevice() {
+            var data = [];
+
+            let option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        axis: 'x'
+                    }
+                },
+                xAxis: {
+                    type: 'time',
+                    boundaryGap: false
+                },
+                yAxis: {
+                    minInterval: 1,
+                    boundaryGap: [0, '50%'],
+                    type: 'value',
+                    axisPointer: {
+                        label: {
+                            formatter: getInteger
+                        }
+                    }
+                },
+                series: [
+                    {
+                        name:'在线设备数',
+                        type:'line',
+                        data: data
+                    }
+                ]
+            };
+
+            onlineDeviceChart.setOption(option);
+            updateData();
+
+            function updateData() {
+                console.log(data);
+                if (data.length === 5) {
+                    data.shift();
+                }
+
+                $.ajax({
+                    url: ip + "/api/overview/device/online/num",
+                    type: "get",
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (res) {
+                        // console.log(res);
+                        if (res.code === 0) {
+                            // data.push([getClock().getTime(), getRandomInt(100)]);
+                            data.push([getClock().getTime(), res.data]);
+                            console.log(data);
+                            onlineDeviceChart.setOption({
+                                series: [{
+                                    data: data
+                                }]
+                            });
+                        } else {
+                            layer.msg(res.msg, {icon: 2, time: 2000});
+                        }
+                    }
+                });
+            }
+
+            setInterval(function () {
+                updateData();
+            }, 60000);
+        }
+
+        function initRunningTask() {
+            var data = [];
+
+            let option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        axis: 'x'
+                    }
+                },
+                xAxis: {
+                    type: 'time',
+                    boundaryGap: false
+                },
+                yAxis: {
+                    minInterval: 1,
+                    boundaryGap: [0, '50%'],
+                    type: 'value',
+                    axisPointer: {
+                        label: {
+                            formatter: getInteger
+                        }
+                    }
+                },
+                series: [
+                    {
+                        name:'运行设备数',
+                        type:'line',
+                        data: data
+                    }
+                ]
+            };
+
+            runningTaskChart.setOption(option);
+            updateData();
+
+            function updateData() {
+                console.log(data);
+                if (data.length === 5) {
+                    data.shift();
+                }
+
+                $.ajax({
+                    url: ip + "/api/overview/task/running/num",
+                    type: "get",
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (res) {
+                        // console.log(res);
+                        if (res.code === 0) {
+                            // data.push([getClock().getTime(), getRandomInt(100)]);
+                            data.push([getClock().getTime(), res.data]);
+                            console.log(data);
+                            runningTaskChart.setOption({
+                                series: [{
+                                    data: data
+                                }]
+                            });
+                        } else {
+                            layer.msg(res.msg, {icon: 2, time: 2000});
+                        }
+                    }
+                });
+            }
+
+            setInterval(function () {
+                updateData();
+            }, 60000);
+        }
+
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * Math.floor(max));
+        }
+        
+        function getInteger(params) {
+            return Math.floor(params.value);
+        }
+
+        function getClock() {
+            let time = new Date();
+            time.setSeconds(0);
+            time.setMilliseconds(0);
+            console.log(time);
+            return time;
+        }
     });
 </script>
 </html>

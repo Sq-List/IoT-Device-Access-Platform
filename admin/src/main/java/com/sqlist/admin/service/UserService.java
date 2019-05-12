@@ -31,4 +31,16 @@ public interface UserService {
      * @param uid
      */
     void delete(Integer uid);
+
+    /**
+     * 获取所有用户数量
+     * @return
+     */
+    Integer count();
+
+    /**
+     * 获取在线用户数
+     * @return
+     */
+    Integer countOnline();
 }

@@ -24,6 +24,9 @@
             </div>
         </div>
     </div>
+    <template id="userToolbar">
+        <a th:href="@{/page/user/{{ d.uid }}/detail}">{{ d.username }}</a>
+    </template>
 </div>
 
 <script layout:fragment="script">
@@ -66,7 +69,8 @@
                         }},
                     {field: 'updateTime', title: "最后一次更新时间", templet: function (d) {
                             return new Date(d.updateTime).format(commonDateFormat);
-                        }}
+                        }},
+                    {field: 'username', title: "用户", toolbar: '#userToolbar'}
                 ]
             ]
         });

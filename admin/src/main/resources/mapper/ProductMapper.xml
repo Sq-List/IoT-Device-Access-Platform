@@ -28,4 +28,13 @@
             #{item}
         </foreach>
     </delete>
+
+    <select id="selectWithUser" resultType="java.util.Map">
+        SELECT p.*, u.username username
+        FROM product p, user u
+        WHERE p.uid = u.uid
+        <if test="uid != null" >
+            AND p.uid = #{uid}
+        </if>
+    </select>
 </mapper>

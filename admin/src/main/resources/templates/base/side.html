@@ -27,7 +27,7 @@
                     </dd>
                 </dl>
             </li>
-            <li class="layui-nav-item" th:classappend="(${parent} == 'taskList') ? 'layui-this' : ''">
+            <li class="layui-nav-item" th:classappend="(${child} == 'taskList') ? 'layui-this' : ''">
                 <a th:href="@{/page/task/list}">任务列表</a>
             </li>
         </ul>

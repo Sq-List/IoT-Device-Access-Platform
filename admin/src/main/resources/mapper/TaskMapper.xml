@@ -26,4 +26,13 @@
             #{item}
         </foreach>
     </delete>
+
+    <select id="selectWithUser" resultType="java.util.Map">
+        SELECT t.*, u.username username
+        FROM task t, user u
+        WHERE t.uid = u.uid
+        <if test="uid != null" >
+            AND t.uid = #{uid}
+        </if>
+    </select>
 </mapper>

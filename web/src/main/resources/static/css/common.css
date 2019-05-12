@@ -54,6 +54,7 @@
 }
 
 .tonghe-card-header {
+    line-height: 1;
     padding: 10px 15px;
     border-bottom: 1px solid #F6F6F6;
     color: #333;
@@ -68,23 +69,6 @@
 
 .tonghe-bg-white {
     background: #fff;
-}
-
-img.tonghe-upload-preview-img {
-    /*width: 750px;*/
-    height: 436px;
-}
-
-img.tonghe-preview-img {
-    /*width: 375px;*/
-    height: 218px;
-    cursor: pointer;
-}
-
-img.tonghe-form-img {
-    margin-right: 5px;
-    width: 200px;
-    height: 200px;
 }
 
 /*img.tonghe-preview-img:hover {*/
@@ -108,21 +92,12 @@ img.tonghe-form-img {
 
 
 /*overview*/
-.overview-div {
-    width: 25%;
-    padding-left: 15px;
-    padding-right: 15px;
-    margin-bottom: 20px;
-    float: left;
-
-
-}
-
 .overview-num-div {
     padding: 8px;
     border-radius: 3px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    line-height: normal;
+    line-height: 60px;
+    height: 60px;
 
     text-align: center;
 }

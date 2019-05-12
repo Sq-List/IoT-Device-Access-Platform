@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author SqList
@@ -44,7 +45,7 @@ public class ProductServiceImpl implements ProductService {
         if (pageVO.getLimit() != -1) {
             PageHelper.startPage(pageVO.getPage(), pageVO.getLimit());
         }
-        List<Product> productList = productMapper.select(product);
+        List<Map<String, String>> productList = productMapper.selectWithUser(product);
 
         if (pageVO.getLimit() != -1) {
             map.put("total", ((Page)productList).getTotal());
@@ -70,10 +71,27 @@ public class ProductServiceImpl implements ProductService {
         deviceService.deleteMultipleByPid(pidList);
     }
 
+    @Transactional(rollbackFor = RuntimeException.class)
+    @Override
+    public void deleteMultiple(Integer uid) {
+        Product product = new Product();
+        product.setUid(uid);
+        List<Product> productList = productMapper.select(product);
+
+        deleteMultiple(productList.stream()
+                                .map(Product::getPid)
+                                .collect(Collectors.toList()));
+    }
+
     @Override
     public Product get(Integer pid) {
         Product product = new Product();
         product.setPid(pid);
         return productMapper.selectByPrimaryKey(product);
+    }
+
+    @Override
+    public Integer count() {
+        return productMapper.selectCount(new Product());
     }
 }

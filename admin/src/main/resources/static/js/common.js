@@ -181,3 +181,4 @@ function logout() {
 // }
 
 var commonDateFormat = "yyyy-MM-dd hh:mm:ss";
+var dayDateFormat = "yyyy-MM-dd";

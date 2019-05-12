@@ -27,6 +27,9 @@
     <template id="toolbar">
         <a th:href="@{/page/product/{{ d.pid }}/detail}" class="layui-btn layui-btn-primary layui-btn-xs">查看</a>
     </template>
+    <template id="userToolbar">
+        <a th:href="@{/page/user/{{ d.uid }}/detail}">{{ d.username }}</a>
+    </template>
 </div>
 
 <script layout:fragment="script">
@@ -59,6 +62,7 @@
                     {field: 'createTime', title: "创建时间", templet: function (d) {
                             return new Date(d.createTime).format(commonDateFormat);
                         }},
+                    {field: 'username', title: "用户", toolbar: '#userToolbar'},
                     {fixed: 'right', align:'center', toolbar: '#toolbar'}
                 ]
             ]

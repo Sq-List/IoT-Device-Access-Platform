@@ -5,7 +5,12 @@ import com.github.pagehelper.PageHelper;
 import com.sqlist.admin.domain.Product;
 import com.sqlist.admin.domain.User;
 import com.sqlist.admin.mapper.UserMapper;
+import com.sqlist.admin.redis.RedisUtil;
+import com.sqlist.admin.redis.keyprefix.UserKeyPrefix;
+import com.sqlist.admin.service.FileService;
+import com.sqlist.admin.service.ProductService;
 import com.sqlist.admin.service.UserService;
+import com.sqlist.admin.service.task.TaskService;
 import com.sqlist.admin.vo.PageVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +32,18 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private RedisUtil redisUtil;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private TaskService taskService;
+
+    @Autowired
+    private FileService fileService;
 
     @Override
     public Map<String, Object> list(PageVO pageVO) {
@@ -55,6 +72,22 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public void delete(Integer uid) {
-        // TODO
+        User user = new User();
+        user.setUid(uid);
+        userMapper.deleteByPrimaryKey(user);
+
+        productService.deleteMultiple(uid);
+        taskService.deleteMultiple(uid);
+        fileService.deleteMultiple(uid);
+    }
+
+    @Override
+    public Integer count() {
+        return userMapper.selectCount(new User());
+    }
+
+    @Override
+    public Integer countOnline() {
+        return redisUtil.keys(UserKeyPrefix.TOKEN);
     }
 }

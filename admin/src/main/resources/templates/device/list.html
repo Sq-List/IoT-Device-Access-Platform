@@ -30,6 +30,9 @@
     <template id="productToolbar">
         <a th:href="@{/page/product/{{ d.pid }}/detail}">{{ d.productName }}</a>
     </template>
+    <template id="userToolbar">
+        <a th:href="@{/page/user/{{ d.uid }}/detail}">{{ d.username }}</a>
+    </template>
 </div>
 
 <script layout:fragment="script">
@@ -78,6 +81,7 @@
                             return "";
                         }},
                     {field: 'pid', title: "所属产品", toolbar: '#productToolbar'},
+                    {field: 'username', title: "用户", toolbar: '#userToolbar'},
                     {fixed: 'right', align:'center', toolbar: '#toolbar'}
                 ]
             ]

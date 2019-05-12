@@ -18,6 +18,17 @@ public class RedisUtil {
     @Autowired
     private JedisPool jedisPool;
 
+    public <T> Integer keys(KeyPrefix keyPrefix) {
+        Jedis jedis = jedisPool.getResource();
+        try {
+            String realKey = keyPrefix.getPrefix() + ":*";
+            Integer nums = jedis.keys(realKey).size();
+            return nums;
+        } finally {
+            returnToPool(jedis);
+        }
+    }
+
     /**
      * 设置值
      * @param keyPrefix
@@ -27,9 +38,8 @@ public class RedisUtil {
      * @return
      */
     public <T> boolean set(KeyPrefix keyPrefix, String key, T value) {
-        Jedis jedis = null;
+        Jedis jedis = jedisPool.getResource();
         try {
-            jedis = jedisPool.getResource();
             String valueStr = beanToString(value);
             if (valueStr == null || valueStr.length() <= 0) {
                 return false;
@@ -57,9 +67,8 @@ public class RedisUtil {
      * @return
      */
     public <T> T get(KeyPrefix keyPrefix, String key, Class<T> clazz) {
-        Jedis jedis = null;
+        Jedis jedis = jedisPool.getResource();
         try {
-            jedis = jedisPool.getResource();
             String realKey = keyPrefix.getPrefix() + ":" + key;
             String valueStr = jedis.get(realKey);
             T t = stringToBean(valueStr, clazz);
@@ -70,9 +79,8 @@ public class RedisUtil {
     }
 
     public <T> Long del(KeyPrefix keyPrefix, String key) {
-        Jedis jedis = null;
+        Jedis jedis = jedisPool.getResource();
         try {
-            jedis = jedisPool.getResource();
             String realKey = keyPrefix.getPrefix() + ":" + key;
             return jedis.del(realKey);
         } finally {
@@ -87,9 +95,8 @@ public class RedisUtil {
      * @return
      */
     public <T> boolean exists(KeyPrefix prefix, String key) {
-        Jedis jedis = null;
+        Jedis jedis = jedisPool.getResource();
         try {
-            jedis =  jedisPool.getResource();
             //生成真正的key
             String realKey  = prefix.getPrefix() + ":" + key;
             return  jedis.exists(realKey);
@@ -106,9 +113,8 @@ public class RedisUtil {
      * @return
      */
     public <T> Long incr(KeyPrefix prefix, String key) {
-        Jedis jedis = null;
+        Jedis jedis = jedisPool.getResource();
         try {
-            jedis =  jedisPool.getResource();
             //生成真正的key
             String realKey  = prefix.getPrefix() + key;
             return  jedis.incr(realKey);
@@ -125,9 +131,8 @@ public class RedisUtil {
      * @return
      */
     public <T> Long decr(KeyPrefix prefix, String key) {
-        Jedis jedis = null;
+        Jedis jedis = jedisPool.getResource();
         try {
-            jedis =  jedisPool.getResource();
             //生成真正的key
             String realKey  = prefix.getPrefix() + key;
             return  jedis.decr(realKey);

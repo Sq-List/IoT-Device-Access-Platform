@@ -43,5 +43,11 @@ public interface FileService {
      * 删除 文件
      * @param fidList
      */
-    void delete(List<Integer> fidList);
+    void deleteMultiple(List<Integer> fidList);
+
+    /**
+     * 删除某用户下所有文件
+     * @param uid
+     */
+    void deleteMultiple(Integer uid);
 }

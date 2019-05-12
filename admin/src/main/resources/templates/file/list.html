@@ -27,6 +27,9 @@
     <template id="toolbar">
         <a th:href="@{/api/file/{{ d.fid }}}" target="_blank" class="layui-btn layui-btn-primary layui-btn-xs">下载</a>
     </template>
+    <template id="userToolbar">
+        <a th:href="@{/page/user/{{ d.uid }}/detail}">{{ d.username }}</a>
+    </template>
 </div>
 
 <script layout:fragment="script">
@@ -59,6 +62,7 @@
                     {field: 'uploadTime', title: "上传时间", templet: function (d) {
                             return new Date(d.uploadTime).format(commonDateFormat);
                         }},
+                    {field: 'username', title: "用户", toolbar: '#userToolbar'},
                     {fixed: 'right', align:'center', toolbar: '#toolbar'}
                 ]
             ]

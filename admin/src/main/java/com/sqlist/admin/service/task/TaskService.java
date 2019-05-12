@@ -30,6 +30,12 @@ public interface TaskService {
     void deleteMultiple(List<Integer> deleteList);
 
     /**
+     * 删除用户下的所有任务
+     * @param uid
+     */
+    void deleteMultiple(Integer uid);
+
+    /**
      * 获取task信息
      * @param tid
      * @return
@@ -37,8 +43,14 @@ public interface TaskService {
     Task detail(Integer tid);
 
     /**
-     * 获取处于 启动中 的任务
+     * 获取所有任务数
      * @return
      */
-    List<Task> getStartingTask();
+    Integer count();
+
+    /**
+     * 获取运行任务数
+     * @return
+     */
+    Integer countRunning();
 }
