@@ -4,6 +4,7 @@ import com.sqlist.web.domain.Task;
 import com.sqlist.web.domain.User;
 import com.sqlist.web.vo.PageVO;
 import com.sqlist.web.vo.TaskVO;
+import com.sqlist.web.vo.search.TaskSearchVO;
 
 import java.util.List;
 import java.util.Map;
@@ -18,10 +19,10 @@ public interface TaskService {
     /**
      * 获取任务列表
      * @param user
-     * @param pageVO
+     * @param taskSearchVO
      * @return
      */
-    Map<String, Object> list(User user, PageVO pageVO);
+    Map<String, Object> list(User user, TaskSearchVO taskSearchVO);
 
     /**
      * 添加任务

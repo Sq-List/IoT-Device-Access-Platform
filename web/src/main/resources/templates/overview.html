@@ -10,48 +10,32 @@
 </div>
 <div layout:fragment="content">
     <div class="layui-row layui-col-space15">
-        <div class="layui-col-md3 layui-col-lg4">
+        <div class="layui-col-md3 layui-col-lg3">
             <div class="overview-num-div panel-success">
                 <i class="fa fa-bar-chart pull-left"></i>
                 <span class="total">产品数量&nbsp;&nbsp;</span>
                 <span class="total-num" id="productNum">21</span>
             </div>
         </div>
-        <div class="layui-col-md3 layui-col-lg4">
+        <div class="layui-col-md3 layui-col-lg3">
             <div class="overview-num-div panel-info">
                 <i class="fa fa-bar-chart pull-left"></i>
                 <span class="total">设备数量&nbsp;&nbsp;</span>
                 <span class="total-num" id="deviceNum">30</span>
             </div>
         </div>
-        <div class="layui-col-md3 layui-col-lg4">
+        <div class="layui-col-md3 layui-col-lg3">
             <div class="overview-num-div panel-primary">
                 <i class="fa fa-bar-chart pull-left"></i>
                 <span class="total">任务数量&nbsp;&nbsp;</span>
                 <span class="total-num" id="taskNum">37</span>
             </div>
         </div>
-    </div>
-    <div class="layui-row layui-col-space15">
-        <div class="layui-col-md3 layui-col-lg4">
+        <div class="layui-col-md3 layui-col-lg3">
             <div class="overview-num-div panel-warning">
                 <i class="fa fa-bar-chart pull-left"></i>
                 <span class="total">文件数量&nbsp;&nbsp;</span>
                 <span class="total-num" id="fileNum">10</span>
-            </div>
-        </div>
-        <div class="layui-col-md3 layui-col-lg4">
-            <div class="overview-num-div layui-bg-blue">
-                <i class="fa fa-bar-chart pull-left"></i>
-                <span class="total">运行设备数量&nbsp;&nbsp;</span>
-                <span class="total-num" id="runningDeviceNum">10</span>
-            </div>
-        </div>
-        <div class="layui-col-md3 layui-col-lg4">
-            <div class="overview-num-div layui-bg-red">
-                <i class="fa fa-bar-chart pull-left"></i>
-                <span class="total">运行任务数量&nbsp;&nbsp;</span>
-                <span class="total-num" id="runningTaskNum">10</span>
             </div>
         </div>
     </div>
@@ -63,7 +47,7 @@
                     近24小时各任务发送量
                 </div>
                 <div class="tonghe-card-body">
-                    <div id="taskSendDayInfo" style="width: 100%; height: 400px;"></div>
+                    <div id="taskSendDayInfo" style="width: 100%; height: 600px;"></div>
                 </div>
             </div>
         </div>
@@ -74,7 +58,7 @@
                     近7天各任务发送量
                 </div>
                 <div class="tonghe-card-body">
-                    <div id="taskSendWeekInfo" style="width: 100%; height: 400px;"></div>
+                    <div id="taskSendWeekInfo" style="width: 100%; height: 600px;"></div>
                 </div>
             </div>
         </div>
@@ -85,7 +69,7 @@
                     各任务发送总量
                 </div>
                 <div class="tonghe-card-body">
-                    <div id="taskSendTotalInfo" style="width: 100%; height: 500px;"></div>
+                    <div id="taskSendTotalInfo" style="width: 100%; height: 600px;"></div>
                 </div>
             </div>
         </div>
@@ -99,12 +83,14 @@
     layui.use(['element'], function () {
         var element = layui.element;
 
+        var dayInfoChart = echarts.init($("#taskSendDayInfo").get(0));
+        var weekInfoChart = echarts.init($("#taskSendWeekInfo").get(0));
+        var totalInfoChart = echarts.init($("#taskSendTotalInfo").get(0));
+
         initTotalInfo();
 
-        // var dayInfoChart = echarts.init($("#taskSendDayInfo").get(0));
-
         function initTotalInfo() {
-            var totalInfoChart = echarts.init($("#taskSendTotalInfo").get(0));
+
             var totalInfoOption = {
                 tooltip: {},
                 legend: {

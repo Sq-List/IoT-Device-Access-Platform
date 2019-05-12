@@ -4,6 +4,7 @@ import com.sqlist.web.domain.Product;
 import com.sqlist.web.domain.User;
 import com.sqlist.web.vo.PageVO;
 import com.sqlist.web.vo.ProductVO;
+import com.sqlist.web.vo.search.ProductSearchVO;
 
 import java.util.List;
 import java.util.Map;
@@ -18,10 +19,10 @@ public interface ProductService {
     /**
      * 获取产品
      * @param user
-     * @param pageVO
+     * @param productSearchVO
      * @return
      */
-    Map<String, Object> list(User user, PageVO pageVO);
+    Map<String, Object> list(User user, ProductSearchVO productSearchVO);
 
     /**
      * 获取产品详细信息

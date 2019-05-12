@@ -9,6 +9,8 @@ import com.sqlist.web.service.ProductService;
 import com.sqlist.web.vo.DeviceVO;
 import com.sqlist.web.vo.PageVO;
 import com.sqlist.web.vo.ProductVO;
+import com.sqlist.web.vo.search.DeviceSearchVO;
+import com.sqlist.web.vo.search.ProductSearchVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -34,8 +36,8 @@ public class ProductController {
     private DeviceService deviceService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public Result list(User user, @Validated PageVO pageVO) {
-        Map<String, Object> map = productService.list(user, pageVO);
+    public Result list(User user, @Validated ProductSearchVO productSearchVO) {
+        Map<String, Object> map = productService.list(user, productSearchVO);
         return Result.success(map);
     }
 
@@ -53,7 +55,11 @@ public class ProductController {
         deviceVO.setPid(pid);
         deviceVO.setUid(user.getUid());
 
-        return Result.success(deviceService.list(deviceVO, pageVO));
+        DeviceSearchVO deviceSearchVO = new DeviceSearchVO();
+        deviceSearchVO.setPage(pageVO.getPage());
+        deviceSearchVO.setLimit(pageVO.getLimit());
+
+        return Result.success(deviceService.list(deviceVO, deviceSearchVO));
     }
 
 //    /**

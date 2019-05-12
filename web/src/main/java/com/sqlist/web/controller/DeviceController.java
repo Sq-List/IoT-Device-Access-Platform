@@ -8,6 +8,7 @@ import com.sqlist.web.service.DeviceService;
 import com.sqlist.web.service.ProductService;
 import com.sqlist.web.vo.DeviceVO;
 import com.sqlist.web.vo.PageVO;
+import com.sqlist.web.vo.search.DeviceSearchVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -34,10 +35,10 @@ public class DeviceController {
     private ProductService productService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public Result list(User user, @Validated PageVO pageVO) {
+    public Result list(User user, @Validated DeviceSearchVO deviceSearchVO) {
         DeviceVO deviceVO = new DeviceVO();
         deviceVO.setUid(user.getUid());
-        return Result.success(deviceService.list(deviceVO, pageVO));
+        return Result.success(deviceService.list(deviceVO, deviceSearchVO));
     }
 
     @RequestMapping(value = "", method = RequestMethod.PUT)

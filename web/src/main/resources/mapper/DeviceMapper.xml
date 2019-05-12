@@ -25,7 +25,16 @@
         FROM device d, product p
         WHERE d.uid = #{uid}
         <if test="pid != null">
-            AND d.pid = ${pid}
+            AND d.pid = #{pid}
+        </if>
+        <if test="name != null" >
+            AND d.name = #{name}
+        </if>
+        <if test="deviceKey != null">
+            AND d.device_key = #{deviceKey}
+        </if>
+        <if test="status != null">
+            AND d.status = #{status}
         </if>
         AND d.pid = p.pid
     </select>

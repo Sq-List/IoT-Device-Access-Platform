@@ -16,8 +16,19 @@
         <div class="layui-col-md12 layui-col-lg12">
             <div class="tonghe-card">
                 <div class="tonghe-card-header">
-                    <div class="layui-btn" id="fileAdd">上传文件</div>
-                    <div class="layui-btn layui-btn-danger" id="fileDel">删除文件</div>
+                    <form class="layui-form  layui-form-pane" lay-filter="detailForm">
+                        <div class="layui-form-item" style="margin-bottom: 0px">
+                            <div class="layui-inline">
+                                <input type="text" name="name" placeholder="名称" class="layui-input">
+                            </div>
+                            <div class="layui-inline">
+                                <input type="text" name="extensions" placeholder="扩展名" class="layui-input">
+                            </div>
+                            <div class="layui-inline">
+                                <div id="searchBtn" class="layui-btn layui-btn-primary" lay-submit lay-filter="searchBtn">搜索</div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="tonghe-card-body">
                     <table id="filesTable"></table>
@@ -25,6 +36,10 @@
             </div>
         </div>
     </div>
+    <template id="topToolbar">
+        <div class="layui-btn" id="fileAdd">上传文件</div>
+        <div class="layui-btn layui-btn-danger" id="fileDel">删除文件</div>
+    </template>
     <template id="toolbar">
         <a th:href="@{/api/file/{{ d.fid }}}" target="_blank" class="layui-btn layui-btn-primary layui-btn-xs">下载</a>
     </template>
@@ -59,15 +74,16 @@
 </div>
 
 <script layout:fragment="script">
-    layui.use(['element', 'table', 'layer'], function () {
+    layui.use(['element', 'table', 'layer', 'form'], function () {
         var element = layui.element;
         var table = layui.table;
         var layer = layui.layer;
+        var form = layui.form;
 
         table.render({
             elem: "#filesTable",
             even: true,
-            toolbar: true,
+            toolbar: '#topToolbar',
             defaultToolbar: ['filter'],
             limit: 10, //每页默认显示的数量
             page: true,
@@ -183,6 +199,26 @@
 
                 $("#fileName").val(name);
             }
+        });
+
+        form.on('submit(searchBtn)', function(data){
+            console.log(data.field);
+
+            let formJson = data.field;
+            for (let key in formJson) {
+                if (!formJson[key]) {
+                    delete formJson[key];
+                }
+            }
+
+            //执行重载
+            table.reload('filesTable', {
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+                where: data.field
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
     });
 </script>

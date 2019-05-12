@@ -8,6 +8,7 @@ import com.sqlist.web.result.Result;
 import com.sqlist.web.service.FileService;
 import com.sqlist.web.vo.FileVO;
 import com.sqlist.web.vo.PageVO;
+import com.sqlist.web.vo.search.FileSearchVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -33,8 +34,8 @@ public class FileController {
     private FileService fileService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public Result list(User user, @Validated PageVO pageVO) {
-        return Result.success(fileService.list(user, pageVO));
+    public Result list(User user, @Validated FileSearchVO fileSearchVO) {
+        return Result.success(fileService.list(user, fileSearchVO));
     }
 
     @RequestMapping(value = "/extensions/{extensions}", method = RequestMethod.GET)

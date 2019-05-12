@@ -4,6 +4,7 @@ import com.sqlist.web.domain.File;
 import com.sqlist.web.domain.User;
 import com.sqlist.web.vo.FileVO;
 import com.sqlist.web.vo.PageVO;
+import com.sqlist.web.vo.search.FileSearchVO;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
@@ -20,10 +21,10 @@ public interface FileService {
     /**
      * 获取 上传文件列表
      * @param user
-     * @param pageVO
+     * @param fileSearchVO
      * @return
      */
-    Map<String, Object> list(User user, PageVO pageVO);
+    Map<String, Object> list(User user, FileSearchVO fileSearchVO);
 
     /**
      * 获取 某extensions 后缀的所有上传文件

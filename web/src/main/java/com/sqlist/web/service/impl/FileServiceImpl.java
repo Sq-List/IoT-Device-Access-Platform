@@ -13,6 +13,7 @@ import com.sqlist.web.util.FileUtil;
 import com.sqlist.web.util.ScpUtil;
 import com.sqlist.web.vo.FileVO;
 import com.sqlist.web.vo.PageVO;
+import com.sqlist.web.vo.search.FileSearchVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,20 +54,22 @@ public class FileServiceImpl implements FileService {
     private ScpUtil scpUtil;
 
     @Override
-    public Map<String, Object> list(User user, PageVO pageVO) {
+    public Map<String, Object> list(User user, FileSearchVO fileSearchVO) {
         File file = new File();
+        file.setName(fileSearchVO.getName());
+        file.setExtensions(fileSearchVO.getExtensions());
         file.setUid(user.getUid());
 
         HashMap<String, Object> map = new HashMap<>();
 
-        if (pageVO.getLimit() != -1) {
-            PageHelper.startPage(pageVO.getPage(), pageVO.getLimit());
+        if (fileSearchVO.getLimit() != -1) {
+            PageHelper.startPage(fileSearchVO.getPage(), fileSearchVO.getLimit());
         }
         List<File> fileList = fileMapper.select(file);
 
         fileList.forEach((tmpFile) -> tmpFile.setPath(null));
 
-        if (pageVO.getLimit() != -1) {
+        if (fileSearchVO.getLimit() != -1) {
             map.put("total", ((Page)fileList).getTotal());
         }
         map.put("list", fileList);

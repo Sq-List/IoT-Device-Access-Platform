@@ -16,8 +16,27 @@
         <div class="layui-col-md12 layui-col-lg12">
             <div class="tonghe-card">
                 <div class="tonghe-card-header">
-                    <div class="layui-btn" id="deviceAdd">添加设备</div>
-                    <div class="layui-btn layui-btn-danger" id="deviceDel">删除设备</div>
+                    <form class="layui-form  layui-form-pane" lay-filter="detailForm">
+                        <div class="layui-form-item" style="margin-bottom: 0px">
+                            <div class="layui-inline">
+                                <input type="text" name="name" placeholder="名称" class="layui-input">
+                            </div>
+                            <div class="layui-inline">
+                                <input type="text" name="deviceKey" placeholder="设备key" class="layui-input">
+                            </div>
+                            <div class="layui-inline">
+                                <select name="status" lay-filter="deviceState">
+                                    <option value="">设备状态</option>
+                                    <option value="UNACTIVE">未激活</option>
+                                    <option value="ONLINE">在线</option>
+                                    <option value="OFFLINE">离线</option>
+                                </select>
+                            </div>
+                            <div class="layui-inline">
+                                <div id="searchBtn" class="layui-btn layui-btn-primary" lay-submit lay-filter="searchBtn">搜索</div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="tonghe-card-body">
                     <table id="devicesTable"></table>
@@ -25,6 +44,10 @@
             </div>
         </div>
     </div>
+    <template id="topToolbar">
+        <div class="layui-btn" id="deviceAdd">添加设备</div>
+        <div class="layui-btn layui-btn-danger" id="deviceDel">删除设备</div>
+    </template>
     <template id="toolbar">
         <a th:href="@{/page/device/{{ d.did }}/detail}" class="layui-btn layui-btn-primary layui-btn-xs">查看</a>
         <!--<a th:href="@{/page/device/{{ d.did }}}" class="layui-btn layui-btn-xs">编辑</a>-->
@@ -68,7 +91,7 @@
         table.render({
             elem: "#devicesTable",
             even: true,
-            toolbar: true,
+            toolbar: '#topToolbar',
             defaultToolbar: ['filter'],
             limit: 10, //每页默认显示的数量
             page: true,
@@ -85,9 +108,9 @@
             cols: [
                 [
                     {type: 'checkbox'},
-                    {field: 'name', title: "名称"},
-                    {field: 'deviceKey', title: "deviceKey"},
-                    {field: 'status', title: "状态"},
+                    {field: 'name', title: "名称", width: 150},
+                    {field: 'deviceKey', title: "deviceKey", width: 300},
+                    {field: 'status', title: "状态", width: 80},
                     {field: 'createTime', title: "创建时间", templet: function (d) {
                             return new Date(d.createTime).format(commonDateFormat);
                         }},
@@ -201,6 +224,26 @@
                     });
                 }
             });
+        });
+
+        form.on('submit(searchBtn)', function(data){
+            console.log(data.field);
+
+            let formJson = data.field;
+            for (let key in formJson) {
+                if (!formJson[key]) {
+                    delete formJson[key];
+                }
+            }
+
+            //执行重载
+            table.reload('devicesTable', {
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+                where: data.field
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
     });
 </script>

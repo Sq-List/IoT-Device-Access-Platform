@@ -16,8 +16,25 @@
         <div class="layui-col-md12 layui-col-lg12">
             <div class="tonghe-card">
                 <div class="tonghe-card-header">
-                    <div class="layui-btn" id="taskAdd">新建任务</div>
-                    <div class="layui-btn layui-btn-danger" id="taskDel">删除任务</div>
+                    <form class="layui-form  layui-form-pane" lay-filter="detailForm">
+                        <div class="layui-form-item" style="margin-bottom: 0px">
+                            <div class="layui-inline">
+                                <input type="text" name="name" placeholder="名称" class="layui-input">
+                            </div>
+                            <div class="layui-inline">
+                                <select name="status" lay-filter="taskState">
+                                    <option value="">任务状态</option>
+                                    <option value="CODING">开发中</option>
+                                    <option value="UNUSE">开发完成</option>
+                                    <option value="STARTING">启动中</option>
+                                    <option value="RUNNING">运行中</option>
+                                </select>
+                            </div>
+                            <div class="layui-inline">
+                                <div id="searchBtn" class="layui-btn layui-btn-primary" lay-submit lay-filter="searchBtn">搜索</div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="tonghe-card-body">
                     <table id="tasksTable"></table>
@@ -25,6 +42,10 @@
             </div>
         </div>
     </div>
+    <template id="topToolbar">
+        <div class="layui-btn" id="taskAdd">新建任务</div>
+        <div class="layui-btn layui-btn-danger" id="taskDel">删除任务</div>
+    </template>
     <template id="toolbar">
         {{#  if (d.status === '开发完成') { }}
         <button class="layui-btn layui-btn-primary layui-btn-xs" id="start" tid="{{ d.tid }}">
@@ -49,15 +70,16 @@
 </div>
 
 <script layout:fragment="script">
-    layui.use(['element', 'table', 'layer'], function () {
+    layui.use(['element', 'table', 'layer', 'form'], function () {
         var element = layui.element;
         var table = layui.table;
         var layer = layui.layer;
+        var form = layui.form;
 
         table.render({
             elem: "#tasksTable",
             even: true,
-            toolbar: true,
+            toolbar: '#topToolbar',
             defaultToolbar: ['filter'],
             limit: 10, //每页默认显示的数量
             page: true,
@@ -95,7 +117,6 @@
         });
 
         $("#taskAdd").click(function () {
-            let index1 = layer.load(2);
             layer.prompt({
                 title: '输入任务名称'
             }, function(value, index, elem){
@@ -108,7 +129,6 @@
                     }),
                     dataType: "json",
                     success: function (res) {
-                        layer.close(index1);
                         console.log(res);
                         if (res.code === 0) {
                             layer.msg('添加成功！', {icon: 1, time: 2000}, function () {
@@ -211,6 +231,26 @@
                 table.reload('tasksTable', {});
             }, 2000);
         }
+
+        form.on('submit(searchBtn)', function(data){
+            console.log(data.field);
+
+            let formJson = data.field;
+            for (let key in formJson) {
+                if (!formJson[key]) {
+                    delete formJson[key];
+                }
+            }
+
+            //执行重载
+            table.reload('tasksTable', {
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+                where: data.field
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
     });
 </script>
 </html>

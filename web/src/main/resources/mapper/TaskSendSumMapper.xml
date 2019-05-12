@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sqlist.web.mapper.TaskSendSumMapper" >
+  <resultMap id="BaseResultMap" type="com.sqlist.web.domain.TaskSendSum" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="tssid" property="tssid" jdbcType="INTEGER" />
+    <result column="count" property="count" jdbcType="INTEGER" />
+    <result column="time" property="time" jdbcType="DATE" />
+    <result column="tid" property="tid" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    tssid, count, time, tid
+  </sql>
+</mapper>

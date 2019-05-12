@@ -4,6 +4,7 @@ import com.sqlist.web.domain.Device;
 import com.sqlist.web.domain.User;
 import com.sqlist.web.vo.DeviceVO;
 import com.sqlist.web.vo.PageVO;
+import com.sqlist.web.vo.search.DeviceSearchVO;
 
 import java.util.List;
 import java.util.Map;
@@ -18,10 +19,10 @@ public interface DeviceService {
     /**
      * 获取设备列表
      * @param deviceVO
-     * @param pageVO
+     * @param deviceSearchVO
      * @return
      */
-    Map<String, Object> list(DeviceVO deviceVO, PageVO pageVO);
+    Map<String, Object> list(DeviceVO deviceVO, DeviceSearchVO deviceSearchVO);
 
     /**
      * 添加 设备

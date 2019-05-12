@@ -11,6 +11,7 @@ import com.sqlist.web.service.ProductService;
 import com.sqlist.web.util.UUIDUtil;
 import com.sqlist.web.vo.PageVO;
 import com.sqlist.web.vo.ProductVO;
+import com.sqlist.web.vo.search.ProductSearchVO;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,18 +39,20 @@ public class ProductServiceImpl implements ProductService {
     private DeviceService deviceService;
 
     @Override
-    public Map<String, Object> list(User user, PageVO pageVO) {
+    public Map<String, Object> list(User user, ProductSearchVO productSearchVO) {
         Product product = new Product();
         product.setUid(user.getUid());
+        product.setName(productSearchVO.getName());
+        product.setProductKey(productSearchVO.getProductKey());
 
         HashMap<String, Object> map = new HashMap<>();
 
-        if (pageVO.getLimit() != -1) {
-            PageHelper.startPage(pageVO.getPage(), pageVO.getLimit());
+        if (productSearchVO.getLimit() != -1) {
+            PageHelper.startPage(productSearchVO.getPage(), productSearchVO.getLimit());
         }
         List<Product> productList = productMapper.select(product);
 
-        if (pageVO.getLimit() != -1) {
+        if (productSearchVO.getLimit() != -1) {
             map.put("total", ((Page)productList).getTotal());
         }
         map.put("list", productList);

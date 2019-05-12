@@ -7,16 +7,16 @@
             <li class="layui-nav-item" th:classappend="(${parent} == 'overview') ? 'layui-this' : ''">
                 <a th:href="@{/page}">概览</a>
             </li>
-            <li class="layui-nav-item" th:classappend="(${parent} == 'productList') ? 'layui-this' : ''">
+            <li class="layui-nav-item" th:classappend="(${child} == 'productList') ? 'layui-this' : ''">
                 <a th:href="@{/page/product/list}">产品列表</a>
             </li>
-            <li class="layui-nav-item" th:classappend="(${parent} == 'deviceList') ? 'layui-this' : ''">
+            <li class="layui-nav-item" th:classappend="(${child} == 'deviceList') ? 'layui-this' : ''">
                 <a th:href="@{/page/device/list}">设备列表</a>
             </li>
-            <li class="layui-nav-item" th:classappend="(${parent} == 'fileList') ? 'layui-this' : ''">
+            <li class="layui-nav-item" th:classappend="(${child} == 'fileList') ? 'layui-this' : ''">
                 <a th:href="@{/page/file/list}">文件列表</a>
             </li>
-            <li class="layui-nav-item" th:classappend="(${parent} == 'taskList') ? 'layui-this' : ''">
+            <li class="layui-nav-item" th:classappend="(${child} == 'taskList') ? 'layui-this' : ''">
                 <a th:href="@{/page/task/list}">任务列表</a>
             </li>
         </ul>

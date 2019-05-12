@@ -11,6 +11,7 @@ import com.sqlist.web.service.flink.TaskFlinkService;
 import com.sqlist.web.service.task.*;
 import com.sqlist.web.vo.PageVO;
 import com.sqlist.web.vo.TaskVO;
+import com.sqlist.web.vo.search.TaskSearchVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -51,13 +52,15 @@ public class TaskServiceImpl implements TaskService {
     private TaskFlinkService taskFlinkService;
 
     @Override
-    public Map<String, Object> list(User user, PageVO pageVO) {
+    public Map<String, Object> list(User user, TaskSearchVO taskSearchVO) {
         Task task = new Task();
+        task.setName(taskSearchVO.getName());
+        task.setStatus(taskSearchVO.getStatus());
         task.setUid(user.getUid());
 
         HashMap<String, Object> map = new HashMap<>();
 
-        PageHelper.startPage(pageVO.getPage(), pageVO.getLimit());
+        PageHelper.startPage(taskSearchVO.getPage(), taskSearchVO.getLimit());
         List<Task> taskList = taskMapper.select(task);
         taskList.forEach((tmpTask) -> tmpTask.setStatus(TaskStatus.valueOf(tmpTask.getStatus()).getMsg()));
 

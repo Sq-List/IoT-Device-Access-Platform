@@ -11,6 +11,7 @@ import com.sqlist.web.util.UUIDUtil;
 import com.sqlist.web.vo.DeviceResponseVO;
 import com.sqlist.web.vo.DeviceVO;
 import com.sqlist.web.vo.PageVO;
+import com.sqlist.web.vo.search.DeviceSearchVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,14 +34,17 @@ public class DeviceServiceImpl implements DeviceService {
     private DeviceMapper deviceMapper;
 
     @Override
-    public Map<String, Object> list(DeviceVO deviceVO, PageVO pageVO) {
+    public Map<String, Object> list(DeviceVO deviceVO, DeviceSearchVO deviceSearchVO) {
         Device device = new Device();
+        device.setName(deviceSearchVO.getName());
+        device.setDeviceKey(deviceSearchVO.getDeviceKey());
+        device.setStatus(deviceSearchVO.getStatus());
         device.setUid(deviceVO.getUid());
         device.setPid(deviceVO.getPid());
 
         HashMap<String, Object> map = new HashMap<>();
 
-        PageHelper.startPage(pageVO.getPage(), pageVO.getLimit());
+        PageHelper.startPage(deviceSearchVO.getPage(), deviceSearchVO.getLimit());
         List<DeviceResponseVO> deviceResponseVOList = deviceMapper.selectWithProduct(device);
         deviceResponseVOList.forEach((tmpDevice) -> tmpDevice.setStatus(DeviceStatus.valueOf(tmpDevice.getStatus()).getMsg()));
 

@@ -6,6 +6,7 @@ import com.sqlist.web.result.Result;
 import com.sqlist.web.service.task.TaskService;
 import com.sqlist.web.vo.PageVO;
 import com.sqlist.web.vo.TaskVO;
+import com.sqlist.web.vo.search.TaskSearchVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -30,12 +31,12 @@ public class TaskController {
     /**
      * 获取task列表
      * @param user
-     * @param pageVO
+     * @param taskSearchVO
      * @return
      */
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public Result list(User user, @Validated PageVO pageVO) {
-        Map<String, Object> map = taskService.list(user, pageVO);
+    public Result list(User user, @Validated TaskSearchVO taskSearchVO) {
+        Map<String, Object> map = taskService.list(user, taskSearchVO);
         return Result.success(map);
     }
 
