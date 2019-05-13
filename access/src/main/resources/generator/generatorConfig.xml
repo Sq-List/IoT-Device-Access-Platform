@@ -55,7 +55,7 @@
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
 
-        <table tableName="%"
+        <table tableName="task_send_sum"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"
