@@ -208,4 +208,11 @@ public class FileServiceImpl implements FileService {
 
         fileMapper.updateByPrimaryKeySelective(file);
     }
+
+    @Override
+    public Integer count(User user) {
+        File file = new File();
+        file.setUid(user.getUid());
+        return fileMapper.selectCount(file);
+    }
 }

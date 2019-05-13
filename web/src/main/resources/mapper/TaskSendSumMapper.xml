@@ -1,19 +1,50 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.sqlist.web.mapper.TaskSendSumMapper" >
-  <resultMap id="BaseResultMap" type="com.sqlist.web.domain.TaskSendSum" >
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="tssid" property="tssid" jdbcType="INTEGER" />
-    <result column="count" property="count" jdbcType="INTEGER" />
-    <result column="time" property="time" jdbcType="DATE" />
-    <result column="tid" property="tid" jdbcType="INTEGER" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    <!--
-      WARNING - @mbg.generated
-    -->
-    tssid, count, time, tid
-  </sql>
+<mapper namespace="com.sqlist.web.mapper.TaskSendSumMapper">
+    <resultMap id="BaseResultMap" type="com.sqlist.web.domain.TaskSendSum">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="tssid" property="tssid" jdbcType="INTEGER"/>
+        <result column="count" property="count" jdbcType="INTEGER"/>
+        <result column="time" property="time" jdbcType="DATE"/>
+        <result column="tid" property="tid" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        tssid, count, time, tid
+    </sql>
+
+    <select id="selectCountPerHourIn24Hours" resultType="map">
+        SELECT tss.time,
+               tss.count
+        FROM task_send_sum tss,
+             task t
+        WHERE t.tid = #{tid}
+          AND tss.time >= NOW() - INTERVAL 24 HOUR
+          AND tss.tid = t.tid
+    </select>
+
+    <select id="selectCountPerDayIn7Day" resultType="map">
+        SELECT CONVERT(tss.time, DATE) time,
+               SUM(count)              count
+        FROM task_send_sum tss,
+             task t
+        WHERE t.tid = #{tid}
+          AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= DATE(tss.time)
+          AND CURDATE() != DATE(tss.time)
+          AND tss.tid = t.tid
+        GROUP BY CONVERT(tss.time, DATE)
+        ORDER BY time
+    </select>
+
+    <select id="selectCountAll" resultType="map">
+        SELECT SUM(count) count
+        FROM task_send_sum tss,
+             task t
+        WHERE tss.tid = t.tid
+          AND t.tid = #{tid}
+    </select>
 </mapper>

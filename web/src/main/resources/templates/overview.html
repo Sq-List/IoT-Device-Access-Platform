@@ -78,35 +78,347 @@
 
 <div layout:fragment="otherScriptAfter" th:remove="tag">
     <script th:src="@{/plugins/echarts.js}"></script>
+    <script th:src="@{/plugins/moment.min.js}"></script>
 </div>
 <script layout:fragment="script">
-    layui.use(['element'], function () {
+    layui.use(['element', 'layer'], function () {
         var element = layui.element;
+        var layer = layui.layer;
 
-        var dayInfoChart = echarts.init($("#taskSendDayInfo").get(0));
-        var weekInfoChart = echarts.init($("#taskSendWeekInfo").get(0));
-        var totalInfoChart = echarts.init($("#taskSendTotalInfo").get(0));
+        getNums();
 
+        function getNums() {
+            $.ajax({
+                url: ip + "/api/overview/nums",
+                type: "get",
+                contentType: "application/json",
+                dataType: "json",
+                success: function (res) {
+                    // console.log(res);
+                    if (res.code === 0) {
+                        let data = res.data;
+
+                        for (let numKey in data) {
+                            $("#" + numKey).text(data[numKey]);
+                        }
+                    } else {
+                        layer.msg(res.msg, {icon: 2, time: 2000});
+                    }
+                }
+            });
+        }
+
+        var infoOf24HourChart = echarts.init($("#taskSendDayInfo").get(0));
+        var infoOf7DayChart = echarts.init($("#taskSendWeekInfo").get(0));
+        var infoOfTotalChart = echarts.init($("#taskSendTotalInfo").get(0));
+
+        init24HourInfo();
+        init7DayInfo();
         initTotalInfo();
+
+        function init24HourInfo() {
+
+            infoOf24HourChart.setOption({
+                grid: {
+                    left: '4%',
+                    top: '2%',
+                    right: '7%',
+                    bottom: 40
+                },
+                legend: {
+                    type: 'scroll',
+                    orient: 'vertical',
+                    right: 10,
+                    top: 20,
+                    bottom: 20,
+                    data: [],
+
+                    selected: []
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        axis: 'x'
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: []
+                },
+                yAxis: {
+                    minInterval: 1,
+                    boundaryGap: [0, '20%'],
+                    type: 'value',
+                    axisPointer: {
+                        label: {
+                            formatter: getInteger
+                        }
+                    }
+                },
+                series: []
+            });
+
+            new Promise(function (resolve, reject) {
+                $.ajax({
+                    url: ip + "/api/overview/24hour",
+                    type: "get",
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (res) {
+                        console.log(res);
+                        if (res.code === 0) {
+                            let data = res.data;
+                            console.log(data);
+                            resolve(data);
+                        } else {
+                            layer.msg(res.msg, {icon: 2, time: 2000});
+                        }
+                    }
+                });
+            }).then(function (data) {
+
+                let allHours = get24Hour();
+
+                let names = [];
+                let namesSelected = [];
+                let seriesData = [];
+
+                let index = 0;
+                for (let key in data) {
+                    let map = data[key];
+
+                    let name = map["name"];
+                    let counts = [];
+
+                    let timeToCountMap = map.timeToCountMap;
+
+                    for (let i = 1; i < allHours.length; i++) {
+                        let dateTime = allHours[i];
+                        if (timeToCountMap[dateTime]) {
+                            counts.push(timeToCountMap[dateTime]);
+                        } else {
+                            counts.push(0);
+                        }
+                    }
+
+                    names.push(name);
+                    namesSelected.push(index < 5);
+                    seriesData.push({
+                        name: name,
+                        type: 'line',
+                        data: counts
+                    });
+                }
+
+                infoOf24HourChart.setOption({
+                    legend: {
+                        data: names,
+                        selected: namesSelected
+                    },
+                    xAxis: {
+                        data: allHours
+                    },
+                    series: seriesData
+                });
+            });
+        }
+
+        function init7DayInfo() {
+
+            infoOf7DayChart.setOption({
+                grid: {
+                    left: '4%',
+                    top: '2%',
+                    right: '7%',
+                    bottom: 40
+                },
+                legend: {
+                    type: 'scroll',
+                    orient: 'vertical',
+                    right: 10,
+                    top: 20,
+                    bottom: 20,
+                    data: [],
+
+                    selected: []
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        axis: 'x'
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: []
+                },
+                yAxis: {
+                    minInterval: 1,
+                    boundaryGap: [0, '20%'],
+                    type: 'value',
+                    axisPointer: {
+                        label: {
+                            formatter: getInteger
+                        }
+                    }
+                },
+                series: []
+            });
+
+            infoOf7DayChart.showLoading();
+            new Promise(function (resolve, reject) {
+                $.ajax({
+                    url: ip + "/api/overview/7day",
+                    type: "get",
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (res) {
+                        console.log(res);
+                        if (res.code === 0) {
+                            let data = res.data;
+                            console.log(data);
+                            resolve(data);
+                        } else {
+                            layer.msg(res.msg, {icon: 2, time: 2000});
+                        }
+                    }
+                });
+            }).then(function (data) {
+
+                let allDay = get7day();
+
+                let names = [];
+                let namesSelected = [];
+                let seriesData = [];
+
+                let index = 0;
+                for (let key in data) {
+                    let map = data[key];
+
+                    let name = map["name"];
+                    let counts = [];
+
+                    let timeToCountMap = map.timeToCountMap;
+
+                    for (let i = 0; i < allDay.length; i++) {
+                        let dateTime = allDay[i];
+                        if (timeToCountMap[dateTime]) {
+                            counts.push(timeToCountMap[dateTime]);
+                        } else {
+                            counts.push(0);
+                        }
+                    }
+
+                    names.push(name);
+                    namesSelected.push(index < 5);
+                    seriesData.push({
+                        name: name,
+                        type: 'line',
+                        data: counts
+                    });
+                }
+
+                infoOf7DayChart.hideLoading();
+                infoOf7DayChart.setOption({
+                    legend: {
+                        data: names,
+                        selected: namesSelected
+                    },
+                    xAxis: {
+                        data: allDay
+                    },
+                    series: seriesData
+                });
+            });
+        }
 
         function initTotalInfo() {
 
-            var totalInfoOption = {
-                tooltip: {},
-                legend: {
-                    data:['销量']
+            infoOfTotalChart.setOption({
+                grid: {
+                    left: '4%',
+                    top: '2%',
+                    right: '4%',
+                    bottom: 40
                 },
+                tooltip: {},
                 xAxis: {
-                    data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+                    data: []
                 },
                 yAxis: {},
-                series: [{
-                    name: '销量',
-                    type: 'bar',
-                    data: [5, 20, 36, 10, 10, 20]
-                }]
-            };
-            totalInfoChart.setOption(totalInfoOption);
+                series: []
+            });
+
+            new Promise(function (resolve, reject) {
+                $.ajax({
+                    url: ip + "/api/overview/total",
+                    type: "get",
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (res) {
+                        console.log(res);
+                        if (res.code === 0) {
+                            let data = res.data;
+                            console.log(data);
+                            resolve(data);
+                        } else {
+                            layer.msg(res.msg, {icon: 2, time: 2000});
+                        }
+                    }
+                });
+            }).then(function (data) {
+
+                let xData = [];
+                let yData = [];
+
+                for (let key in data) {
+                    let map = data[key];
+
+                    xData.push(map["name"]);
+                    yData.push(map["count"]);
+                }
+
+                infoOfTotalChart.setOption({
+                    xAxis: {
+                        data: xData
+                    },
+                    series: [{
+                        name: '发送量',
+                        type: 'bar',
+                        data: yData
+                    }]
+                });
+            });
+        }
+
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * Math.floor(max));
+        }
+
+        function getInteger(params) {
+            return Math.floor(params.value);
+        }
+
+        function get24Hour() {
+            let hours = [];
+            for(let i = 24; i >= 0; i--) {
+                hours.push(moment().subtract(i, 'hours').format("YYYY-MM-DD HH:00:00"));
+            }
+            // console.log(hours);
+            return hours;
+        }
+
+        function get7day() {
+            let dates = [];
+            for(let i = 7; i >= 1; i--) {
+                dates.push(moment().subtract(i, 'days').format("YYYY-MM-DD"));
+            }
+            console.log(dates);
+            return dates;
         }
     });
 </script>

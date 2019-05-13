@@ -187,4 +187,11 @@ public class TaskServiceImpl implements TaskService {
 
         taskMapper.updateByPrimaryKeySelective(task);
     }
+
+    @Override
+    public Integer count(User user) {
+        Task task = new Task();
+        task.setUid(user.getUid());
+        return taskMapper.selectCount(task);
+    }
 }

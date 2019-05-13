@@ -100,4 +100,11 @@ public class ProductServiceImpl implements ProductService {
         product.setPid(pid);
         return productMapper.selectByPrimaryKey(product);
     }
+
+    @Override
+    public Integer count(User user) {
+        Product product = new Product();
+        product.setUid(user.getUid());
+        return productMapper.selectCount(product);
+    }
 }

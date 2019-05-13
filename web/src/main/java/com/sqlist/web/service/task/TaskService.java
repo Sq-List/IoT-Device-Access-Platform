@@ -80,4 +80,11 @@ public interface TaskService {
      * @param tid
      */
     void stop(Integer tid);
+
+    /**
+     * 统计某用户的所有任务数
+     * @param user
+     * @return
+     */
+    Integer count(User user);
 }

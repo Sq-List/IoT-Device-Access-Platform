@@ -82,21 +82,17 @@ public class DeviceServiceImpl implements DeviceService {
         deviceMapper.deleteMultipleByPid(device, pidList);
     }
 
-//    @Transactional(rollbackFor = RuntimeException.class)
-//    @Override
-//    public void updatePidMultipleByDid(Device device, List<Integer> didList) {
-//        deviceMapper.updatePidMultipleByDid(device, didList);
-//    }
-//
-//    @Override
-//    public void updatePidMultipleByPid(Device device, List<Integer> pidList) {
-//        deviceMapper.updatePidMultipleByPid(device, pidList);
-//    }
-
     @Override
     public Device detail(Device device) {
         device = deviceMapper.selectByPrimaryKey(device);
         device.setStatus(DeviceStatus.valueOf(device.getStatus()).getMsg());
         return device;
+    }
+
+    @Override
+    public Integer count(User user) {
+        Device device = new Device();
+        device.setUid(user.getUid());
+        return deviceMapper.selectCount(device);
     }
 }

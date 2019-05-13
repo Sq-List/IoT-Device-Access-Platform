@@ -38,20 +38,6 @@ public interface DeviceService {
      */
     void deleteMultiple(User user, List<Integer> didList);
 
-//    /**
-//     * 更新多个设备的pid
-//     * @param device
-//     * @param didList
-//     */
-//    void updatePidMultipleByDid(Device device, List<Integer> didList);
-//
-//    /**
-//     * 更新多个设备的pid
-//     * @param device
-//     * @param pidList
-//     */
-//    void updatePidMultipleByPid(Device device, List<Integer> pidList);
-
     /**
      * 删除某产品下的所有设备
      * @param device
@@ -65,4 +51,11 @@ public interface DeviceService {
      * @return
      */
     Device detail(Device device);
+
+    /**
+     * 统计某用户的设备数
+     * @param user
+     * @return
+     */
+    Integer count(User user);
 }

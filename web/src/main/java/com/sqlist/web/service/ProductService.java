@@ -51,4 +51,11 @@ public interface ProductService {
      * @return
      */
     Product get(Integer pid);
+
+    /**
+     * 统计某用户产品数
+     * @param user
+     * @return
+     */
+    Integer count(User user);
 }

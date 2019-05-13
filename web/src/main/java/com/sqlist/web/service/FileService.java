@@ -52,6 +52,7 @@ public interface FileService {
      * 下载文件
      * @param response
      * @param fid
+     * @throws UnsupportedEncodingException
      */
     void download(HttpServletResponse response, Integer fid) throws UnsupportedEncodingException;
 
@@ -68,4 +69,11 @@ public interface FileService {
      * @param jarId
      */
     void updateJarId(Integer fid, String jarId);
+
+    /**
+     * 统计某用户的文件数
+     * @param user
+     * @return
+     */
+    Integer count(User user);
 }
