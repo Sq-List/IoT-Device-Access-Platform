@@ -109,7 +109,7 @@
             ]
         });
 
-        $("#fileAdd").click(function () {
+        $(document).on("click", "#fileAdd", function () {
             layer.open({
                 title: "上传文件",
                 content: $("#fileAddLayer").html(),
@@ -146,7 +146,7 @@
             });
         });
 
-        $("#fileDel").click(function () {
+        $(document).on("click", "#fileDel", function () {
             let checkStatus = table.checkStatus('filesTable');
 
             if (checkStatus.data.length === 0) {

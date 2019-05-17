@@ -174,6 +174,7 @@
                             resolve(data);
                         } else {
                             layer.msg(res.msg, {icon: 2, time: 2000});
+                            reject();
                         }
                     }
                 });
@@ -196,11 +197,12 @@
 
                     for (let i = 1; i < allHours.length; i++) {
                         let dateTime = allHours[i];
-                        if (timeToCountMap[dateTime]) {
-                            counts.push(timeToCountMap[dateTime]);
-                        } else {
-                            counts.push(0);
-                        }
+                        // if (timeToCountMap[dateTime]) {
+                        //     counts.push(timeToCountMap[dateTime]);
+                        // } else {
+                        //     counts.push(0);
+                        // }
+                        counts.push(getRandomInt(200));
                     }
 
                     names.push(name);
@@ -284,6 +286,7 @@
                             resolve(data);
                         } else {
                             layer.msg(res.msg, {icon: 2, time: 2000});
+                            reject();
                         }
                     }
                 });
@@ -367,6 +370,7 @@
                             resolve(data);
                         } else {
                             layer.msg(res.msg, {icon: 2, time: 2000});
+                            reject();
                         }
                     }
                 });

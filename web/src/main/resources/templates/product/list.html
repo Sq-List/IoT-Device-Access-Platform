@@ -81,7 +81,7 @@
             ]
         });
 
-        $("#productAdd").click(function () {
+        $(document).on("click", "#productAdd", function () {
             layer.prompt({
                 title: '输入产品名称'
             }, function(value, index, elem){
@@ -108,7 +108,7 @@
             });
         });
 
-        $("#productDel").click(function () {
+        $(document).on("click", "#productDel", function () {
             let checkStatus = table.checkStatus('productsTable');
 
             if (checkStatus.data.length === 0) {

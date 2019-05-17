@@ -19,10 +19,13 @@ public class LuaUtil implements Serializable {
 //
 //    }
 
+    private static String transferOperatePath = "/usr/local/flink-1.7.2/lua/transferOperate.lua";
+    private static String transferOperateMethod = "transferOperate";
+
     public static String operate(String luaFilePath, String data) {
         Globals globals = JsePlatform.standardGlobals();
-        globals.loadfile(luaFilePath).call();
-        LuaValue func = globals.get(LuaValue.valueOf("operate"));
-        return func.call(data).tojstring();
+        globals.loadfile(transferOperatePath).call();
+        LuaValue func = globals.get(LuaValue.valueOf(transferOperateMethod));
+        return func.call(LuaValue.valueOf(luaFilePath), LuaValue.valueOf(data)).tojstring();
     }
 }

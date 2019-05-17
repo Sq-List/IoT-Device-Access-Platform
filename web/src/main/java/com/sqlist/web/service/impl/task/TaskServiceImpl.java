@@ -166,12 +166,14 @@ public class TaskServiceImpl implements TaskService {
     public void start(Integer tid) {
         Task task = new Task();
         task.setTid(tid);
-        task.setStatus(TaskStatus.STARTING.name());
+
+        task = taskMapper.selectByPrimaryKey(task);
 
         log.info("before start.");
-        taskFlinkService.start(tid);
+        taskFlinkService.start(task);
         log.info("after start.");
 
+        task.setStatus(TaskStatus.STARTING.name());
         taskMapper.updateByPrimaryKeySelective(task);
     }
 
@@ -179,12 +181,14 @@ public class TaskServiceImpl implements TaskService {
     public void stop(Integer tid) {
         Task task = new Task();
         task.setTid(tid);
-        task.setStatus(TaskStatus.UNUSE.name());
+
+        task = taskMapper.selectByPrimaryKey(task);
 
         log.info("before stop.");
-        taskFlinkService.stop(tid);
+        taskFlinkService.stop(task);
         log.info("after stop.");
 
+        task.setStatus(TaskStatus.UNUSE.name());
         taskMapper.updateByPrimaryKeySelective(task);
     }
 

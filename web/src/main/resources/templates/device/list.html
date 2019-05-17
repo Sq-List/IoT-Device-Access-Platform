@@ -132,7 +132,7 @@
             ]
         });
 
-        $("#deviceAdd").click(function () {
+        $(document).on("click", "#deviceAdd", function () {
             layer.open({
                 title: "添加设备",
                 content: $("#deviceAddLayer").html(),
@@ -188,7 +188,7 @@
             });
         });
 
-        $("#deviceDel").click(function () {
+        $(document).on("click", "#deviceDel", function () {
             let checkStatus = table.checkStatus('devicesTable');
 
             if (checkStatus.data.length === 0) {

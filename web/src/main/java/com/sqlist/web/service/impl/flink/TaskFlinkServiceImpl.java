@@ -33,8 +33,6 @@ import java.util.stream.Collectors;
 @Service
 public class TaskFlinkServiceImpl implements TaskFlinkService {
 
-    public static final String JAVA = "java";
-
     @Value("http://${config.flink.rest.ip}:${config.flink.rest.port}")
     private String flinkIp;
 
@@ -72,13 +70,13 @@ public class TaskFlinkServiceImpl implements TaskFlinkService {
     private TaskJobService taskJobService;
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void inputToOutput(TaskUnitInput input, TaskUnitOutput output) throws IOException {
+    public void inputToOutput(Task task, TaskUnitInput input, TaskUnitOutput output) throws IOException {
         Product product = productService.get(input.getPid());
-        toOutput(product.getTopic(), output);
+        toOutput(task, product.getTopic(), output);
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void inputToHandle(TaskUnitInput input, TaskUnitHandle handle) throws IOException {
+    public void inputToHandle(Task task, TaskUnitInput input, TaskUnitHandle handle) throws IOException {
         Product product = productService.get(input.getPid());
 
         String url = "";
@@ -126,11 +124,11 @@ public class TaskFlinkServiceImpl implements TaskFlinkService {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void handleToOutput(TaskUnitHandle handle, TaskUnitOutput output) throws IOException {
-        toOutput(handle.getTuid(), output);
+    public void handleToOutput(Task task, TaskUnitHandle handle, TaskUnitOutput output) throws IOException {
+        toOutput(task, handle.getTuid(), output);
     }
 
-    private void toOutput(String topic, TaskUnitOutput output) throws IOException {
+    private void toOutput(Task task, String topic, TaskUnitOutput output) throws IOException {
         CommonJar commonJar = commonJarService.get(TaskUnit.OUTPUT, output.getType());
         String jarId = commonJar.getJarId();
         String mainClass = commonJar.getMainClass();
@@ -142,9 +140,10 @@ public class TaskFlinkServiceImpl implements TaskFlinkService {
                 .append(" --consumerGroup ").append(output.getTuid()).append("-group")
                 .append(" --consumerZookeeperIp ").append(zookeeperIp)
                 .append(" --producerIp ").append(output.getIp()).append(":").append(output.getPort())
-                .append(" --producerTopic ").append(output.getUrl());
+                .append(" --producerTopic ").append(output.getUrl())
+                .append(" --tid ").append(task.getTid());
 
-        Map<String, String> paramsMap = new HashMap<>();
+        Map<String, String> paramsMap = new HashMap<>(3);
         paramsMap.put("programArgs", paramsArgs.toString());
         paramsMap.put("entryClass", mainClass);
 
@@ -175,7 +174,8 @@ public class TaskFlinkServiceImpl implements TaskFlinkService {
     @Async
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void start(Integer tid) {
+    public void start(Task task) {
+        Integer tid = task.getTid();
         TaskUnitInput input = taskUnitInputService.list(tid).get(0);
         Map<String, TaskUnitHandle> tuidToHandleMap = taskUnitHandleService.list(tid)
                                                         .stream()
@@ -191,11 +191,11 @@ public class TaskFlinkServiceImpl implements TaskFlinkService {
 
             try {
                 if (sourceTuid.startsWith(TaskUnit.INPUT) && targetTuid.startsWith(TaskUnit.HANDLE)) {
-                    inputToHandle(input, tuidToHandleMap.get(targetTuid));
+                    inputToHandle(task, input, tuidToHandleMap.get(targetTuid));
                 } else if (sourceTuid.startsWith(TaskUnit.HANDLE) && targetTuid.startsWith(TaskUnit.OUTPUT)) {
-                    handleToOutput(tuidToHandleMap.get(sourceTuid), tuidToOutputMap.get(targetTuid));
+                    handleToOutput(task, tuidToHandleMap.get(sourceTuid), tuidToOutputMap.get(targetTuid));
                 } else if (sourceTuid.startsWith(TaskUnit.INPUT) && targetTuid.startsWith(TaskUnit.OUTPUT)) {
-                    inputToOutput(input, tuidToOutputMap.get(targetTuid));
+                    inputToOutput(task, input, tuidToOutputMap.get(targetTuid));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -206,10 +206,10 @@ public class TaskFlinkServiceImpl implements TaskFlinkService {
     @Async
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void stop(Integer tid) {
+    public void stop(Task task) {
         List<TaskUnitJob> taskUnitJobList = new ArrayList<>();
-        taskUnitJobList.addAll(taskUnitOutputService.list(tid));
-        taskUnitJobList.addAll(taskUnitHandleService.list(tid));
+        taskUnitJobList.addAll(taskUnitOutputService.list(task.getTid()));
+        taskUnitJobList.addAll(taskUnitHandleService.list(task.getTid()));
 
         for (TaskUnitJob job : taskUnitJobList) {
             String url = flinkIp + "/jobs/" + job.getJobId() + "/yarn-cancel";
@@ -225,6 +225,7 @@ public class TaskFlinkServiceImpl implements TaskFlinkService {
                 e.printStackTrace();
             }
 
+            // 更新 单元信息
             job.setJobId("");
             job.setStatus(TaskJobStatus.UNUSE.name());
             taskJobService.update(job);

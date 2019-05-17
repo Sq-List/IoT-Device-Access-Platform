@@ -7,40 +7,41 @@
     <link rel="stylesheet" th:href="@{/css/login.css}"/>
 </head>
 <body style="background-size: 100% 100%; background-attachment: fixed;">
-    <div class="container-fluid">
-        <div class="login-div">
-            <div class="login-title">
-                <span>流处理平台</span>
-            </div>
-            <div class="login-content layui-card">
-                <div class="layui-card-body">
-                    <div class="login-tab-content">
-                        <form class="layui-form" method="post">
-                            <div class="layui-form-item">
-                                <input type="text" name="username" required="required" lay-verify="required"
-                                       placeholder="用户名" autocomplete="off" class="layui-input"/>
-                            </div>
-                            <div class="layui-form-item">
-                                <input type="password" name="password" required="required" lay-verify="required"
-                                       placeholder="密码" autocomplete="off" class="layui-input"/>
-                            </div>
-                            <!--<input type="hidden" name="loginType" value="4"/>-->
-                            <div class="layui-form-item login-form-item">
-                                <button class="layui-btn layui-btn-big layui-btn-normal" lay-submit lay-filter="formDemo">
-                                    登录
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+<div class="container-fluid">
+    <div class="login-div">
+        <div class="login-title">
+            <span>流处理平台</span>
+        </div>
+        <div class="login-content layui-card">
+            <div class="layui-card-body">
+                <div class="login-tab-content">
+                    <form class="layui-form" method="post">
+                        <div class="layui-form-item">
+                            <input type="text" name="username" required="required" lay-verify="required"
+                                   placeholder="用户名" autocomplete="off" class="layui-input"/>
+                        </div>
+                        <div class="layui-form-item">
+                            <input type="password" name="password" required="required" lay-verify="required"
+                                   placeholder="密码" autocomplete="off" class="layui-input"/>
+                        </div>
+                        <div class="layui-form-item login-form-item">
+                            <button class="layui-btn layui-btn-big layui-btn-normal" lay-submit lay-filter="formDemo">
+                                登录
+                            </button>
+                            <a class="layui-btn layui-btn-big layui-btn-normal" href="javascript:;">
+                                注册
+                            </a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </body>
 <div th:replace="base/script"></div>
 <script type="text/javascript">
-    layui.use(["layer", "form"], function()
-    {
+    layui.use(["layer", "form"], function () {
         var $ = layui.$;
         var layer = layui.layer;
         var form = layui.form;
@@ -49,6 +50,7 @@
             console.log(data);
             let formData = data.field;
 
+            let index1 = layer.load(2);
             $.ajax({
                 url: ip + "/api/session",
                 type: "post",
@@ -57,6 +59,7 @@
                 dataType: "json",
                 success: function (res) {
                     console.log(res);
+                    layer.close(index1);
                     if (res.code === 0) {
                         let data = res.data;
 
