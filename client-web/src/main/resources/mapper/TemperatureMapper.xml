@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sqlist.clientweb.mapper.TemperatureMapper">
+    <resultMap id="BaseResultMap" type="com.sqlist.clientweb.domain.Temperature">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="tid" property="tid" jdbcType="INTEGER"/>
+        <result column="temperature" property="temperature" jdbcType="INTEGER"/>
+        <result column="time" property="time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        tid, temperature, time
+    </sql>
+
+    <select id="selectNewest50" resultMap="BaseResultMap">
+        SELECT * FROM `temperature` ORDER BY tid DESC LIMIT 50
+    </select>
+</mapper>

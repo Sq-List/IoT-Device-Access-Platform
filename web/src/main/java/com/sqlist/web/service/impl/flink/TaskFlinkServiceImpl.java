@@ -145,7 +145,7 @@ public class TaskFlinkServiceImpl implements TaskFlinkService {
                 .append(" --producerIp ").append(output.getIp()).append(":").append(output.getPort())
                 .append(" --producerTopic ").append(output.getUrl())
                 .append(" --tid ").append(task.getTid())
-                .append(" --totalTopic").append(totalTopic);
+                .append(" --totalTopic ").append(totalTopic);
 
         Map<String, String> paramsMap = new HashMap<>(3);
         paramsMap.put("programArgs", paramsArgs.toString());

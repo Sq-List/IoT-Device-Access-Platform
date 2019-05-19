@@ -7,6 +7,8 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 
@@ -74,10 +76,11 @@ public class Client {
     public static void start() {
         try {
             Random random = new Random();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             while (true) {
 //                String message = messageList.take();
                 String temperature = random.nextInt(100) + "";
-                String message = "{\"temperature\": " + temperature + "}";
+                String message = "{\"temperature\": " + temperature + ", \"time\": \"" + sdf.format(new Date()) + "\"}";
                 MqttMessage mqttMessage = new MqttMessage(message.getBytes());
                 try {
                     System.out.println("send message" + message);

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sqlist.clientweb.mapper.TemperatureAlarmMapper">
+    <resultMap id="BaseResultMap" type="com.sqlist.clientweb.domain.TemperatureAlarm">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="taid" property="taid" jdbcType="INTEGER"/>
+        <result column="alarm" property="alarm" jdbcType="TINYINT"/>
+        <result column="time" property="time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        taid, alarm, time
+    </sql>
+</mapper>

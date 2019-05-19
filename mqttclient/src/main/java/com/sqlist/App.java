@@ -12,8 +12,13 @@ import java.io.*;
  */
 public class App {
     public static void main(String[] args) {
-        String deviceInfoStr = readDeviceInfo(args[0]);
-        DeviceInfo deviceInfo = JSON.parseObject(deviceInfoStr, DeviceInfo.class);
+//        String deviceInfoStr = readDeviceInfo(args[0]);
+//        DeviceInfo deviceInfo = JSON.parseObject(deviceInfoStr, DeviceInfo.class);
+
+        DeviceInfo deviceInfo = new DeviceInfo();
+        deviceInfo.setProductKey("58ed8c7636a243e4bf79f6a0091bacb9");
+        deviceInfo.setDeviceKey("5960e0e86651444ea011ba3f79105275");
+        deviceInfo.setDeviceSecret("f536ac156cc348a8a4b1df12fd56f016");
 
         try {
             Client.init(deviceInfo);
