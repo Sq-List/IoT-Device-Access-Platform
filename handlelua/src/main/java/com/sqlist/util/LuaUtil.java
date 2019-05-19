@@ -13,12 +13,6 @@ import java.io.Serializable;
  **/
 public class LuaUtil implements Serializable {
 
-//    private LuaValue func;
-//
-//    public LuaUtil(String luaFilePath) {
-//
-//    }
-
     private static String transferOperatePath = "/usr/local/flink-1.7.2/lua/transferOperate.lua";
     private static String transferOperateMethod = "transferOperate";
 

@@ -7,6 +7,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
+import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**
@@ -72,13 +73,15 @@ public class Client {
 
     public static void start() {
         try {
+            Random random = new Random();
             while (true) {
 //                String message = messageList.take();
-                String message = "1";
+                String temperature = random.nextInt(100) + "";
+                String message = "{\"temperature\": " + temperature + "}";
                 MqttMessage mqttMessage = new MqttMessage(message.getBytes());
                 try {
+                    System.out.println("send message" + message);
                     mqttClient.publish(sendTopic, mqttMessage);
-                    System.out.println("send message");
                 } catch (MqttException e) {
                     e.printStackTrace();
                 }

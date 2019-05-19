@@ -64,7 +64,7 @@
         {{# if (d.status === '开发完成' || d.status === '开发中') { }}
         <a th:href="@{/page/task/{{ d.tid }}/edit}" class="layui-btn layui-btn-primary layui-btn-xs">编辑</a>
         {{#  } else if (d.status === '运行中') { }}
-        <a th:href="@{/page/task/{{ d.tid }}}" class="layui-btn layui-btn-xs">查看</a>
+        <!--<a th:href="@{/page/task/{{ d.tid }}}" class="layui-btn layui-btn-xs">查看</a>-->
         {{#  } }}
     </template>
 </div>
@@ -116,7 +116,7 @@
             ]
         });
 
-        $("#taskAdd").click(function () {
+        $(document).on("click", "#taskAdd", function () {
             layer.prompt({
                 title: '输入任务名称'
             }, function(value, index, elem){
@@ -143,7 +143,7 @@
             });
         });
 
-        $("#taskDel").click(function () {
+        $(document).on("click", "#taskDel", function () {
             let checkStatus = table.checkStatus('tasksTable');
 
             if (checkStatus.data.length === 0) {

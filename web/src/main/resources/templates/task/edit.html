@@ -125,7 +125,7 @@
                 </div>
             </div>
             <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">url</label>
+                <label class="layui-form-label">topic/url</label>
                 <div class="layui-input-block">
                     <input type="text" id="url" name="url" class="layui-input">
                 </div>
@@ -357,11 +357,10 @@
                 scope: "main"
             });
 
+            // 页面拖拽的主体执行
             $("#task-main").droppable({
                 scope: "main",
                 drop: function (event, ui) {
-                    console.log(ui);
-                    // console.log(this);
                     let left = parseInt(ui.offset.left - $(this).offset().left);
                     let top = parseInt(ui.offset.top - $(this).offset().top);
                     let type = ui.draggable[0].id;
@@ -371,6 +370,7 @@
                 }
             });
 
+            // 拖拽后，根据拖拽类型添加任务单元Div到中心区域
             function addTaskUnitDiv(type, id, left, top) {
                 let $taskMain = $("#task-main");
 
@@ -386,6 +386,7 @@
                 instance.draggable(id, {
                     containment: true
                 });
+                // 为每一个中心区域的任务单元添加拖拽调用，拖拽到新的位置更新当前位置到数据库
                 $id.draggable({
                     containment: "#task-main",
                     stop: function (event, ui) {
@@ -436,6 +437,7 @@
              * @param top
              * @returns {string}
              */
+            // 将左侧拖拽到中心的任务单元，向服务端发送添加任务单元的请求
             function addTaskUnit(type, left, top) {
                 let index = layer.load(2);
 
@@ -453,7 +455,6 @@
                     dataType: "json",
                     async: false,
                     success: function (res) {
-                        // console.log(res);
                         layer.close(index);
                         if (res.code === 0) {
                             resData = res.data;
@@ -526,7 +527,7 @@
                                         $taskDetail.html("").append($("#noClickContent").html());
                                     }
 
-                                    instance.removeAllEndpoints($thisTaskButton.attr("id"));
+                                    instance.removeAllEndpoints(tuid);
                                     $thisTaskButton.remove();
                                     layer.close(index); //如果设定了yes回调，需进行手工关闭
                                     autoSave();

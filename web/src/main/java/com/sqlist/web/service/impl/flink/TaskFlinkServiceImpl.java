@@ -45,6 +45,9 @@ public class TaskFlinkServiceImpl implements TaskFlinkService {
     @Value("${config.jar.mainClass}")
     private String mainClass;
 
+    @Value("${config.kafka.totalTopic}")
+    private String totalTopic;
+
     @Autowired
     private TaskUnitInputService taskUnitInputService;
 
@@ -141,7 +144,8 @@ public class TaskFlinkServiceImpl implements TaskFlinkService {
                 .append(" --consumerZookeeperIp ").append(zookeeperIp)
                 .append(" --producerIp ").append(output.getIp()).append(":").append(output.getPort())
                 .append(" --producerTopic ").append(output.getUrl())
-                .append(" --tid ").append(task.getTid());
+                .append(" --tid ").append(task.getTid())
+                .append(" --totalTopic").append(totalTopic);
 
         Map<String, String> paramsMap = new HashMap<>(3);
         paramsMap.put("programArgs", paramsArgs.toString());

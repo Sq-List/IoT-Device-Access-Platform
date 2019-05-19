@@ -99,7 +99,11 @@ public class TaskSendSumImpl implements TaskSendSumService {
             tmpMap.put("name", tmpTask.getName());
 
             Map<String, Object> countAllMap = taskSendSumMapper.selectCountAll(tmpTask);
-            tmpMap.put("count", countAllMap.get("count").toString());
+            if (countAllMap != null) {
+                tmpMap.put("count", countAllMap.get("count").toString());
+            } else {
+                tmpMap.put("count", "0");
+            }
 
             tidToResult.put(tmpTask.getTid(), tmpMap);
         });
