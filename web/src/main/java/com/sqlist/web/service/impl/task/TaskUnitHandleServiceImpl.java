@@ -71,6 +71,13 @@ public class TaskUnitHandleServiceImpl implements TaskUnitHandleService {
     }
 
     @Override
+    public Boolean fileIsUsed(Integer fid) {
+        TaskUnitHandle taskUnitHandle = new TaskUnitHandle();
+        taskUnitHandle.setFid(fid);
+        return taskUnitHandleMapper.selectCount(taskUnitHandle) != 0;
+    }
+
+    @Override
     public void update(TaskUnitHandle taskUnitHandle) {
         taskUnitHandleMapper.updateByPrimaryKeySelective(taskUnitHandle);
     }

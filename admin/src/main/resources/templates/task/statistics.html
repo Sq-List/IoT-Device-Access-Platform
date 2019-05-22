@@ -152,7 +152,7 @@
                 let times = timeRange.split(" - ");
                 startTime = new Date(times[0]);
                 endTime = new Date(times[1]);
-                
+
                 if (endTime - startTime > 48 * 60 * 60 * 1000) {
                     layer.msg("选定的时间范围不能超过48小时", {icon: 2, time: 2000});
                     return;

@@ -45,4 +45,11 @@ public interface TaskUnitInputService {
      * @return
      */
     Integer count(Integer tid);
+
+    /**
+     * 确认产品是否被input使用
+     * @param pid
+     * @return true 为使用， false 为未使用
+     */
+    Boolean productIsUsed(Integer pid);
 }

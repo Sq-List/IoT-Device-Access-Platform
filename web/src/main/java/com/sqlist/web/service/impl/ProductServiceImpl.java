@@ -5,9 +5,12 @@ import com.github.pagehelper.PageHelper;
 import com.sqlist.web.domain.Device;
 import com.sqlist.web.domain.Product;
 import com.sqlist.web.domain.User;
+import com.sqlist.web.exception.GlobalException;
 import com.sqlist.web.mapper.ProductMapper;
+import com.sqlist.web.result.CodeMsg;
 import com.sqlist.web.service.DeviceService;
 import com.sqlist.web.service.ProductService;
+import com.sqlist.web.service.task.TaskUnitInputService;
 import com.sqlist.web.util.UUIDUtil;
 import com.sqlist.web.vo.PageVO;
 import com.sqlist.web.vo.ProductVO;
@@ -37,6 +40,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private DeviceService deviceService;
+
+    @Autowired
+    private TaskUnitInputService taskUnitInputService;
 
     @Override
     public Map<String, Object> list(User user, ProductSearchVO productSearchVO) {
@@ -86,6 +92,17 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public void deleteMultiple(User user, List<Integer> pidList) {
+        pidList.forEach((pid) -> {
+            Product product = new Product();
+            product.setPid(pid);
+            product = productMapper.selectByPrimaryKey(product);
+
+            // 产品被任务使用不能被删除
+            if (taskUnitInputService.productIsUsed(pid)) {
+                throw new GlobalException(CodeMsg.PRODUCT_IS_USED.fillArgs(product.getName()));
+            }
+        });
+
         productMapper.deleteMultiple(user, pidList);
 
         // 原本属于此产品的设备直接删除

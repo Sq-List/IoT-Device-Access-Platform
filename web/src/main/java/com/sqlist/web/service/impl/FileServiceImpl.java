@@ -9,6 +9,7 @@ import com.sqlist.web.mapper.FileMapper;
 import com.sqlist.web.result.CodeMsg;
 import com.sqlist.web.service.flink.FileFlinkService;
 import com.sqlist.web.service.FileService;
+import com.sqlist.web.service.task.TaskUnitHandleService;
 import com.sqlist.web.util.FileUtil;
 import com.sqlist.web.util.ScpUtil;
 import com.sqlist.web.vo.FileVO;
@@ -49,6 +50,9 @@ public class FileServiceImpl implements FileService {
 
     @Autowired
     private FileFlinkService fileFlinkService;
+
+    @Autowired
+    private TaskUnitHandleService taskUnitHandleService;
 
     @Autowired
     private ScpUtil scpUtil;
@@ -188,10 +192,16 @@ public class FileServiceImpl implements FileService {
     @Override
     public void delete(User user, List<Integer> fidList) {
         fidList.forEach((fid) -> {
+
             File file = new File();
             file.setFid(fid);
             file.setUid(user.getUid());
             file = fileMapper.selectByPrimaryKey(file);
+
+            // 文件被使用不能被删除
+            if (taskUnitHandleService.fileIsUsed(fid)) {
+                throw new GlobalException(CodeMsg.FILE_IS_USED.fillArgs(file.getName()));
+            }
 
             String deletePath = file.getPath();
             FileUtil.delete(deletePath);

@@ -27,6 +27,9 @@
     <template id="userToolbar">
         <a th:href="@{/page/user/{{ d.uid }}/detail}">{{ d.username }}</a>
     </template>
+    <template id="toolbar">
+        <a th:href="@{/page/task/{{ d.tid }}/statistics}" class="layui-btn layui-btn-primary layui-btn-xs">统计</a>
+    </template>
 </div>
 
 <script layout:fragment="script">
@@ -70,7 +73,8 @@
                     {field: 'updateTime', title: "最后一次更新时间", templet: function (d) {
                             return new Date(d.updateTime).format(commonDateFormat);
                         }},
-                    {field: 'username', title: "用户", toolbar: '#userToolbar'}
+                    {field: 'username', title: "用户", toolbar: '#userToolbar'},
+                    {fixed: 'right', align:'center', toolbar: '#toolbar'}
                 ]
             ]
         });

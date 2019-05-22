@@ -92,6 +92,16 @@ public class TaskServiceImpl implements TaskService {
     @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public void deleteMultiple(User user, List<Integer> tidList) {
+        tidList.forEach((tid) -> {
+            Task task = new Task();
+            task.setTid(tid);
+            task = taskMapper.selectByPrimaryKey(task);
+            // 任务处在 “启动中” 或 “运行中”时， 不能删除任务
+            if (task.getStatus().equals(TaskStatus.RUNNING.name()) || task.getStatus().equals(TaskStatus.STARTING.name())) {
+                throw new GlobalException(CodeMsg.TASK_IS_RUNNING.fillArgs(task.getName()));
+            }
+        });
+
         taskMapper.deleteMultiple(user, tidList);
 
         // 删除相关的unit和connect

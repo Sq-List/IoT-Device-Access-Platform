@@ -47,6 +47,13 @@ public interface TaskUnitHandleService {
     Integer count(Integer tid);
 
     /**
+     * 确认文件是否被handle使用
+     * @param fid
+     * @return true 为使用， false 为未使用
+     */
+    Boolean fileIsUsed(Integer fid);
+
+    /**
      * 更新
      * @param taskUnitHandle
      */

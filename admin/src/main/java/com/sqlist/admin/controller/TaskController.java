@@ -7,10 +7,7 @@ import com.sqlist.admin.vo.PageVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -51,5 +48,10 @@ public class TaskController {
         taskService.deleteMultiple(deleteTidList);
 
         return Result.success(null);
+    }
+
+    @RequestMapping(value = "/{tid}", method = RequestMethod.GET)
+    public Result detail(@PathVariable("tid") Integer tid) {
+        return Result.success(taskService.detail(tid));
     }
 }

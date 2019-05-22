@@ -32,6 +32,7 @@ public class CodeMsg {
     public static CodeMsg TASK_CONNECT_LACK = new CodeMsg(500303, "存在任务单元还未连接");
     public static CodeMsg TASK_INPUT_ONE = new CodeMsg(500304, "输入单元需要存在且只有一个");
     public static CodeMsg TASK_OUTPUT_ZERO = new CodeMsg(500305, "输出单元最少需要一个");
+    public static CodeMsg TASK_IS_RUNNING = new CodeMsg(500306, "任务 %s 正在运行无法删除");
 
     /**
      * File 5004XX
@@ -40,6 +41,12 @@ public class CodeMsg {
     public static CodeMsg UPLOAD_FILE_IO_EXCEPTION = new CodeMsg(500402, "上传文件失败");
     public static CodeMsg FILE_NAME_REPEAT = new CodeMsg(500403, "文件名称不能重复");
     public static CodeMsg FILE_NOT_EXIST = new CodeMsg(500404, "下载文件失败，文件不存在");
+    public static CodeMsg FILE_IS_USED = new CodeMsg(500405, "文件 %s 被任务使用无法删除");
+
+    /**
+     * 产品 5005XX
+     */
+    public static CodeMsg PRODUCT_IS_USED = new CodeMsg(500501, "任务 %s 被任务使用无法删除");
 
     private CodeMsg() {
     }

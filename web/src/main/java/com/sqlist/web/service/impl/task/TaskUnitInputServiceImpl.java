@@ -64,4 +64,11 @@ public class TaskUnitInputServiceImpl implements TaskUnitInputService {
         taskUnitInput.setTid(tid);
         return taskUnitInputMapper.selectCount(taskUnitInput);
     }
+
+    @Override
+    public Boolean productIsUsed(Integer pid) {
+        TaskUnitInput taskUnitInput = new TaskUnitInput();
+        taskUnitInput.setPid(pid);
+        return taskUnitInputMapper.selectCount(taskUnitInput) != 0;
+    }
 }

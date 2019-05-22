@@ -17,4 +17,9 @@ public class TaskPageController {
     public String listView() {
         return "task/list";
     }
+
+    @RequestMapping(value = "/{tid}/statistics", method = RequestMethod.GET)
+    public String statisticsView() {
+        return "task/statistics";
+    }
 }
