@@ -23,4 +23,9 @@ public class TaskPageController {
     public String create(@PathVariable("tid") int tid) {
         return "task/edit";
     }
+
+    @RequestMapping(value = "/{tid}/statistics", method = RequestMethod.GET)
+    public String statistics() {
+        return "task/statistics";
+    }
 }

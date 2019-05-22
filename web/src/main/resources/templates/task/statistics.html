@@ -3,39 +3,45 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="base/layout">
 
-<title layout:fragment="title">流处理平台</title>
-<div layout:fragment="side" th:replace="base/side::onselectLayout ('overview', '')"></div>
+<title layout:fragment="title">统计</title>
+<div layout:fragment="side" th:replace="base/side::onselectLayout ('task', 'taskList')"></div>
 <div layout:fragment="content-header" class="layui-card tonghe-header">
+    <span class="layui-breadcrumb">
+        <a href="javascript:;" class="layui-breadcrumb-unclick">任务</a>
+        <a><cite>统计</cite></a>
+    </span>
+</div>
 
 </div>
 <div layout:fragment="content">
     <div class="layui-row layui-col-space15">
-        <div class="layui-col-md3 layui-col-lg3">
-            <div class="overview-num-div panel-success">
-                <i class="fa fa-bar-chart pull-left"></i>
-                <span class="total">产品数量&nbsp;&nbsp;</span>
-                <span class="total-num" id="productNum">21</span>
-            </div>
-        </div>
-        <div class="layui-col-md3 layui-col-lg3">
-            <div class="overview-num-div panel-info">
-                <i class="fa fa-bar-chart pull-left"></i>
-                <span class="total">设备数量&nbsp;&nbsp;</span>
-                <span class="total-num" id="deviceNum">30</span>
-            </div>
-        </div>
-        <div class="layui-col-md3 layui-col-lg3">
-            <div class="overview-num-div panel-primary">
-                <i class="fa fa-bar-chart pull-left"></i>
-                <span class="total">任务数量&nbsp;&nbsp;</span>
-                <span class="total-num" id="taskNum">37</span>
-            </div>
-        </div>
-        <div class="layui-col-md3 layui-col-lg3">
-            <div class="overview-num-div panel-warning">
-                <i class="fa fa-bar-chart pull-left"></i>
-                <span class="total">文件数量&nbsp;&nbsp;</span>
-                <span class="total-num" id="fileNum">10</span>
+        <div class="layui-col-md12 layui-col-lg12">
+            <div class="tonghe-card">
+                <div class="tonghe-card-header">
+                    任务信息
+                </div>
+                <div class="tonghe-card-body">
+                    <form class="layui-form  layui-form-pane" lay-filter="detailForm">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">任务名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="name" class="layui-input" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">创建时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="createTime" class="layui-input" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">更新时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="updateTime" class="layui-input" readonly>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -43,11 +49,15 @@
         <div class="layui-col-md12 layui-col-lg12">
             <div class="tonghe-card">
                 <div class="tonghe-card-header">
-                    <i class="fa fa-bar-chart pull-left"></i>
-                    近24小时各任务发送量
+                    <div class="layui-inline" style="width: 300px;">
+                        <input type="text" id="timeRange" name="timeRange" placeholder="时间范围" class="layui-input">
+                    </div>
+                    <div class="layui-inline">
+                        <div id="searchBtn" class="layui-btn layui-btn-primary" lay-submit lay-filter="formDemo">查询</div>
+                    </div>
                 </div>
                 <div class="tonghe-card-body">
-                    <div id="taskSendDayInfo" style="width: 100%; height: 600px;"></div>
+                    <div id="taskSendHourInfo" style="width: 100%; height: 600px;"></div>
                 </div>
             </div>
         </div>
@@ -81,26 +91,42 @@
     <script th:src="@{/plugins/moment.min.js}"></script>
 </div>
 <script layout:fragment="script">
-    layui.use(['element', 'layer'], function () {
+    layui.use(['element', 'layer', 'laydate', 'form'], function () {
         var element = layui.element;
         var layer = layui.layer;
+        var laydate = layui.laydate;
+        var form = layui.form;
 
-        getNums();
+        var tid = /.*\/(\d+)\/.*/g.exec(window.location.pathname)[1];
 
-        function getNums() {
+        //时间范围选择
+        laydate.render({
+            elem: '#timeRange',
+            type: 'datetime',
+            range: '-'
+        });
+
+        $("#searchBtn").click(function () {
+            let $timeRange = $("#timeRange");
+            if ($timeRange.val()) {
+                initHourInfo($timeRange.val());
+            }
+        });
+
+        function detail() {
             $.ajax({
-                url: ip + "/api/overview/nums",
+                url: ip + "/api/task/" + tid,
                 type: "get",
                 contentType: "application/json",
                 dataType: "json",
                 success: function (res) {
-                    // console.log(res);
+                    console.log(res);
                     if (res.code === 0) {
                         let data = res.data;
+                        data.createTime = new Date(data.createTime).format(commonDateFormat);
+                        data.updateTime = new Date(data.updateTime).format(commonDateFormat);
 
-                        for (let numKey in data) {
-                            $("#" + numKey).text(data[numKey]);
-                        }
+                        form.val("detailForm", data);
                     } else {
                         layer.msg(res.msg, {icon: 2, time: 2000});
                     }
@@ -108,32 +134,35 @@
             });
         }
 
-        var infoOf24HourChart = echarts.init($("#taskSendDayInfo").get(0));
+        detail();
+
+        var infoOfHourChart = echarts.init($("#taskSendHourInfo").get(0));
         var infoOf7DayChart = echarts.init($("#taskSendWeekInfo").get(0));
         var infoOfTotalChart = echarts.init($("#taskSendTotalInfo").get(0));
 
-        init24HourInfo();
+        initHourInfo();
         init7DayInfo();
         initTotalInfo();
 
-        function init24HourInfo() {
+        function initHourInfo(timeRange) {
+            let startTime;
+            let endTime;
 
-            infoOf24HourChart.setOption({
+            if (timeRange) {
+                let times = timeRange.split(" - ");
+                startTime = new Date(times[0]);
+                endTime = new Date(times[1]);
+            } else {
+                endTime = new Date();
+                startTime = new Date(endTime.getTime() - 1 * 60 * 60 * 1000);
+            }
+
+            infoOfHourChart.setOption({
                 grid: {
                     left: '4%',
                     top: '2%',
-                    right: '10%',
+                    right: '4%',
                     bottom: 70
-                },
-                legend: {
-                    type: 'scroll',
-                    orient: 'vertical',
-                    right: 10,
-                    top: 20,
-                    bottom: 20,
-                    data: [],
-
-                    selected: []
                 },
                 tooltip: {
                     trigger: 'axis',
@@ -166,17 +195,9 @@
             });
 
             new Promise(function (resolve, reject) {
-                let now  = new Date();
-                now.setMilliseconds(0);
-                if (now.getSeconds() >= 30) {
-                    now.setSeconds(30);
-                } else {
-                    now.setSeconds(0);
-                }
-                let oneHourAgo = new Date(now.getTime() - 1 * 60 * 60 * 1000);
 
                 $.ajax({
-                    url: ip + "/api/overview/1hour?startTime=" + oneHourAgo.format(commonDateFormat) + "&endTime=" + now.format(commonDateFormat),
+                    url: ip + "/api/overview/1hour?startTime=" + startTime.format(commonDateFormat) + "&endTime=" + endTime.format(commonDateFormat) + "tid=" + tid,
                     type: "get",
                     contentType: "application/json",
                     dataType: "json",
@@ -185,8 +206,8 @@
                         if (res.code === 0) {
                             let data = {};
                             data["data"] = res.data;
-                            data["startTime"] = oneHourAgo;
-                            data["endTime"] = now;
+                            data["startTime"] = startTime;
+                            data["endTime"] = endTime;
                             console.log(data);
                             resolve(data);
                         } else {
@@ -196,16 +217,7 @@
                     }
                 });
             }).then(function (data) {
-
-                let startTime = data.startTime;
-                let endTime = data.endTime;
-
-                let allTime = [];
-                for (let time = startTime; time <= endTime;) {
-                    allTime.push(time.format(commonDateFormat));
-
-                    time = new Date(time.getTime() + 30 * 1000);
-                }
+                let allTime = getAllTime(data.startTime, data.endTime);
 
                 data = data.data;
                 let names = [];
@@ -240,11 +252,7 @@
                     });
                 }
 
-                infoOf24HourChart.setOption({
-                    legend: {
-                        data: names,
-                        selected: namesSelected
-                    },
+                infoOfHourChart.setOption({
                     xAxis: {
                         data: allTime
                     },
@@ -259,18 +267,8 @@
                 grid: {
                     left: '4%',
                     top: '2%',
-                    right: '7%',
+                    right: '4%',
                     bottom: 40
-                },
-                legend: {
-                    type: 'scroll',
-                    orient: 'vertical',
-                    right: 10,
-                    top: 20,
-                    bottom: 20,
-                    data: [],
-
-                    selected: []
                 },
                 tooltip: {
                     trigger: 'axis',
@@ -300,7 +298,7 @@
             infoOf7DayChart.showLoading();
             new Promise(function (resolve, reject) {
                 $.ajax({
-                    url: ip + "/api/overview/7day",
+                    url: ip + "/api/overview/7day?tid=" + tid,
                     type: "get",
                     contentType: "application/json",
                     dataType: "json",
@@ -353,10 +351,6 @@
 
                 infoOf7DayChart.hideLoading();
                 infoOf7DayChart.setOption({
-                    legend: {
-                        data: names,
-                        selected: namesSelected
-                    },
                     xAxis: {
                         data: allDay
                     },
@@ -384,7 +378,7 @@
 
             new Promise(function (resolve, reject) {
                 $.ajax({
-                    url: ip + "/api/overview/total",
+                    url: ip + "/api/overview/total?tid=" + tid,
                     type: "get",
                     contentType: "application/json",
                     dataType: "json",
@@ -433,13 +427,29 @@
             return Math.floor(params.value);
         }
 
-        function get24Hour() {
-            let hours = [];
-            for(let i = 24; i >= 0; i--) {
-                hours.push(moment().subtract(i, 'hours').format("YYYY-MM-DD HH:00:00"));
+        function getAllTime(startTime, endTime) {
+            startTime.setMilliseconds(0);
+            if (startTime.getSeconds() >= 30) {
+                startTime.setSeconds(30);
+            } else {
+                startTime.setSeconds(0);
             }
-            // console.log(hours);
-            return hours;
+
+            endTime.setMilliseconds(0);
+            if (endTime.getSeconds() >= 30) {
+                endTime.setSeconds(30);
+            } else {
+                endTime.setSeconds(0);
+            }
+
+            let allTime = [];
+            for (let time = startTime; time <= endTime;) {
+                allTime.push(time.format(commonDateFormat));
+
+                time = new Date(time.getTime() + 30 * 1000);
+            }
+
+            return allTime;
         }
 
         function get7day() {

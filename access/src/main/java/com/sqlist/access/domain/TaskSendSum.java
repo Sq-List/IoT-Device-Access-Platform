@@ -12,10 +12,20 @@ public class TaskSendSum {
 
     private Integer count;
 
-    @JSONField(format = "yyyy-MM-dd HH")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date time;
 
     private Integer tid;
+
+    @Override
+    public String toString() {
+        return "TaskSendSum{" +
+                "tssid=" + tssid +
+                ", count=" + count +
+                ", time=" + time +
+                ", tid=" + tid +
+                '}';
+    }
 
     /**
      * @return tssid

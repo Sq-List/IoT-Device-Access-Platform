@@ -24,7 +24,7 @@ public class FileFlinkServiceImpl implements FileFlinkService {
     public static final String SUCCESS = "success";
     public static final String STATUS = "status";
 
-    @Value("http://${config.flink.rest.ip}")
+    @Value("http://${config.flink.rest.ip}:${config.flink.rest.port}")
     private String flinkIp;
 
     @Override

@@ -3,18 +3,22 @@ package com.sqlist.web.mapper;
 import com.sqlist.web.domain.Task;
 import com.sqlist.web.domain.TaskSendSum;
 import com.sqlist.web.util.MyMapper;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 public interface TaskSendSumMapper extends MyMapper<TaskSendSum> {
 
     /**
-     * 获取 近24小时 每小时 该任务发送量
+     * 根据时间范围获取某任务发送量
      * @param task
+     * @param startTime
+     * @param endTime
      * @return
      */
-    List<Map<String, Object>> selectCountPerHourIn24Hours(Task task);
+    List<Map<String, Object>> selectCountBetweenTime(@Param("task") Task task, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
     /**
      * 获取 近7天 每天 该任务发送量

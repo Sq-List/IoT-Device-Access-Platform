@@ -66,6 +66,7 @@
         {{#  } else if (d.status === '运行中') { }}
         <!--<a th:href="@{/page/task/{{ d.tid }}}" class="layui-btn layui-btn-xs">查看</a>-->
         {{#  } }}
+        <a th:href="@{/page/task/{{ d.tid }}/statistics}" class="layui-btn layui-btn-primary layui-btn-xs">统计</a>
     </template>
 </div>
 

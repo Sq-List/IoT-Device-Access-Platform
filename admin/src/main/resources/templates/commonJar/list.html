@@ -133,7 +133,7 @@
                             if (res.code === 0) {
                                 layer.msg('上传成功！', {icon: 1, time: 2000}, function () {
                                     layer.close(index);
-                                    table.reload('filesTable', {});
+                                    table.reload('jarsTable', {});
                                 });
                             } else {
                                 layer.msg(res.msg, {icon: 2, time: 2000});
@@ -192,7 +192,10 @@
                 let pointIndex = fileDom.files[0].name.lastIndexOf(".");
                 let name = fileDom.files[0].name.slice(0, pointIndex);
 
-                $("#jarName").val(name);
+                let $jarName = $("#jarName");
+                if (!$jarName.val()) {
+                    $jarName.val(name);
+                }
             }
         });
     });

@@ -93,7 +93,7 @@ public class StreamingJob {
 
 		dataStreamSource.addSink(new FlinkKafkaProducer011<>(producerTopic, new SimpleStringSchema(), producerProps));
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		SingleOutputStreamOperator<String> sum = dataStreamSource.flatMap(new FlatMapFunction<String, WordWithCount>() {
 			@Override
 			public void flatMap(String s, Collector<WordWithCount> collector) throws Exception {

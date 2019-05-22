@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,21 +30,19 @@ public class TaskSendSumImpl implements TaskSendSumService {
     private TaskMapper taskMapper;
 
     @Override
-    public Map get24HourInfo(User user) {
-        Task task = new Task();
-        task.setUid(user.getUid());
+    public Map getInfoBetweenTime(Task task, Date startTime, Date endTime) {
         List<Task> taskList = taskMapper.select(task);
 
         int cap = (int) (taskList.size() / 0.75 + 1);
         HashMap<Integer, Map> tidToResult = new HashMap<>(cap);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:00:00");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         taskList.forEach(tmpTask -> {
             HashMap<String, Object> tmpMap = new HashMap<>(3);
             tmpMap.put("name", tmpTask.getName());
 
-            List<Map<String, Object>> countPerHourMap = taskSendSumMapper.selectCountPerHourIn24Hours(tmpTask);
+            List<Map<String, Object>> countPerHourMap = taskSendSumMapper.selectCountBetweenTime(tmpTask, startTime, endTime);
 
             HashMap<String, Integer> timeToCountMap = new HashMap<>((int) (countPerHourMap.size() / 0.75 + 1));
             countPerHourMap.forEach(timeCountMap ->
@@ -57,9 +56,7 @@ public class TaskSendSumImpl implements TaskSendSumService {
     }
 
     @Override
-    public Map get7DayInfo(User user) {
-        Task task = new Task();
-        task.setUid(user.getUid());
+    public Map get7DayInfo(Task task) {
         List<Task> taskList = taskMapper.select(task);
 
         int cap = (int) (taskList.size() / 0.75 + 1);
@@ -86,9 +83,7 @@ public class TaskSendSumImpl implements TaskSendSumService {
     }
 
     @Override
-    public Map getTotalInfo(User user) {
-        Task task = new Task();
-        task.setUid(user.getUid());
+    public Map getTotalInfo(Task task) {
         List<Task> taskList = taskMapper.select(task);
 
         int cap = (int) (taskList.size() / 0.75 + 1);

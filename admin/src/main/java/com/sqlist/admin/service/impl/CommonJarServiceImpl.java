@@ -65,10 +65,8 @@ public class CommonJarServiceImpl implements CommonJarService {
     @Override
     public void upload(CommonJarVO commonJarVO) {
         MultipartFile file = commonJarVO.getFile();
-        String originalName = file.getOriginalFilename();
-        String extensions = originalName.substring(originalName.lastIndexOf(".") + 1);
-        String savePath = localPath + java.io.File.separator + COMMON + java.io.File.separator + extensions;
-        String fileName = commonJarVO.getName() + "." + extensions;
+        String savePath = localPath + java.io.File.separator + COMMON + java.io.File.separator + commonJarVO.getTaskUnitType();
+        String fileName = commonJarVO.getName();
         String localFileFullPath = new java.io.File(savePath, fileName).getPath();
 
         CommonJar commonJar = new CommonJar();

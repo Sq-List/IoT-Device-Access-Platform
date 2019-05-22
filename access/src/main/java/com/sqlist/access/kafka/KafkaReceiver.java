@@ -28,7 +28,7 @@ public class KafkaReceiver {
     @Autowired
     private TaskSendSumService taskSendSumService;
 
-    @KafkaListener(topics = {"message-send-sum"})
+    @KafkaListener(topics = {"message-send-count"})
     public void listen(ConsumerRecord<String, String> record) {
         Optional<String> kafkaMessage = Optional.ofNullable(record.value());
 
@@ -38,6 +38,7 @@ public class KafkaReceiver {
             log.info("receive message: {}", message);
             try {
                 TaskSendSum taskSendSum = JSON.parseObject(message, TaskSendSum.class);
+                log.debug("taskSendSum: {}", taskSendSum);
                 taskSendSumService.add(taskSendSum);
             } catch (JSONException e) {
                 e.printStackTrace();

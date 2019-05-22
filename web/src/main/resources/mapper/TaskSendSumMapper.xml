@@ -17,13 +17,13 @@
         tssid, count, time, tid
     </sql>
 
-    <select id="selectCountPerHourIn24Hours" resultType="map">
+    <select id="selectCountBetweenTime" resultType="map">
         SELECT tss.time,
                tss.count
         FROM task_send_sum tss,
              task t
-        WHERE t.tid = #{tid}
-          AND tss.time >= NOW() - INTERVAL 24 HOUR
+        WHERE t.tid = #{task.tid}
+          AND tss.time BETWEEN #{startTime} AND #{endTime}
           AND tss.tid = t.tid
     </select>
 
@@ -33,8 +33,7 @@
         FROM task_send_sum tss,
              task t
         WHERE t.tid = #{tid}
-          AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= DATE(tss.time)
-          AND CURDATE() != DATE(tss.time)
+          AND DATE_SUB(CURDATE(), INTERVAL 6 DAY) &lt;= DATE(tss.time)
           AND tss.tid = t.tid
         GROUP BY CONVERT(tss.time, DATE)
         ORDER BY time

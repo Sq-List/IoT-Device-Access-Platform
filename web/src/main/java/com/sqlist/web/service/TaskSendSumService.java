@@ -1,7 +1,9 @@
 package com.sqlist.web.service;
 
+import com.sqlist.web.domain.Task;
 import com.sqlist.web.domain.User;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -13,23 +15,25 @@ import java.util.Map;
 public interface TaskSendSumService {
 
     /**
-     * 获取 近24小时 每小时 用户各个任务发送量
-     * @param user
+     * 根据时间获取发送量
+     * @param task
+     * @param startTime
+     * @param endTime
      * @return
      */
-    Map get24HourInfo(User user);
+    Map getInfoBetweenTime(Task task, Date startTime, Date endTime);
 
     /**
      * 获取 近7天 每天 该任务发送量
-     * @param user
+     * @param task
      * @return
      */
-    Map get7DayInfo(User user);
+    Map get7DayInfo(Task task);
 
     /**
      * 获取 该任务总发送量
-     * @param user
+     * @param task
      * @return
      */
-    Map getTotalInfo(User user);
+    Map getTotalInfo(Task task);
 }

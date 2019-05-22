@@ -49,6 +49,7 @@
             console.log(data);
             let formData = data.field;
 
+            let index1 = layer.load(2);
             $.ajax({
                 url: ip + "/api/session",
                 type: "post",
@@ -57,6 +58,7 @@
                 dataType: "json",
                 success: function (res) {
                     console.log(res);
+                    layer.close(index1);
                     if (res.code === 0) {
                         let data = res.data;
 
