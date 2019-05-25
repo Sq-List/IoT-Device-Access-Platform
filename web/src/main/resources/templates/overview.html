@@ -6,7 +6,7 @@
 <title layout:fragment="title">流处理平台</title>
 <div layout:fragment="side" th:replace="base/side::onselectLayout ('overview', '')"></div>
 <div layout:fragment="content-header" class="layui-card tonghe-header">
-
+    <a><cite>概览</cite></a>
 </div>
 <div layout:fragment="content">
     <div class="layui-row layui-col-space15">
@@ -340,6 +340,7 @@
                         } else {
                             counts.push(0);
                         }
+                        // counts.push(getRandomInt(600));
                     }
 
                     names.push(name);
@@ -409,6 +410,7 @@
                     let map = data[key];
 
                     xData.push(map["name"]);
+                    // yData.push(getRandomInt(1000));
                     yData.push(map["count"]);
                 }
 
